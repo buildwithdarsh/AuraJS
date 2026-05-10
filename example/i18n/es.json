@@ -1,0 +1,23 @@
+{
+  "hero": {
+    "title": "Crea Apps Hermosas",
+    "subtitle": "El framework ligero que lo hace todo"
+  },
+  "nav": {
+    "home": "Inicio",
+    "features": "Funciones",
+    "docs": "Docs",
+    "demo": "Demo"
+  },
+  "features": {
+    "routing": "Enrutamiento",
+    "state": "Estado",
+    "api": "API",
+    "i18n": "i18n"
+  },
+  "greeting": "Hola, {name}",
+  "items_zero": "Sin elementos",
+  "items_one": "{count} elemento",
+  "items_other": "{count} elementos",
+  "footer": "Hecho con Flxy.js"
+}

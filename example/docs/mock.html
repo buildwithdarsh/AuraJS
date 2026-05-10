@@ -1,0 +1,737 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+  <title>Mock API — Aura.js Docs</title>
+  <meta name="description" content="Aura.js Mock API — simple fetch interception for API mocking with custom responses, delays, file-based definitions, and import/export. Full method reference." />
+  <meta name="robots" content="index, follow" />
+  <meta property="og:title" content="Mock API — Aura.js Docs" />
+  <meta property="og:description" content="Aura.js Mock API — simple fetch interception for API mocking with custom responses, delays, file-based definitions, and import/export. Full method reference." />
+  <meta property="og:type" content="article" />
+  <meta property="og:url" content="https://aurajs-delta.vercel.app/docs/mock.html" />
+  <meta property="og:image" content="https://aurajs-delta.vercel.app/og-image.png" />
+  <meta property="og:site_name" content="Aura.js" />
+  <meta name="twitter:card" content="summary_large_image" />
+  <meta name="twitter:title" content="Mock API — Aura.js Docs" />
+  <meta name="twitter:description" content="Aura.js Mock API — simple fetch interception for API mocking with custom responses, delays, file-based definitions, and import/export. Full method reference." />
+  <meta name="twitter:image" content="https://aurajs-delta.vercel.app/og-image.png" />
+  <link rel="canonical" href="https://aurajs-delta.vercel.app/docs/mock.html" />
+  <link rel="icon" href="../favicon.svg" type="image/svg+xml" />
+  <script type="application/ld+json">
+  {
+    "@context": "https://schema.org",
+    "@graph": [
+      {
+        "@type": "TechArticle",
+        "headline": "Mock API — Aura.js Docs",
+        "description": "Aura.js Mock API — simple fetch interception for API mocking with custom responses, delays, file-based definitions, and import/export.",
+        "url": "https://aurajs-delta.vercel.app/docs/mock.html",
+        "image": "https://aurajs-delta.vercel.app/og-image.png",
+        "datePublished": "2026-03-17",
+        "dateModified": "2026-03-17",
+        "author": { "@type": "Organization", "name": "Darsh Gupta", "url": "https://github.com/darshgupta" },
+        "publisher": { "@type": "Organization", "name": "Darsh Gupta", "url": "https://github.com/darshgupta", "logo": { "@type": "ImageObject", "url": "https://aurajs-delta.vercel.app/favicon.svg" } },
+        "mainEntityOfPage": "https://aurajs-delta.vercel.app/docs/mock.html",
+        "inLanguage": "en"
+      },
+      {
+        "@type": "BreadcrumbList",
+        "itemListElement": [
+          { "@type": "ListItem", "position": 1, "name": "Home", "item": "https://aurajs-delta.vercel.app/" },
+          { "@type": "ListItem", "position": 2, "name": "Docs", "item": "https://aurajs-delta.vercel.app/docs/router.html" },
+          { "@type": "ListItem", "position": 3, "name": "Mock API", "item": "https://aurajs-delta.vercel.app/docs/mock.html" }
+        ]
+      }
+    ]
+  }
+  </script>
+  <style>
+    *, *::before, *::after { margin: 0; padding: 0; box-sizing: border-box; }
+    :root {
+      --bg: #000000; --bg-card: #111111; --bg-code: #0d0d0d;
+      --text: #f5f5f7; --text-secondary: #86868b; --text-tertiary: #6e6e73;
+      --accent: #2997ff; --accent-hover: #0077ed; --green: #30d158;
+      --orange: #ff9f0a; --pink: #ff375f; --purple: #bf5af2; --teal: #64d2ff;
+      --border: #1d1d1f; --radius: 20px; --radius-sm: 12px; --radius-xs: 8px;
+      --font: -apple-system, BlinkMacSystemFont, 'SF Pro Display', 'Helvetica Neue', sans-serif;
+      --mono: 'SF Mono', SFMono-Regular, ui-monospace, 'Cascadia Code', Menlo, monospace;
+      --transition: 0.3s cubic-bezier(0.25, 0.1, 0.25, 1);
+    }
+    html { scroll-behavior: smooth; -webkit-font-smoothing: antialiased; }
+    body { font-family: var(--font); background: var(--bg); color: var(--text); line-height: 1.6; }
+    .doc-nav { position: fixed; top: 0; left: 0; right: 0; z-index: 100; backdrop-filter: saturate(180%) blur(20px); background: rgba(0,0,0,0.72); border-bottom: 0.5px solid rgba(255,255,255,0.08); }
+    .doc-nav-inner { max-width: 1200px; margin: 0 auto; padding: 0 24px; height: 52px; display: flex; align-items: center; gap: 24px; }
+    .doc-nav-logo { font-size: 20px; font-weight: 700; background: linear-gradient(135deg, var(--accent), var(--purple)); -webkit-background-clip: text; -webkit-text-fill-color: transparent; text-decoration: none; }
+    .doc-nav-links { display: flex; gap: 20px; list-style: none; margin-left: auto; }
+    .doc-nav-links a { color: var(--text-secondary); text-decoration: none; font-size: 14px; transition: color var(--transition); }
+    .doc-nav-links a:hover { color: var(--text); }
+    .doc-layout { display: grid; grid-template-columns: 240px 1fr; max-width: 1200px; margin: 0 auto; padding-top: 52px; min-height: 100vh; }
+    .doc-sidebar { position: sticky; top: 52px; height: calc(100vh - 52px); overflow-y: auto; padding: 32px 24px; border-right: 1px solid var(--border); }
+    .doc-sidebar h4 { font-size: 11px; font-weight: 600; text-transform: uppercase; letter-spacing: 0.08em; color: var(--text-tertiary); margin: 24px 0 8px; }
+    .doc-sidebar h4:first-child { margin-top: 0; }
+    .doc-sidebar a { display: block; padding: 6px 12px; border-radius: 6px; font-size: 13px; color: var(--text-secondary); text-decoration: none; transition: all 0.15s ease; }
+    .doc-sidebar a:hover { background: rgba(255,255,255,0.04); color: var(--text); }
+    .doc-sidebar a.active { background: rgba(41,151,255,0.1); color: var(--accent); }
+    .doc-content { padding: 48px 48px 120px; max-width: 800px; }
+    .doc-content h1 { font-size: 40px; font-weight: 700; letter-spacing: -0.03em; margin-bottom: 8px; }
+    .doc-content .doc-lead { font-size: 18px; color: var(--text-secondary); margin-bottom: 48px; line-height: 1.5; }
+    .doc-content h2 { font-size: 24px; font-weight: 600; letter-spacing: -0.02em; margin: 48px 0 16px; padding-bottom: 8px; border-bottom: 1px solid var(--border); }
+    .doc-content h3 { font-size: 18px; font-weight: 600; margin: 32px 0 12px; color: var(--text); }
+    .doc-content p { color: var(--text-secondary); margin-bottom: 16px; }
+    .doc-content ul, .doc-content ol { color: var(--text-secondary); margin-bottom: 16px; padding-left: 24px; }
+    .doc-content li { margin-bottom: 6px; }
+    .doc-content code { font-family: var(--mono); font-size: 13px; background: rgba(255,255,255,0.06); padding: 2px 7px; border-radius: 4px; color: var(--pink); }
+    .doc-content a { color: var(--accent); text-decoration: none; }
+    .code-block { background: var(--bg-code); border-radius: var(--radius-sm); border: 1px solid var(--border); margin-bottom: 24px; overflow: hidden; }
+    .code-header { display: flex; align-items: center; justify-content: space-between; padding: 10px 16px; border-bottom: 1px solid var(--border); background: rgba(255,255,255,0.02); }
+    .code-dots { display: flex; gap: 6px; }
+    .code-dot { width: 10px; height: 10px; border-radius: 50%; }
+    .code-dot:nth-child(1) { background: #ff5f57; }
+    .code-dot:nth-child(2) { background: #febc2e; }
+    .code-dot:nth-child(3) { background: #28c840; }
+    .code-lang { font-size: 12px; color: var(--text-tertiary); font-family: var(--mono); }
+    .code-body { padding: 16px; overflow-x: auto; }
+    .code-body pre { font-family: var(--mono); font-size: 13px; line-height: 1.7; color: var(--text-secondary); margin: 0; }
+    .code-body .kw { color: var(--pink); }
+    .code-body .fn { color: var(--accent); }
+    .code-body .str { color: var(--green); }
+    .code-body .cm { color: var(--text-tertiary); }
+    .code-body .num { color: var(--orange); }
+    .code-body .prop { color: var(--teal); }
+    .code-body .obj { color: var(--purple); }
+    .method-sig { background: rgba(41,151,255,0.06); border: 1px solid rgba(41,151,255,0.15); border-radius: var(--radius-xs); padding: 12px 16px; margin-bottom: 12px; font-family: var(--mono); font-size: 13px; color: var(--accent); overflow-x: auto; }
+    .param-table { width: 100%; border-collapse: collapse; margin-bottom: 24px; }
+    .param-table th { text-align: left; font-size: 12px; font-weight: 600; color: var(--text-tertiary); text-transform: uppercase; letter-spacing: 0.06em; padding: 8px 12px; border-bottom: 1px solid var(--border); }
+    .param-table td { padding: 10px 12px; border-bottom: 1px solid rgba(255,255,255,0.04); font-size: 14px; color: var(--text-secondary); }
+    .param-table td:first-child { font-family: var(--mono); font-size: 13px; color: var(--pink); }
+    .param-table td:nth-child(2) { font-family: var(--mono); font-size: 13px; color: var(--orange); }
+    .new-badge { display: inline-block; background: linear-gradient(135deg, var(--accent), var(--purple)); color: #fff; font-size: 11px; font-weight: 700; padding: 2px 8px; border-radius: 4px; letter-spacing: 0.04em; vertical-align: middle; margin-left: 8px; }
+    @media (max-width: 768px) { .doc-layout { grid-template-columns: 1fr; } .doc-sidebar { display: none; } .doc-content { padding: 24px; } }
+    ::-webkit-scrollbar { width: 8px; } ::-webkit-scrollbar-track { background: transparent; } ::-webkit-scrollbar-thumb { background: var(--border); border-radius: 4px; }
+  </style>
+</head>
+<body>
+  <nav class="doc-nav">
+    <div class="doc-nav-inner">
+      <a href="../index.html" class="doc-nav-logo">Aura.js</a>
+      <ul class="doc-nav-links">
+        <li><a href="../index.html">Home</a></li>
+        <li><a href="router.html">Router</a></li>
+        <li><a href="state.html">State</a></li>
+        <li><a href="events.html">Events</a></li>
+        <li><a href="template.html">Template</a></li>
+        <li><a href="api.html">API</a></li>
+        <li><a href="i18n.html">i18n</a></li>
+        <li><a href="mock.html">Mock</a></li>
+      </ul>
+    </div>
+  </nav>
+
+  <div class="doc-layout">
+    <aside class="doc-sidebar">
+      <h4>Modules</h4>
+      <a href="storage.html">Storage</a>
+      <a href="utils.html">Utilities</a>
+      <a class="active" href="mock.html">Mock API</a>
+      <a href="router.html">Router</a>
+      <a href="state.html">State</a>
+      <a href="events.html">Events</a>
+      <a href="template.html">Template</a>
+      <a href="api.html">API</a>
+      <a href="i18n.html">i18n</a>
+
+      <h4>On This Page</h4>
+      <a href="#overview">Overview</a>
+      <a href="#quick-start">Quick Start</a>
+      <a href="#register">register()</a>
+      <a href="#register-file">register() from file</a>
+      <a href="#load">load()</a>
+      <a href="#unregister">unregister()</a>
+      <a href="#clear">clear()</a>
+      <a href="#enable">enable()</a>
+      <a href="#disable">disable()</a>
+      <a href="#passthrough">passthrough()</a>
+      <a href="#save">save()</a>
+      <a href="#restore">restore()</a>
+      <a href="#clearSaved">clearSaved()</a>
+      <a href="#export">export()</a>
+      <a href="#import">import()</a>
+      <a href="#log">log</a>
+      <a href="#routes">routes</a>
+      <a href="#recipes">Recipes</a>
+    </aside>
+
+    <main class="doc-content">
+      <h1 id="overview">Mock API <span class="new-badge">NEW</span></h1>
+      <p class="doc-lead">
+        Intercept <code>fetch()</code> requests and return fake responses -- no server required.
+        Register mock routes with inline data or external JSON files, simulate network delays
+        and error codes, persist mocks across page reloads, and share them between team members
+        with export/import. Perfect for prototyping, testing, and offline development.
+      </p>
+
+      <!-- Quick Start -->
+      <h2 id="quick-start">Quick Start</h2>
+      <p>Three steps: register your mocks, enable interception, and use <code>fetch()</code> as usual.</p>
+      <div class="code-block">
+        <div class="code-header">
+          <div class="code-dots"><span class="code-dot"></span><span class="code-dot"></span><span class="code-dot"></span></div>
+          <span class="code-lang">js</span>
+        </div>
+        <div class="code-body"><pre><span class="kw">import</span> aura <span class="kw">from</span> <span class="str">'@buildwithdarsh/aura.js'</span>;
+
+<span class="cm">// 1. Register mock routes</span>
+aura.<span class="obj">mock</span>.<span class="fn">register</span>(<span class="str">'GET'</span>, <span class="str">'/api/users'</span>, {
+  <span class="prop">body</span>: [
+    { <span class="prop">id</span>: <span class="num">1</span>, <span class="prop">name</span>: <span class="str">'Alex'</span> },
+    { <span class="prop">id</span>: <span class="num">2</span>, <span class="prop">name</span>: <span class="str">'Jordan'</span> },
+  ],
+});
+
+<span class="cm">// 2. Enable interception</span>
+aura.<span class="obj">mock</span>.<span class="fn">enable</span>();
+
+<span class="cm">// 3. Use fetch normally -- it returns mock data!</span>
+<span class="kw">const</span> res = <span class="kw">await</span> <span class="fn">fetch</span>(<span class="str">'/api/users'</span>);
+<span class="kw">const</span> users = <span class="kw">await</span> res.<span class="fn">json</span>();
+console.<span class="fn">log</span>(users); <span class="cm">// [{ id: 1, name: "Alex" }, ...]</span></pre></div>
+      </div>
+
+      <!-- register() -->
+      <h2 id="register">register()</h2>
+      <p>Register a single mock route. The pattern supports <code>:param</code> segments (e.g. <code>/users/:id</code>) and <code>*</code> wildcards. If a route with the same method and pattern already exists, it is replaced.</p>
+
+      <h3>Inline data variant</h3>
+      <div class="method-sig">register(method: string, pattern: string, def?: MockDefinition): void</div>
+      <table class="param-table">
+        <thead><tr><th>Param</th><th>Type</th><th>Description</th></tr></thead>
+        <tbody>
+          <tr><td>method</td><td>string</td><td>HTTP method: <code>'GET'</code>, <code>'POST'</code>, <code>'PUT'</code>, <code>'DELETE'</code>, etc.</td></tr>
+          <tr><td>pattern</td><td>string</td><td>URL pattern. Supports <code>:param</code> and <code>*</code> wildcard.</td></tr>
+          <tr><td>def</td><td>MockDefinition?</td><td>Optional mock definition (see below).</td></tr>
+        </tbody>
+      </table>
+
+      <h3>MockDefinition</h3>
+      <table class="param-table">
+        <thead><tr><th>Property</th><th>Type</th><th>Description</th></tr></thead>
+        <tbody>
+          <tr><td>status</td><td>number?</td><td>HTTP status code. Default: <code>200</code>.</td></tr>
+          <tr><td>body</td><td>unknown?</td><td>Response body. Will be JSON-serialized. Can also be a function <code>(ctx) => value</code>.</td></tr>
+          <tr><td>headers</td><td>Record&lt;string, string&gt;?</td><td>Response headers. <code>Content-Type: application/json</code> is included by default.</td></tr>
+          <tr><td>delay</td><td>number?</td><td>Simulated network delay in ms. Default: <code>0</code>.</td></tr>
+        </tbody>
+      </table>
+
+      <div class="code-block">
+        <div class="code-header">
+          <div class="code-dots"><span class="code-dot"></span><span class="code-dot"></span><span class="code-dot"></span></div>
+          <span class="code-lang">js</span>
+        </div>
+        <div class="code-body"><pre><span class="cm">// Simple GET with body</span>
+aura.<span class="obj">mock</span>.<span class="fn">register</span>(<span class="str">'GET'</span>, <span class="str">'/api/users'</span>, {
+  <span class="prop">body</span>: [{ <span class="prop">id</span>: <span class="num">1</span>, <span class="prop">name</span>: <span class="str">'Alex'</span> }],
+});
+
+<span class="cm">// POST with custom status</span>
+aura.<span class="obj">mock</span>.<span class="fn">register</span>(<span class="str">'POST'</span>, <span class="str">'/api/users'</span>, {
+  <span class="prop">status</span>: <span class="num">201</span>,
+  <span class="prop">body</span>: { <span class="prop">id</span>: <span class="num">3</span>, <span class="prop">name</span>: <span class="str">'New User'</span> },
+});
+
+<span class="cm">// Dynamic route with :param</span>
+aura.<span class="obj">mock</span>.<span class="fn">register</span>(<span class="str">'GET'</span>, <span class="str">'/api/users/:id'</span>, {
+  <span class="prop">body</span>: { <span class="prop">id</span>: <span class="num">1</span>, <span class="prop">name</span>: <span class="str">'Alex'</span>, <span class="prop">email</span>: <span class="str">'alex@example.com'</span> },
+});
+
+<span class="cm">// Dynamic body using a function</span>
+aura.<span class="obj">mock</span>.<span class="fn">register</span>(<span class="str">'GET'</span>, <span class="str">'/api/users/:id'</span>, {
+  <span class="prop">body</span>: ({ <span class="prop">params</span> }) => ({
+    <span class="prop">id</span>: <span class="obj">Number</span>(params.<span class="prop">id</span>),
+    <span class="prop">name</span>: <span class="str">`User ${params.<span class="prop">id</span>}`</span>,
+  }),
+});
+
+<span class="cm">// Wildcard: catch all under /api/legacy/*</span>
+aura.<span class="obj">mock</span>.<span class="fn">register</span>(<span class="str">'GET'</span>, <span class="str">'/api/legacy/*'</span>, {
+  <span class="prop">status</span>: <span class="num">301</span>,
+  <span class="prop">headers</span>: { <span class="str">'Location'</span>: <span class="str">'/api/v2'</span> },
+});</pre></div>
+      </div>
+
+      <!-- register() from file -->
+      <h2 id="register-file">register() from file</h2>
+      <p>Instead of passing inline data, pass a file path string as the third argument. The JSON file is fetched once (using the real <code>fetch</code>) and cached as the response body.</p>
+      <div class="method-sig">register(method: string, pattern: string, filePath: string): void</div>
+      <table class="param-table">
+        <thead><tr><th>Param</th><th>Type</th><th>Description</th></tr></thead>
+        <tbody>
+          <tr><td>method</td><td>string</td><td>HTTP method.</td></tr>
+          <tr><td>pattern</td><td>string</td><td>URL pattern.</td></tr>
+          <tr><td>filePath</td><td>string</td><td>Path to a local JSON file (relative to your app root).</td></tr>
+        </tbody>
+      </table>
+      <div class="code-block">
+        <div class="code-header">
+          <div class="code-dots"><span class="code-dot"></span><span class="code-dot"></span><span class="code-dot"></span></div>
+          <span class="code-lang">js</span>
+        </div>
+        <div class="code-body"><pre><span class="cm">// Load mock data from a JSON file</span>
+aura.<span class="obj">mock</span>.<span class="fn">register</span>(<span class="str">'GET'</span>, <span class="str">'/api/products'</span>, <span class="str">'/mocks/products.json'</span>);
+aura.<span class="obj">mock</span>.<span class="fn">register</span>(<span class="str">'GET'</span>, <span class="str">'/api/categories'</span>, <span class="str">'/mocks/categories.json'</span>);
+
+<span class="cm">// The file is fetched with the real fetch (even if mocking is enabled)</span>
+<span class="cm">// and its parsed JSON becomes the response body</span></pre></div>
+      </div>
+
+      <!-- load() -->
+      <h2 id="load">load()</h2>
+      <p>Bulk-register multiple mocks in a single call. Keys use the format <code>"METHOD /path"</code>. Values can be <code>MockDefinition</code> objects or file path strings.</p>
+      <div class="method-sig">load(definitions: Record&lt;string, MockDefinition | string&gt;): void</div>
+      <table class="param-table">
+        <thead><tr><th>Param</th><th>Type</th><th>Description</th></tr></thead>
+        <tbody>
+          <tr><td>definitions</td><td>Record&lt;string, MockDefinition | string&gt;</td><td>Map of <code>"METHOD /path"</code> to definition or file path.</td></tr>
+        </tbody>
+      </table>
+      <div class="code-block">
+        <div class="code-header">
+          <div class="code-dots"><span class="code-dot"></span><span class="code-dot"></span><span class="code-dot"></span></div>
+          <span class="code-lang">js</span>
+        </div>
+        <div class="code-body"><pre>aura.<span class="obj">mock</span>.<span class="fn">load</span>({
+  <span class="str">'GET /api/users'</span>:      { <span class="prop">body</span>: [{ <span class="prop">id</span>: <span class="num">1</span>, <span class="prop">name</span>: <span class="str">'Alex'</span> }] },
+  <span class="str">'POST /api/users'</span>:     { <span class="prop">status</span>: <span class="num">201</span>, <span class="prop">body</span>: { <span class="prop">id</span>: <span class="num">2</span> } },
+  <span class="str">'GET /api/users/:id'</span>:  { <span class="prop">body</span>: { <span class="prop">id</span>: <span class="num">1</span>, <span class="prop">name</span>: <span class="str">'Alex'</span> } },
+  <span class="str">'DELETE /api/users/:id'</span>: { <span class="prop">status</span>: <span class="num">204</span> },
+  <span class="str">'GET /api/products'</span>:   <span class="str">'/mocks/products.json'</span>,
+});</pre></div>
+      </div>
+
+      <!-- unregister() -->
+      <h2 id="unregister">unregister()</h2>
+      <p>Remove a specific mock by its method and pattern.</p>
+      <div class="method-sig">unregister(method: string, pattern: string): boolean</div>
+      <table class="param-table">
+        <thead><tr><th>Param</th><th>Type</th><th>Description</th></tr></thead>
+        <tbody>
+          <tr><td>method</td><td>string</td><td>HTTP method.</td></tr>
+          <tr><td>pattern</td><td>string</td><td>The exact pattern string used during registration.</td></tr>
+        </tbody>
+      </table>
+      <p><strong>Returns:</strong> <code>true</code> if the mock was found and removed, <code>false</code> otherwise.</p>
+      <div class="code-block">
+        <div class="code-header">
+          <div class="code-dots"><span class="code-dot"></span><span class="code-dot"></span><span class="code-dot"></span></div>
+          <span class="code-lang">js</span>
+        </div>
+        <div class="code-body"><pre>aura.<span class="obj">mock</span>.<span class="fn">unregister</span>(<span class="str">'GET'</span>, <span class="str">'/api/users'</span>);    <span class="cm">// true</span>
+aura.<span class="obj">mock</span>.<span class="fn">unregister</span>(<span class="str">'GET'</span>, <span class="str">'/api/nothing'</span>);   <span class="cm">// false (not found)</span></pre></div>
+      </div>
+
+      <!-- clear() -->
+      <h2 id="clear">clear()</h2>
+      <p>Remove all registered mocks and clear the request log.</p>
+      <div class="method-sig">clear(): void</div>
+      <div class="code-block">
+        <div class="code-header">
+          <div class="code-dots"><span class="code-dot"></span><span class="code-dot"></span><span class="code-dot"></span></div>
+          <span class="code-lang">js</span>
+        </div>
+        <div class="code-body"><pre>aura.<span class="obj">mock</span>.<span class="fn">clear</span>();
+console.<span class="fn">log</span>(aura.<span class="obj">mock</span>.<span class="prop">routes</span>.<span class="prop">length</span>); <span class="cm">// 0</span>
+console.<span class="fn">log</span>(aura.<span class="obj">mock</span>.<span class="prop">log</span>.<span class="prop">length</span>);    <span class="cm">// 0</span></pre></div>
+      </div>
+
+      <!-- enable() -->
+      <h2 id="enable">enable()</h2>
+      <p>Activate mock interception by replacing <code>window.fetch</code> with the mock handler. The original <code>fetch</code> is preserved internally and restored when you call <code>disable()</code>. Calling <code>enable()</code> when already enabled is a no-op.</p>
+      <div class="method-sig">enable(): void</div>
+      <div class="code-block">
+        <div class="code-header">
+          <div class="code-dots"><span class="code-dot"></span><span class="code-dot"></span><span class="code-dot"></span></div>
+          <span class="code-lang">js</span>
+        </div>
+        <div class="code-body"><pre>aura.<span class="obj">mock</span>.<span class="fn">enable</span>();
+console.<span class="fn">log</span>(aura.<span class="obj">mock</span>.<span class="prop">enabled</span>); <span class="cm">// true</span>
+
+<span class="cm">// All fetch() calls now go through the mock layer</span>
+<span class="kw">const</span> res = <span class="kw">await</span> <span class="fn">fetch</span>(<span class="str">'/api/users'</span>); <span class="cm">// returns mock data</span></pre></div>
+      </div>
+
+      <!-- disable() -->
+      <h2 id="disable">disable()</h2>
+      <p>Deactivate mock interception and restore the original <code>window.fetch</code>. Calling <code>disable()</code> when not enabled is a no-op.</p>
+      <div class="method-sig">disable(): void</div>
+      <div class="code-block">
+        <div class="code-header">
+          <div class="code-dots"><span class="code-dot"></span><span class="code-dot"></span><span class="code-dot"></span></div>
+          <span class="code-lang">js</span>
+        </div>
+        <div class="code-body"><pre>aura.<span class="obj">mock</span>.<span class="fn">disable</span>();
+console.<span class="fn">log</span>(aura.<span class="obj">mock</span>.<span class="prop">enabled</span>); <span class="cm">// false</span>
+
+<span class="cm">// fetch() now hits real endpoints again</span></pre></div>
+      </div>
+
+      <!-- passthrough() -->
+      <h2 id="passthrough">passthrough()</h2>
+      <p>Add URL prefixes that should always bypass mock interception and hit the real network, even when mocking is enabled. Useful for auth endpoints, CDN assets, or analytics.</p>
+      <div class="method-sig">passthrough(...prefixes: string[]): void</div>
+      <table class="param-table">
+        <thead><tr><th>Param</th><th>Type</th><th>Description</th></tr></thead>
+        <tbody>
+          <tr><td>...prefixes</td><td>string[]</td><td>One or more URL prefixes to pass through.</td></tr>
+        </tbody>
+      </table>
+      <div class="code-block">
+        <div class="code-header">
+          <div class="code-dots"><span class="code-dot"></span><span class="code-dot"></span><span class="code-dot"></span></div>
+          <span class="code-lang">js</span>
+        </div>
+        <div class="code-body"><pre><span class="cm">// These prefixes will always use the real fetch</span>
+aura.<span class="obj">mock</span>.<span class="fn">passthrough</span>(
+  <span class="str">'/api/auth'</span>,
+  <span class="str">'https://cdn.example.com'</span>,
+  <span class="str">'/analytics'</span>
+);
+
+aura.<span class="obj">mock</span>.<span class="fn">enable</span>();
+
+<span class="cm">// This hits a mock (if registered)</span>
+<span class="kw">await</span> <span class="fn">fetch</span>(<span class="str">'/api/users'</span>);
+
+<span class="cm">// This always hits the real server</span>
+<span class="kw">await</span> <span class="fn">fetch</span>(<span class="str">'/api/auth/login'</span>);</pre></div>
+      </div>
+
+      <!-- save() -->
+      <h2 id="save">save()</h2>
+      <p>Persist all current mock definitions to <code>localStorage</code> under the key <code>__aura_mocks__</code>. Use this to preserve your mock setup across page reloads.</p>
+      <div class="method-sig">save(): void</div>
+      <div class="code-block">
+        <div class="code-header">
+          <div class="code-dots"><span class="code-dot"></span><span class="code-dot"></span><span class="code-dot"></span></div>
+          <span class="code-lang">js</span>
+        </div>
+        <div class="code-body"><pre><span class="cm">// Register mocks, then save</span>
+aura.<span class="obj">mock</span>.<span class="fn">load</span>({ <span class="str">'GET /api/users'</span>: { <span class="prop">body</span>: [] } });
+aura.<span class="obj">mock</span>.<span class="fn">save</span>();
+
+<span class="cm">// Mocks survive page refresh!</span></pre></div>
+      </div>
+
+      <!-- restore() -->
+      <h2 id="restore">restore()</h2>
+      <p>Load and register mocks previously saved to <code>localStorage</code>. By default, also calls <code>enable()</code> to activate interception immediately.</p>
+      <div class="method-sig">restore(autoEnable?: boolean): boolean</div>
+      <table class="param-table">
+        <thead><tr><th>Param</th><th>Type</th><th>Description</th></tr></thead>
+        <tbody>
+          <tr><td>autoEnable</td><td>boolean</td><td>Automatically call <code>enable()</code> after restoring. Default: <code>true</code>.</td></tr>
+        </tbody>
+      </table>
+      <p><strong>Returns:</strong> <code>true</code> if mocks were found and restored, <code>false</code> if nothing was saved.</p>
+      <div class="code-block">
+        <div class="code-header">
+          <div class="code-dots"><span class="code-dot"></span><span class="code-dot"></span><span class="code-dot"></span></div>
+          <span class="code-lang">js</span>
+        </div>
+        <div class="code-body"><pre><span class="cm">// On app startup, restore any saved mocks</span>
+<span class="kw">if</span> (aura.<span class="obj">mock</span>.<span class="fn">restore</span>()) {
+  console.<span class="fn">log</span>(<span class="str">'Mocks restored and enabled!'</span>);
+}
+
+<span class="cm">// Restore without auto-enabling</span>
+aura.<span class="obj">mock</span>.<span class="fn">restore</span>(<span class="kw">false</span>);
+<span class="cm">// Mocks are loaded but fetch is not intercepted yet</span></pre></div>
+      </div>
+
+      <!-- clearSaved() -->
+      <h2 id="clearSaved">clearSaved()</h2>
+      <p>Remove persisted mocks from <code>localStorage</code>. Does not affect the currently registered in-memory mocks.</p>
+      <div class="method-sig">clearSaved(): void</div>
+      <div class="code-block">
+        <div class="code-header">
+          <div class="code-dots"><span class="code-dot"></span><span class="code-dot"></span><span class="code-dot"></span></div>
+          <span class="code-lang">js</span>
+        </div>
+        <div class="code-body"><pre>aura.<span class="obj">mock</span>.<span class="fn">clearSaved</span>();
+<span class="cm">// localStorage key "__aura_mocks__" is removed</span></pre></div>
+      </div>
+
+      <!-- export() -->
+      <h2 id="export">export()</h2>
+      <p>Serialize all registered mocks to a JSON string. The output uses the same <code>"METHOD /path"</code> format as <code>load()</code>, making it easy to share mock configurations between developers.</p>
+      <div class="method-sig">export(): string</div>
+      <p><strong>Returns:</strong> A pretty-printed JSON string.</p>
+      <div class="code-block">
+        <div class="code-header">
+          <div class="code-dots"><span class="code-dot"></span><span class="code-dot"></span><span class="code-dot"></span></div>
+          <span class="code-lang">js</span>
+        </div>
+        <div class="code-body"><pre><span class="kw">const</span> json = aura.<span class="obj">mock</span>.<span class="fn">export</span>();
+console.<span class="fn">log</span>(json);
+<span class="cm">// {</span>
+<span class="cm">//   "GET /api/users": {</span>
+<span class="cm">//     "status": 200,</span>
+<span class="cm">//     "body": [{ "id": 1, "name": "Alex" }],</span>
+<span class="cm">//     "headers": { "Content-Type": "application/json" },</span>
+<span class="cm">//     "delay": 0</span>
+<span class="cm">//   }</span>
+<span class="cm">// }</span>
+
+<span class="cm">// Copy to clipboard for a teammate</span>
+navigator.<span class="obj">clipboard</span>.<span class="fn">writeText</span>(json);</pre></div>
+      </div>
+
+      <!-- import() -->
+      <h2 id="import">import()</h2>
+      <p>Import mocks from a JSON string (typically the output of <code>export()</code>). Internally calls <code>load()</code>, so existing mocks with the same method/pattern are replaced.</p>
+      <div class="method-sig">import(json: string): void</div>
+      <table class="param-table">
+        <thead><tr><th>Param</th><th>Type</th><th>Description</th></tr></thead>
+        <tbody>
+          <tr><td>json</td><td>string</td><td>A JSON string in the <code>"METHOD /path"</code> format.</td></tr>
+        </tbody>
+      </table>
+      <div class="code-block">
+        <div class="code-header">
+          <div class="code-dots"><span class="code-dot"></span><span class="code-dot"></span><span class="code-dot"></span></div>
+          <span class="code-lang">js</span>
+        </div>
+        <div class="code-body"><pre><span class="cm">// Paste a teammate's exported JSON</span>
+<span class="kw">const</span> shared = <span class="str">`{
+  "GET /api/todos": { "body": [{ "id": 1, "text": "Ship it" }] },
+  "POST /api/todos": { "status": 201, "body": { "id": 2 } }
+}`</span>;
+
+aura.<span class="obj">mock</span>.<span class="fn">import</span>(shared);
+aura.<span class="obj">mock</span>.<span class="fn">enable</span>();</pre></div>
+      </div>
+
+      <!-- log -->
+      <h2 id="log">log (property)</h2>
+      <p>A read-only array of every request that has been intercepted since mocking was enabled. Each entry records the method, URL, whether it matched a registered mock, and the timestamp.</p>
+      <div class="method-sig">get log: ReadonlyArray&lt;{ method: string; url: string; matched: boolean; timestamp: number }&gt;</div>
+      <div class="code-block">
+        <div class="code-header">
+          <div class="code-dots"><span class="code-dot"></span><span class="code-dot"></span><span class="code-dot"></span></div>
+          <span class="code-lang">js</span>
+        </div>
+        <div class="code-body"><pre><span class="cm">// After some fetch calls...</span>
+console.<span class="fn">table</span>(aura.<span class="obj">mock</span>.<span class="prop">log</span>);
+<span class="cm">// [</span>
+<span class="cm">//   { method: "GET", url: "/api/users", matched: true, timestamp: 1710672000000 },</span>
+<span class="cm">//   { method: "GET", url: "/api/unknown", matched: false, timestamp: 1710672001000 },</span>
+<span class="cm">// ]</span>
+
+<span class="cm">// Filter to see only unmatched requests (fell through to real fetch)</span>
+<span class="kw">const</span> missed = aura.<span class="obj">mock</span>.<span class="prop">log</span>.<span class="fn">filter</span>(e => !e.<span class="prop">matched</span>);
+console.<span class="fn">log</span>(<span class="str">'Unhandled requests:'</span>, missed);</pre></div>
+      </div>
+
+      <!-- routes -->
+      <h2 id="routes">routes (property)</h2>
+      <p>A read-only array of all registered <code>MockRoute</code> definitions. Useful for debugging or displaying a list of available mocks.</p>
+      <div class="method-sig">get routes: MockRoute[]</div>
+      <p>Each <code>MockRoute</code> contains: <code>method</code>, <code>pattern</code>, <code>status</code>, <code>body</code>, <code>headers</code>, and <code>delay</code>.</p>
+      <div class="code-block">
+        <div class="code-header">
+          <div class="code-dots"><span class="code-dot"></span><span class="code-dot"></span><span class="code-dot"></span></div>
+          <span class="code-lang">js</span>
+        </div>
+        <div class="code-body"><pre>console.<span class="fn">table</span>(aura.<span class="obj">mock</span>.<span class="prop">routes</span>);
+<span class="cm">// [</span>
+<span class="cm">//   { method: "GET", pattern: "/api/users", status: 200, delay: 0, ... },</span>
+<span class="cm">//   { method: "POST", pattern: "/api/users", status: 201, delay: 0, ... },</span>
+<span class="cm">// ]</span>
+
+console.<span class="fn">log</span>(<span class="str">`${aura.<span class="obj">mock</span>.<span class="prop">routes</span>.<span class="prop">length</span>} mocks registered`</span>);</pre></div>
+      </div>
+
+      <!-- enabled -->
+      <h3>enabled (property)</h3>
+      <p>A boolean getter indicating whether mock interception is currently active.</p>
+      <div class="method-sig">get enabled: boolean</div>
+      <div class="code-block">
+        <div class="code-header">
+          <div class="code-dots"><span class="code-dot"></span><span class="code-dot"></span><span class="code-dot"></span></div>
+          <span class="code-lang">js</span>
+        </div>
+        <div class="code-body"><pre>console.<span class="fn">log</span>(aura.<span class="obj">mock</span>.<span class="prop">enabled</span>); <span class="cm">// false</span>
+aura.<span class="obj">mock</span>.<span class="fn">enable</span>();
+console.<span class="fn">log</span>(aura.<span class="obj">mock</span>.<span class="prop">enabled</span>); <span class="cm">// true</span></pre></div>
+      </div>
+
+      <!-- ===== RECIPES ===== -->
+      <h2 id="recipes">Recipes</h2>
+
+      <!-- Recipe: Mock entire backend -->
+      <h3>Mock an entire backend</h3>
+      <p>Use <code>load()</code> to define your complete API surface in one place. Combine inline data with JSON files for large datasets.</p>
+      <div class="code-block">
+        <div class="code-header">
+          <div class="code-dots"><span class="code-dot"></span><span class="code-dot"></span><span class="code-dot"></span></div>
+          <span class="code-lang">js — mocks/setup.js</span>
+        </div>
+        <div class="code-body"><pre><span class="kw">import</span> aura <span class="kw">from</span> <span class="str">'@buildwithdarsh/aura.js'</span>;
+
+aura.<span class="obj">mock</span>.<span class="fn">load</span>({
+  <span class="cm">// Auth</span>
+  <span class="str">'POST /api/auth/login'</span>: {
+    <span class="prop">body</span>: { <span class="prop">token</span>: <span class="str">'mock-jwt-token'</span>, <span class="prop">user</span>: { <span class="prop">id</span>: <span class="num">1</span>, <span class="prop">name</span>: <span class="str">'Alex'</span> } },
+  },
+  <span class="str">'POST /api/auth/logout'</span>: { <span class="prop">status</span>: <span class="num">204</span> },
+
+  <span class="cm">// Users</span>
+  <span class="str">'GET /api/users'</span>:        <span class="str">'/mocks/users.json'</span>,
+  <span class="str">'GET /api/users/:id'</span>:    { <span class="prop">body</span>: { <span class="prop">id</span>: <span class="num">1</span>, <span class="prop">name</span>: <span class="str">'Alex'</span> } },
+  <span class="str">'POST /api/users'</span>:       { <span class="prop">status</span>: <span class="num">201</span>, <span class="prop">body</span>: { <span class="prop">id</span>: <span class="num">99</span> } },
+  <span class="str">'PUT /api/users/:id'</span>:    { <span class="prop">body</span>: { <span class="prop">ok</span>: <span class="kw">true</span> } },
+  <span class="str">'DELETE /api/users/:id'</span>:  { <span class="prop">status</span>: <span class="num">204</span> },
+
+  <span class="cm">// Products</span>
+  <span class="str">'GET /api/products'</span>:     <span class="str">'/mocks/products.json'</span>,
+  <span class="str">'GET /api/products/:id'</span>: <span class="str">'/mocks/product-detail.json'</span>,
+});
+
+aura.<span class="obj">mock</span>.<span class="fn">enable</span>();
+<span class="kw">export default</span> aura;</pre></div>
+      </div>
+
+      <!-- Recipe: Simulate errors -->
+      <h3>Simulate errors</h3>
+      <p>Test how your app handles different HTTP error codes by setting the <code>status</code> field.</p>
+      <div class="code-block">
+        <div class="code-header">
+          <div class="code-dots"><span class="code-dot"></span><span class="code-dot"></span><span class="code-dot"></span></div>
+          <span class="code-lang">js</span>
+        </div>
+        <div class="code-body"><pre><span class="cm">// 401 Unauthorized</span>
+aura.<span class="obj">mock</span>.<span class="fn">register</span>(<span class="str">'GET'</span>, <span class="str">'/api/profile'</span>, {
+  <span class="prop">status</span>: <span class="num">401</span>,
+  <span class="prop">body</span>: { <span class="prop">error</span>: <span class="str">'Token expired'</span> },
+});
+
+<span class="cm">// 500 Internal Server Error</span>
+aura.<span class="obj">mock</span>.<span class="fn">register</span>(<span class="str">'POST'</span>, <span class="str">'/api/checkout'</span>, {
+  <span class="prop">status</span>: <span class="num">500</span>,
+  <span class="prop">body</span>: { <span class="prop">error</span>: <span class="str">'Payment gateway timeout'</span> },
+});
+
+<span class="cm">// 422 Validation Error</span>
+aura.<span class="obj">mock</span>.<span class="fn">register</span>(<span class="str">'POST'</span>, <span class="str">'/api/users'</span>, {
+  <span class="prop">status</span>: <span class="num">422</span>,
+  <span class="prop">body</span>: {
+    <span class="prop">errors</span>: {
+      <span class="prop">email</span>: [<span class="str">'Email is already taken'</span>],
+      <span class="prop">name</span>: [<span class="str">'Name is required'</span>],
+    },
+  },
+});
+
+<span class="cm">// 404 Not Found</span>
+aura.<span class="obj">mock</span>.<span class="fn">register</span>(<span class="str">'GET'</span>, <span class="str">'/api/users/:id'</span>, {
+  <span class="prop">status</span>: <span class="num">404</span>,
+  <span class="prop">body</span>: { <span class="prop">error</span>: <span class="str">'User not found'</span> },
+});</pre></div>
+      </div>
+
+      <!-- Recipe: Add network delay -->
+      <h3>Add network delay</h3>
+      <p>Use the <code>delay</code> field to simulate slow networks or loading states. This is invaluable for testing skeleton screens, spinners, and timeout handling.</p>
+      <div class="code-block">
+        <div class="code-header">
+          <div class="code-dots"><span class="code-dot"></span><span class="code-dot"></span><span class="code-dot"></span></div>
+          <span class="code-lang">js</span>
+        </div>
+        <div class="code-body"><pre><span class="cm">// Simulate a slow API (2 seconds)</span>
+aura.<span class="obj">mock</span>.<span class="fn">register</span>(<span class="str">'GET'</span>, <span class="str">'/api/dashboard'</span>, {
+  <span class="prop">delay</span>: <span class="num">2000</span>,
+  <span class="prop">body</span>: { <span class="prop">stats</span>: { <span class="prop">users</span>: <span class="num">1420</span>, <span class="prop">revenue</span>: <span class="num">52300</span> } },
+});
+
+<span class="cm">// Simulate a very slow file upload (5 seconds)</span>
+aura.<span class="obj">mock</span>.<span class="fn">register</span>(<span class="str">'POST'</span>, <span class="str">'/api/upload'</span>, {
+  <span class="prop">delay</span>: <span class="num">5000</span>,
+  <span class="prop">status</span>: <span class="num">201</span>,
+  <span class="prop">body</span>: { <span class="prop">url</span>: <span class="str">'https://cdn.example.com/file.pdf'</span> },
+});
+
+<span class="cm">// Add a small realistic delay to all mocks</span>
+aura.<span class="obj">mock</span>.<span class="fn">load</span>({
+  <span class="str">'GET /api/users'</span>:    { <span class="prop">delay</span>: <span class="num">200</span>, <span class="prop">body</span>: [] },
+  <span class="str">'GET /api/posts'</span>:    { <span class="prop">delay</span>: <span class="num">150</span>, <span class="prop">body</span>: [] },
+  <span class="str">'GET /api/comments'</span>: { <span class="prop">delay</span>: <span class="num">300</span>, <span class="prop">body</span>: [] },
+});</pre></div>
+      </div>
+
+      <!-- Recipe: Dev/prod toggle -->
+      <h3>Dev/prod toggle</h3>
+      <p>Conditionally enable mocking based on environment, URL parameters, or localStorage flags.</p>
+      <div class="code-block">
+        <div class="code-header">
+          <div class="code-dots"><span class="code-dot"></span><span class="code-dot"></span><span class="code-dot"></span></div>
+          <span class="code-lang">js — main.js</span>
+        </div>
+        <div class="code-body"><pre><span class="kw">import</span> aura <span class="kw">from</span> <span class="str">'@buildwithdarsh/aura.js'</span>;
+
+<span class="cm">// Option 1: Environment variable</span>
+<span class="kw">if</span> (import.meta.<span class="prop">env</span>.<span class="prop">DEV</span>) {
+  <span class="kw">await</span> <span class="kw">import</span>(<span class="str">'./mocks/setup.js'</span>);
+}
+
+<span class="cm">// Option 2: URL param — add ?mock to any page</span>
+<span class="kw">if</span> (<span class="kw">new</span> <span class="obj">URLSearchParams</span>(location.<span class="prop">search</span>).<span class="fn">has</span>(<span class="str">'mock'</span>)) {
+  <span class="kw">await</span> <span class="kw">import</span>(<span class="str">'./mocks/setup.js'</span>);
+}
+
+<span class="cm">// Option 3: Restore from localStorage (saved from a previous session)</span>
+aura.<span class="obj">mock</span>.<span class="fn">restore</span>();
+
+<span class="cm">// Option 4: Combine — use saved mocks in dev, nothing in prod</span>
+<span class="kw">if</span> (import.meta.<span class="prop">env</span>.<span class="prop">DEV</span>) {
+  <span class="kw">if</span> (!aura.<span class="obj">mock</span>.<span class="fn">restore</span>()) {
+    <span class="cm">// No saved mocks — load defaults</span>
+    <span class="kw">await</span> <span class="kw">import</span>(<span class="str">'./mocks/setup.js'</span>);
+  }
+}
+
+<span class="cm">// Handy: expose to browser console for on-the-fly toggling</span>
+window.<span class="prop">__mock</span> = aura.<span class="obj">mock</span>;
+<span class="cm">// Then in DevTools: __mock.disable() / __mock.enable()</span></pre></div>
+      </div>
+
+      <!-- Recipe: Share between devs -->
+      <h3>Share mocks between developers</h3>
+      <p>Use <code>export()</code> and <code>import()</code> to share mock configurations via Slack, email, or version control.</p>
+      <div class="code-block">
+        <div class="code-header">
+          <div class="code-dots"><span class="code-dot"></span><span class="code-dot"></span><span class="code-dot"></span></div>
+          <span class="code-lang">js</span>
+        </div>
+        <div class="code-body"><pre><span class="cm">// Developer A: export and copy to clipboard</span>
+<span class="kw">const</span> json = aura.<span class="obj">mock</span>.<span class="fn">export</span>();
+navigator.<span class="obj">clipboard</span>.<span class="fn">writeText</span>(json);
+console.<span class="fn">log</span>(<span class="str">'Mocks copied! Send to your teammate.'</span>);
+
+<span class="cm">// Developer B: paste and import</span>
+<span class="kw">const</span> pasted = <span class="kw">await</span> navigator.<span class="obj">clipboard</span>.<span class="fn">readText</span>();
+aura.<span class="obj">mock</span>.<span class="fn">import</span>(pasted);
+aura.<span class="obj">mock</span>.<span class="fn">enable</span>();
+
+<span class="cm">// Or save the JSON as a file in your repo</span>
+<span class="cm">// mocks/shared-mocks.json</span>
+<span class="cm">// Then load at startup:</span>
+<span class="kw">const</span> res = <span class="kw">await</span> <span class="fn">fetch</span>(<span class="str">'/mocks/shared-mocks.json'</span>);
+<span class="kw">const</span> defs = <span class="kw">await</span> res.<span class="fn">text</span>();
+aura.<span class="obj">mock</span>.<span class="fn">import</span>(defs);
+aura.<span class="obj">mock</span>.<span class="fn">enable</span>();</pre></div>
+      </div>
+
+    </main>
+  </div>
+</body>
+</html>

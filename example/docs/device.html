@@ -1,0 +1,463 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+  <title>Device — Aura.js Docs</title>
+  <meta name="description" content="Aura.js Device API — simple device detection, network info, battery status, dark mode, online/offline monitoring, and browser fingerprinting. Full reference." />
+  <meta name="robots" content="index, follow" />
+  <meta property="og:title" content="Device — Aura.js Docs" />
+  <meta property="og:description" content="Aura.js Device API — simple device detection, network info, battery status, dark mode, online/offline monitoring, and browser fingerprinting. Full reference." />
+  <meta property="og:type" content="article" />
+  <meta property="og:url" content="https://aurajs-delta.vercel.app/docs/device.html" />
+  <meta property="og:image" content="https://aurajs-delta.vercel.app/og-image.png" />
+  <meta property="og:site_name" content="Aura.js" />
+  <meta name="twitter:card" content="summary_large_image" />
+  <meta name="twitter:title" content="Device — Aura.js Docs" />
+  <meta name="twitter:description" content="Aura.js Device API — simple device detection, network info, battery status, dark mode, online/offline monitoring, and browser fingerprinting. Full reference." />
+  <meta name="twitter:image" content="https://aurajs-delta.vercel.app/og-image.png" />
+  <link rel="canonical" href="https://aurajs-delta.vercel.app/docs/device.html" />
+  <link rel="icon" href="../favicon.svg" type="image/svg+xml" />
+  <script type="application/ld+json">
+  {
+    "@context": "https://schema.org",
+    "@graph": [
+      {
+        "@type": "TechArticle",
+        "headline": "Device — Aura.js Docs",
+        "description": "Aura.js Device API — simple device detection, network info, battery status, dark mode, online/offline monitoring, and browser fingerprinting.",
+        "url": "https://aurajs-delta.vercel.app/docs/device.html",
+        "image": "https://aurajs-delta.vercel.app/og-image.png",
+        "datePublished": "2026-03-17",
+        "dateModified": "2026-03-17",
+        "author": { "@type": "Organization", "name": "Darsh Gupta", "url": "https://github.com/darshgupta" },
+        "publisher": { "@type": "Organization", "name": "Darsh Gupta", "url": "https://github.com/darshgupta", "logo": { "@type": "ImageObject", "url": "https://aurajs-delta.vercel.app/favicon.svg" } },
+        "mainEntityOfPage": "https://aurajs-delta.vercel.app/docs/device.html",
+        "inLanguage": "en"
+      },
+      {
+        "@type": "BreadcrumbList",
+        "itemListElement": [
+          { "@type": "ListItem", "position": 1, "name": "Home", "item": "https://aurajs-delta.vercel.app/" },
+          { "@type": "ListItem", "position": 2, "name": "Docs", "item": "https://aurajs-delta.vercel.app/docs/router.html" },
+          { "@type": "ListItem", "position": 3, "name": "Device", "item": "https://aurajs-delta.vercel.app/docs/device.html" }
+        ]
+      }
+    ]
+  }
+  </script>
+  <style>
+    *, *::before, *::after { margin: 0; padding: 0; box-sizing: border-box; }
+    :root {
+      --bg: #000000; --bg-card: #111111; --bg-code: #0d0d0d;
+      --text: #f5f5f7; --text-secondary: #86868b; --text-tertiary: #6e6e73;
+      --accent: #2997ff; --accent-hover: #0077ed; --green: #30d158;
+      --orange: #ff9f0a; --pink: #ff375f; --purple: #bf5af2; --teal: #64d2ff;
+      --border: #1d1d1f; --radius: 20px; --radius-sm: 12px; --radius-xs: 8px;
+      --font: -apple-system, BlinkMacSystemFont, 'SF Pro Display', 'Helvetica Neue', sans-serif;
+      --mono: 'SF Mono', SFMono-Regular, ui-monospace, 'Cascadia Code', Menlo, monospace;
+      --transition: 0.3s cubic-bezier(0.25, 0.1, 0.25, 1);
+    }
+    html { scroll-behavior: smooth; -webkit-font-smoothing: antialiased; }
+    body { font-family: var(--font); background: var(--bg); color: var(--text); line-height: 1.6; }
+    .doc-nav { position: fixed; top: 0; left: 0; right: 0; z-index: 100; backdrop-filter: saturate(180%) blur(20px); background: rgba(0,0,0,0.72); border-bottom: 0.5px solid rgba(255,255,255,0.08); }
+    .doc-nav-inner { max-width: 1200px; margin: 0 auto; padding: 0 24px; height: 52px; display: flex; align-items: center; gap: 24px; }
+    .doc-nav-logo { font-size: 20px; font-weight: 700; background: linear-gradient(135deg, var(--accent), var(--purple)); -webkit-background-clip: text; -webkit-text-fill-color: transparent; text-decoration: none; }
+    .doc-nav-links { display: flex; gap: 20px; list-style: none; margin-left: auto; }
+    .doc-nav-links a { color: var(--text-secondary); text-decoration: none; font-size: 14px; transition: color var(--transition); }
+    .doc-nav-links a:hover { color: var(--text); }
+    .doc-layout { display: grid; grid-template-columns: 240px 1fr; max-width: 1200px; margin: 0 auto; padding-top: 52px; min-height: 100vh; }
+    .doc-sidebar { position: sticky; top: 52px; height: calc(100vh - 52px); overflow-y: auto; padding: 32px 24px; border-right: 1px solid var(--border); }
+    .doc-sidebar h4 { font-size: 11px; font-weight: 600; text-transform: uppercase; letter-spacing: 0.08em; color: var(--text-tertiary); margin: 24px 0 8px; }
+    .doc-sidebar h4:first-child { margin-top: 0; }
+    .doc-sidebar a { display: block; padding: 6px 12px; border-radius: 6px; font-size: 13px; color: var(--text-secondary); text-decoration: none; transition: all 0.15s ease; }
+    .doc-sidebar a:hover { background: rgba(255,255,255,0.04); color: var(--text); }
+    .doc-sidebar a.active { background: rgba(41,151,255,0.1); color: var(--accent); }
+    .doc-content { padding: 48px 48px 120px; max-width: 800px; }
+    .doc-content h1 { font-size: 40px; font-weight: 700; letter-spacing: -0.03em; margin-bottom: 8px; }
+    .doc-content .doc-lead { font-size: 18px; color: var(--text-secondary); margin-bottom: 48px; line-height: 1.5; }
+    .doc-content h2 { font-size: 24px; font-weight: 600; letter-spacing: -0.02em; margin: 48px 0 16px; padding-bottom: 8px; border-bottom: 1px solid var(--border); }
+    .doc-content h3 { font-size: 18px; font-weight: 600; margin: 32px 0 12px; color: var(--text); }
+    .doc-content p { color: var(--text-secondary); margin-bottom: 16px; }
+    .doc-content ul, .doc-content ol { color: var(--text-secondary); margin-bottom: 16px; padding-left: 24px; }
+    .doc-content li { margin-bottom: 6px; }
+    .doc-content code { font-family: var(--mono); font-size: 13px; background: rgba(255,255,255,0.06); padding: 2px 7px; border-radius: 4px; color: var(--pink); }
+    .doc-content a { color: var(--accent); text-decoration: none; }
+    .code-block { background: var(--bg-code); border-radius: var(--radius-sm); border: 1px solid var(--border); margin-bottom: 24px; overflow: hidden; }
+    .code-header { display: flex; align-items: center; justify-content: space-between; padding: 10px 16px; border-bottom: 1px solid var(--border); background: rgba(255,255,255,0.02); }
+    .code-dots { display: flex; gap: 6px; }
+    .code-dot { width: 10px; height: 10px; border-radius: 50%; }
+    .code-dot:nth-child(1) { background: #ff5f57; }
+    .code-dot:nth-child(2) { background: #febc2e; }
+    .code-dot:nth-child(3) { background: #28c840; }
+    .code-lang { font-size: 12px; color: var(--text-tertiary); font-family: var(--mono); }
+    .code-body { padding: 16px; overflow-x: auto; }
+    .code-body pre { font-family: var(--mono); font-size: 13px; line-height: 1.7; color: var(--text-secondary); margin: 0; }
+    .code-body .kw { color: var(--pink); }
+    .code-body .fn { color: var(--accent); }
+    .code-body .str { color: var(--green); }
+    .code-body .cm { color: var(--text-tertiary); }
+    .code-body .num { color: var(--orange); }
+    .code-body .prop { color: var(--teal); }
+    .code-body .obj { color: var(--purple); }
+    .method-sig { background: rgba(41,151,255,0.06); border: 1px solid rgba(41,151,255,0.15); border-radius: var(--radius-xs); padding: 12px 16px; margin-bottom: 12px; font-family: var(--mono); font-size: 13px; color: var(--accent); overflow-x: auto; }
+    .param-table { width: 100%; border-collapse: collapse; margin-bottom: 24px; }
+    .param-table th { text-align: left; font-size: 12px; font-weight: 600; color: var(--text-tertiary); text-transform: uppercase; letter-spacing: 0.06em; padding: 8px 12px; border-bottom: 1px solid var(--border); }
+    .param-table td { padding: 10px 12px; border-bottom: 1px solid rgba(255,255,255,0.04); font-size: 14px; color: var(--text-secondary); }
+    .param-table td:first-child { font-family: var(--mono); font-size: 13px; color: var(--pink); }
+    .param-table td:nth-child(2) { font-family: var(--mono); font-size: 13px; color: var(--orange); }
+    @media (max-width: 768px) { .doc-layout { grid-template-columns: 1fr; } .doc-sidebar { display: none; } .doc-content { padding: 24px; } }
+    ::-webkit-scrollbar { width: 8px; } ::-webkit-scrollbar-track { background: transparent; } ::-webkit-scrollbar-thumb { background: var(--border); border-radius: 4px; }
+  </style>
+</head>
+<body>
+  <nav class="doc-nav">
+    <div class="doc-nav-inner">
+      <a href="../index.html" class="doc-nav-logo">Aura.js</a>
+      <ul class="doc-nav-links">
+        <li><a href="../index.html">Home</a></li>
+        <li><a href="router.html">Router</a></li>
+        <li><a href="state.html">State</a></li>
+        <li><a href="events.html">Events</a></li>
+        <li><a href="template.html">Template</a></li>
+        <li><a href="api.html">API</a></li>
+        <li><a href="i18n.html">i18n</a></li>
+      </ul>
+    </div>
+  </nav>
+
+  <div class="doc-layout">
+    <aside class="doc-sidebar">
+      <h4>Modules</h4>
+      <a class="active" href="device.html">Device</a>
+      <a href="geo.html">Geolocation</a>
+      <a href="perf.html">Performance</a>
+      <a href="delegate.html">Delegate</a>
+      <a href="router.html">Router</a>
+      <a href="state.html">State</a>
+      <a href="events.html">Events</a>
+      <a href="template.html">Template</a>
+      <a href="api.html">API</a>
+      <a href="i18n.html">i18n</a>
+
+      <h4>On This Page</h4>
+      <a href="#quick-start">Quick Start</a>
+      <a href="#info">info</a>
+      <a href="#getNetwork">getNetwork()</a>
+      <a href="#checkPermission">checkPermission()</a>
+      <a href="#getStorageQuota">getStorageQuota()</a>
+      <a href="#prefersDarkMode">prefersDarkMode()</a>
+      <a href="#onDarkModeChange">onDarkModeChange()</a>
+      <a href="#getBattery">getBattery()</a>
+      <a href="#onVisibilityChange">onVisibilityChange()</a>
+      <a href="#isOnline">isOnline()</a>
+      <a href="#onOnlineChange">onOnlineChange()</a>
+      <a href="#fingerprint">fingerprint()</a>
+      <a href="#hash">hash()</a>
+      <a href="#types">Types</a>
+    </aside>
+
+    <main class="doc-content">
+      <h1>Device</h1>
+      <p class="doc-lead">
+        Detect device characteristics, monitor network and battery status, track visibility changes, and generate browser fingerprints. Access via <code>Aura.device</code>.
+      </p>
+
+      <!-- Quick Start -->
+      <h2 id="quick-start">Quick Start</h2>
+      <div class="code-block">
+        <div class="code-header">
+          <div class="code-dots"><span class="code-dot"></span><span class="code-dot"></span><span class="code-dot"></span></div>
+          <span class="code-lang">js</span>
+        </div>
+        <div class="code-body"><pre><span class="kw">import</span> <span class="obj">Aura</span> <span class="kw">from</span> <span class="str">'@buildwithdarsh/aura.js'</span>;
+
+<span class="obj">Aura</span>.<span class="fn">init</span>();
+
+<span class="cm">// Read device info</span>
+<span class="kw">const</span> { <span class="prop">deviceType</span>, <span class="prop">os</span>, <span class="prop">screen</span>, <span class="prop">touch</span> } = <span class="obj">Aura</span>.<span class="prop">device</span>.<span class="prop">info</span>;
+console.<span class="fn">log</span>(<span class="str">`${deviceType} on ${os}, ${screen.width}x${screen.height}`</span>);
+
+<span class="cm">// Monitor connectivity</span>
+<span class="kw">const</span> <span class="prop">unsub</span> = <span class="obj">Aura</span>.<span class="prop">device</span>.<span class="fn">onOnlineChange</span>(<span class="prop">online</span> =&gt; {
+  console.<span class="fn">log</span>(<span class="prop">online</span> ? <span class="str">'Back online'</span> : <span class="str">'Went offline'</span>);
+});
+
+<span class="cm">// Generate a fingerprint</span>
+<span class="kw">const</span> <span class="prop">fp</span> = <span class="kw">await</span> <span class="obj">Aura</span>.<span class="prop">device</span>.<span class="fn">fingerprint</span>();
+console.<span class="fn">log</span>(<span class="str">'Fingerprint:'</span>, <span class="prop">fp</span>);</pre></div>
+      </div>
+
+      <!-- info -->
+      <h2 id="info">info</h2>
+      <p>A read-only property that lazily collects and caches device information on first access. Returns a <code>DeviceInfo</code> object with browser, screen, touch, device type, and OS details. A persistent <code>id</code> is stored in local storage and reused across sessions.</p>
+      <div class="method-sig">get info: DeviceInfo</div>
+      <div class="code-block">
+        <div class="code-header">
+          <div class="code-dots"><span class="code-dot"></span><span class="code-dot"></span><span class="code-dot"></span></div>
+          <span class="code-lang">js</span>
+        </div>
+        <div class="code-body"><pre><span class="kw">const</span> <span class="prop">info</span> = <span class="obj">Aura</span>.<span class="prop">device</span>.<span class="prop">info</span>;
+
+console.<span class="fn">log</span>(<span class="prop">info</span>.<span class="prop">id</span>);                <span class="cm">// persistent UUID</span>
+console.<span class="fn">log</span>(<span class="prop">info</span>.<span class="prop">browser</span>.<span class="prop">language</span>); <span class="cm">// "en-US"</span>
+console.<span class="fn">log</span>(<span class="prop">info</span>.<span class="prop">screen</span>.<span class="prop">pixelRatio</span>); <span class="cm">// 2</span>
+console.<span class="fn">log</span>(<span class="prop">info</span>.<span class="prop">deviceType</span>);         <span class="cm">// "desktop" | "mobile" | "tablet"</span>
+console.<span class="fn">log</span>(<span class="prop">info</span>.<span class="prop">os</span>);                 <span class="cm">// "mac" | "ios" | "android" | "windows" | "linux" | "unknown"</span>
+console.<span class="fn">log</span>(<span class="prop">info</span>.<span class="prop">touch</span>);              <span class="cm">// true / false</span></pre></div>
+      </div>
+
+      <!-- getNetwork -->
+      <h2 id="getNetwork">getNetwork()</h2>
+      <p>Returns current network information including online status, connection type, downlink speed, round-trip time, and effective connection type. Uses the Network Information API where available.</p>
+      <div class="method-sig">getNetwork(): NetworkInfo</div>
+      <div class="code-block">
+        <div class="code-header">
+          <div class="code-dots"><span class="code-dot"></span><span class="code-dot"></span><span class="code-dot"></span></div>
+          <span class="code-lang">js</span>
+        </div>
+        <div class="code-body"><pre><span class="kw">const</span> <span class="prop">net</span> = <span class="obj">Aura</span>.<span class="prop">device</span>.<span class="fn">getNetwork</span>();
+
+console.<span class="fn">log</span>(<span class="prop">net</span>.<span class="prop">online</span>);        <span class="cm">// true</span>
+console.<span class="fn">log</span>(<span class="prop">net</span>.<span class="prop">type</span>);          <span class="cm">// "wifi"</span>
+console.<span class="fn">log</span>(<span class="prop">net</span>.<span class="prop">downlink</span>);      <span class="cm">// 10 (Mbps)</span>
+console.<span class="fn">log</span>(<span class="prop">net</span>.<span class="prop">rtt</span>);           <span class="cm">// 50 (ms)</span>
+console.<span class="fn">log</span>(<span class="prop">net</span>.<span class="prop">effectiveType</span>); <span class="cm">// "4g"</span></pre></div>
+      </div>
+
+      <!-- checkPermission -->
+      <h2 id="checkPermission">checkPermission()</h2>
+      <p>Queries the browser Permissions API for the given permission name. Returns <code>'prompt'</code> as a fallback if the API is unavailable.</p>
+      <div class="method-sig">async checkPermission(name: PermissionName): Promise&lt;PermissionState&gt;</div>
+      <table class="param-table">
+        <thead><tr><th>Param</th><th>Type</th><th>Description</th></tr></thead>
+        <tbody>
+          <tr><td>name</td><td>PermissionName</td><td>The permission to query, e.g. <code>'geolocation'</code>, <code>'notifications'</code>, <code>'camera'</code></td></tr>
+        </tbody>
+      </table>
+      <div class="code-block">
+        <div class="code-header">
+          <div class="code-dots"><span class="code-dot"></span><span class="code-dot"></span><span class="code-dot"></span></div>
+          <span class="code-lang">js</span>
+        </div>
+        <div class="code-body"><pre><span class="kw">const</span> <span class="prop">state</span> = <span class="kw">await</span> <span class="obj">Aura</span>.<span class="prop">device</span>.<span class="fn">checkPermission</span>(<span class="str">'notifications'</span>);
+<span class="cm">// "granted" | "denied" | "prompt"</span>
+
+<span class="kw">if</span> (<span class="prop">state</span> === <span class="str">'granted'</span>) {
+  <span class="cm">// safe to use Notifications API</span>
+}</pre></div>
+      </div>
+
+      <!-- getStorageQuota -->
+      <h2 id="getStorageQuota">getStorageQuota()</h2>
+      <p>Returns estimated storage usage and quota in bytes via the Storage Manager API. Returns <code>null</code> if the API is not available.</p>
+      <div class="method-sig">async getStorageQuota(): Promise&lt;{ usage: number; quota: number } | null&gt;</div>
+      <div class="code-block">
+        <div class="code-header">
+          <div class="code-dots"><span class="code-dot"></span><span class="code-dot"></span><span class="code-dot"></span></div>
+          <span class="code-lang">js</span>
+        </div>
+        <div class="code-body"><pre><span class="kw">const</span> <span class="prop">quota</span> = <span class="kw">await</span> <span class="obj">Aura</span>.<span class="prop">device</span>.<span class="fn">getStorageQuota</span>();
+
+<span class="kw">if</span> (<span class="prop">quota</span>) {
+  <span class="kw">const</span> <span class="prop">usedMB</span> = (<span class="prop">quota</span>.<span class="prop">usage</span> / <span class="num">1024</span> / <span class="num">1024</span>).<span class="fn">toFixed</span>(<span class="num">2</span>);
+  <span class="kw">const</span> <span class="prop">totalMB</span> = (<span class="prop">quota</span>.<span class="prop">quota</span> / <span class="num">1024</span> / <span class="num">1024</span>).<span class="fn">toFixed</span>(<span class="num">2</span>);
+  console.<span class="fn">log</span>(<span class="str">`Storage: ${usedMB} MB / ${totalMB} MB`</span>);
+}</pre></div>
+      </div>
+
+      <!-- prefersDarkMode -->
+      <h2 id="prefersDarkMode">prefersDarkMode()</h2>
+      <p>Returns <code>true</code> if the user's OS or browser is set to dark mode, using the <code>prefers-color-scheme</code> media query.</p>
+      <div class="method-sig">prefersDarkMode(): boolean</div>
+      <div class="code-block">
+        <div class="code-header">
+          <div class="code-dots"><span class="code-dot"></span><span class="code-dot"></span><span class="code-dot"></span></div>
+          <span class="code-lang">js</span>
+        </div>
+        <div class="code-body"><pre><span class="kw">if</span> (<span class="obj">Aura</span>.<span class="prop">device</span>.<span class="fn">prefersDarkMode</span>()) {
+  document.<span class="prop">body</span>.<span class="prop">classList</span>.<span class="fn">add</span>(<span class="str">'dark-theme'</span>);
+}</pre></div>
+      </div>
+
+      <!-- onDarkModeChange -->
+      <h2 id="onDarkModeChange">onDarkModeChange()</h2>
+      <p>Listens for changes to the user's color scheme preference. Returns an unsubscribe function to stop listening.</p>
+      <div class="method-sig">onDarkModeChange(fn: (dark: boolean) =&gt; void): () =&gt; void</div>
+      <table class="param-table">
+        <thead><tr><th>Param</th><th>Type</th><th>Description</th></tr></thead>
+        <tbody>
+          <tr><td>fn</td><td>(dark: boolean) =&gt; void</td><td>Callback invoked with <code>true</code> when dark mode activates, <code>false</code> when it deactivates</td></tr>
+        </tbody>
+      </table>
+      <div class="code-block">
+        <div class="code-header">
+          <div class="code-dots"><span class="code-dot"></span><span class="code-dot"></span><span class="code-dot"></span></div>
+          <span class="code-lang">js</span>
+        </div>
+        <div class="code-body"><pre><span class="kw">const</span> <span class="prop">unsub</span> = <span class="obj">Aura</span>.<span class="prop">device</span>.<span class="fn">onDarkModeChange</span>(<span class="prop">dark</span> =&gt; {
+  document.<span class="prop">body</span>.<span class="prop">classList</span>.<span class="fn">toggle</span>(<span class="str">'dark-theme'</span>, <span class="prop">dark</span>);
+});
+
+<span class="cm">// Later: stop listening</span>
+<span class="fn">unsub</span>();</pre></div>
+      </div>
+
+      <!-- getBattery -->
+      <h2 id="getBattery">getBattery()</h2>
+      <p>Returns battery level (0-1) and charging status. Returns <code>null</code> if the Battery Status API is unavailable.</p>
+      <div class="method-sig">async getBattery(): Promise&lt;{ level: number; charging: boolean } | null&gt;</div>
+      <div class="code-block">
+        <div class="code-header">
+          <div class="code-dots"><span class="code-dot"></span><span class="code-dot"></span><span class="code-dot"></span></div>
+          <span class="code-lang">js</span>
+        </div>
+        <div class="code-body"><pre><span class="kw">const</span> <span class="prop">battery</span> = <span class="kw">await</span> <span class="obj">Aura</span>.<span class="prop">device</span>.<span class="fn">getBattery</span>();
+
+<span class="kw">if</span> (<span class="prop">battery</span>) {
+  console.<span class="fn">log</span>(<span class="str">`Battery: ${(battery.level * 100).toFixed(0)}%`</span>);
+  console.<span class="fn">log</span>(<span class="str">`Charging: ${battery.charging}`</span>);
+}</pre></div>
+      </div>
+
+      <!-- onVisibilityChange -->
+      <h2 id="onVisibilityChange">onVisibilityChange()</h2>
+      <p>Fires a callback whenever the page visibility changes (e.g. user switches tabs). Returns an unsubscribe function.</p>
+      <div class="method-sig">onVisibilityChange(fn: (visible: boolean) =&gt; void): () =&gt; void</div>
+      <table class="param-table">
+        <thead><tr><th>Param</th><th>Type</th><th>Description</th></tr></thead>
+        <tbody>
+          <tr><td>fn</td><td>(visible: boolean) =&gt; void</td><td>Callback invoked with <code>true</code> when page becomes visible, <code>false</code> when hidden</td></tr>
+        </tbody>
+      </table>
+      <div class="code-block">
+        <div class="code-header">
+          <div class="code-dots"><span class="code-dot"></span><span class="code-dot"></span><span class="code-dot"></span></div>
+          <span class="code-lang">js</span>
+        </div>
+        <div class="code-body"><pre><span class="kw">const</span> <span class="prop">unsub</span> = <span class="obj">Aura</span>.<span class="prop">device</span>.<span class="fn">onVisibilityChange</span>(<span class="prop">visible</span> =&gt; {
+  <span class="kw">if</span> (<span class="prop">visible</span>) {
+    console.<span class="fn">log</span>(<span class="str">'Tab is active — resume polling'</span>);
+  } <span class="kw">else</span> {
+    console.<span class="fn">log</span>(<span class="str">'Tab is hidden — pause polling'</span>);
+  }
+});
+
+<span class="fn">unsub</span>();</pre></div>
+      </div>
+
+      <!-- isOnline -->
+      <h2 id="isOnline">isOnline()</h2>
+      <p>Returns the current online status of the browser. A simple wrapper around <code>navigator.onLine</code>.</p>
+      <div class="method-sig">isOnline(): boolean</div>
+      <div class="code-block">
+        <div class="code-header">
+          <div class="code-dots"><span class="code-dot"></span><span class="code-dot"></span><span class="code-dot"></span></div>
+          <span class="code-lang">js</span>
+        </div>
+        <div class="code-body"><pre><span class="kw">if</span> (!<span class="obj">Aura</span>.<span class="prop">device</span>.<span class="fn">isOnline</span>()) {
+  <span class="fn">showOfflineBanner</span>();
+}</pre></div>
+      </div>
+
+      <!-- onOnlineChange -->
+      <h2 id="onOnlineChange">onOnlineChange()</h2>
+      <p>Listens for online/offline transitions. Registers both <code>online</code> and <code>offline</code> window events. Returns an unsubscribe function that removes both listeners.</p>
+      <div class="method-sig">onOnlineChange(fn: (online: boolean) =&gt; void): () =&gt; void</div>
+      <table class="param-table">
+        <thead><tr><th>Param</th><th>Type</th><th>Description</th></tr></thead>
+        <tbody>
+          <tr><td>fn</td><td>(online: boolean) =&gt; void</td><td>Callback invoked with <code>true</code> when going online, <code>false</code> when going offline</td></tr>
+        </tbody>
+      </table>
+      <div class="code-block">
+        <div class="code-header">
+          <div class="code-dots"><span class="code-dot"></span><span class="code-dot"></span><span class="code-dot"></span></div>
+          <span class="code-lang">js</span>
+        </div>
+        <div class="code-body"><pre><span class="kw">const</span> <span class="prop">unsub</span> = <span class="obj">Aura</span>.<span class="prop">device</span>.<span class="fn">onOnlineChange</span>(<span class="prop">online</span> =&gt; {
+  <span class="obj">Aura</span>.<span class="prop">state</span>.<span class="fn">set</span>(<span class="str">'network.online'</span>, <span class="prop">online</span>);
+});
+
+<span class="cm">// Clean up</span>
+<span class="fn">unsub</span>();</pre></div>
+      </div>
+
+      <!-- fingerprint -->
+      <h2 id="fingerprint">fingerprint()</h2>
+      <p>Generates a SHA-256 browser fingerprint from device info (user agent, platform, language, screen dimensions, touch support, OS, and timezone). The result is cached after the first call.</p>
+      <div class="method-sig">async fingerprint(): Promise&lt;string&gt;</div>
+      <div class="code-block">
+        <div class="code-header">
+          <div class="code-dots"><span class="code-dot"></span><span class="code-dot"></span><span class="code-dot"></span></div>
+          <span class="code-lang">js</span>
+        </div>
+        <div class="code-body"><pre><span class="kw">const</span> <span class="prop">fp</span> = <span class="kw">await</span> <span class="obj">Aura</span>.<span class="prop">device</span>.<span class="fn">fingerprint</span>();
+console.<span class="fn">log</span>(<span class="prop">fp</span>); <span class="cm">// "a3f8c2e1b9d047..."</span></pre></div>
+      </div>
+
+      <!-- hash -->
+      <h2 id="hash">hash()</h2>
+      <p>Hashes an arbitrary string using SHA-256 (via <code>crypto.subtle</code>). Falls back to a simple 32-bit hash when the SubtleCrypto API is unavailable.</p>
+      <div class="method-sig">async hash(input: string): Promise&lt;string&gt;</div>
+      <table class="param-table">
+        <thead><tr><th>Param</th><th>Type</th><th>Description</th></tr></thead>
+        <tbody>
+          <tr><td>input</td><td>string</td><td>The string to hash</td></tr>
+        </tbody>
+      </table>
+      <div class="code-block">
+        <div class="code-header">
+          <div class="code-dots"><span class="code-dot"></span><span class="code-dot"></span><span class="code-dot"></span></div>
+          <span class="code-lang">js</span>
+        </div>
+        <div class="code-body"><pre><span class="kw">const</span> <span class="prop">hashed</span> = <span class="kw">await</span> <span class="obj">Aura</span>.<span class="prop">device</span>.<span class="fn">hash</span>(<span class="str">'my-secret-data'</span>);
+console.<span class="fn">log</span>(<span class="prop">hashed</span>); <span class="cm">// hex-encoded SHA-256 string</span></pre></div>
+      </div>
+
+      <!-- Types -->
+      <h2 id="types">Types</h2>
+
+      <h3>DeviceInfo</h3>
+      <div class="code-block">
+        <div class="code-header">
+          <div class="code-dots"><span class="code-dot"></span><span class="code-dot"></span><span class="code-dot"></span></div>
+          <span class="code-lang">ts</span>
+        </div>
+        <div class="code-body"><pre><span class="kw">interface</span> <span class="obj">DeviceInfo</span> {
+  <span class="prop">id</span>: <span class="orange">string</span>;
+  <span class="prop">browser</span>: {
+    <span class="prop">userAgent</span>: <span class="orange">string</span>;
+    <span class="prop">platform</span>: <span class="orange">string</span>;
+    <span class="prop">language</span>: <span class="orange">string</span>;
+    <span class="prop">languages</span>: <span class="kw">readonly</span> <span class="orange">string</span>[];
+  };
+  <span class="prop">screen</span>: {
+    <span class="prop">width</span>: <span class="orange">number</span>;
+    <span class="prop">height</span>: <span class="orange">number</span>;
+    <span class="prop">pixelRatio</span>: <span class="orange">number</span>;
+  };
+  <span class="prop">touch</span>: <span class="orange">boolean</span>;
+  <span class="prop">deviceType</span>: <span class="str">'mobile'</span> | <span class="str">'tablet'</span> | <span class="str">'desktop'</span>;
+  <span class="prop">os</span>: <span class="str">'ios'</span> | <span class="str">'android'</span> | <span class="str">'windows'</span> | <span class="str">'mac'</span> | <span class="str">'linux'</span> | <span class="str">'unknown'</span>;
+}</pre></div>
+      </div>
+
+      <h3>NetworkInfo</h3>
+      <div class="code-block">
+        <div class="code-header">
+          <div class="code-dots"><span class="code-dot"></span><span class="code-dot"></span><span class="code-dot"></span></div>
+          <span class="code-lang">ts</span>
+        </div>
+        <div class="code-body"><pre><span class="kw">interface</span> <span class="obj">NetworkInfo</span> {
+  <span class="prop">online</span>: <span class="orange">boolean</span>;
+  <span class="prop">type</span>?: <span class="orange">string</span>;
+  <span class="prop">downlink</span>?: <span class="orange">number</span>;
+  <span class="prop">rtt</span>?: <span class="orange">number</span>;
+  <span class="prop">effectiveType</span>?: <span class="orange">string</span>;
+}</pre></div>
+      </div>
+    </main>
+  </div>
+</body>
+</html>

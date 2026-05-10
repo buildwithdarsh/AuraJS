@@ -1,0 +1,2990 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+  <title>Aura.js — Lightweight JavaScript Framework</title>
+  <meta name="description" content="Aura.js is a lightweight JavaScript framework with 20 modules, routing, state, hooks, PWA, IndexedDB, and more — all in ~32KB with zero dependencies and no build step required." />
+  <meta property="og:title" content="Aura.js — Lightweight JavaScript Framework" />
+  <meta property="og:description" content="Build fast, lightweight web apps with 20 built-in modules — routing, state, hooks, i18n, PWA, and more. No Node required. No build step. No dependencies. Just one script tag." />
+  <meta property="og:type" content="website" />
+  <meta property="og:url" content="https://aurajs-delta.vercel.app/" />
+  <meta property="og:image" content="https://aurajs-delta.vercel.app/og-image.png" />
+  <meta property="og:site_name" content="Aura.js" />
+  <meta name="twitter:card" content="summary_large_image" />
+  <meta name="twitter:title" content="Aura.js — Lightweight JavaScript Framework" />
+  <meta name="twitter:description" content="Build fast, lightweight web apps with 20 built-in modules — routing, state, hooks, i18n, PWA, and more. No Node required. No build step. No dependencies. Just one script tag." />
+  <meta name="twitter:image" content="https://aurajs-delta.vercel.app/og-image.png" />
+  <link rel="canonical" href="https://aurajs-delta.vercel.app/" />
+  <meta name="robots" content="index, follow" />
+  <link rel="icon" href="favicon.svg" type="image/svg+xml" />
+  <script type="application/ld+json">
+  {
+    "@context": "https://schema.org",
+    "@graph": [
+      {
+        "@type": "WebSite",
+        "name": "Aura.js",
+        "url": "https://aurajs-delta.vercel.app/",
+        "description": "Lightweight JavaScript framework with 20 built-in modules, zero dependencies, and no build step required.",
+        "inLanguage": "en",
+        "potentialAction": {
+          "@type": "SearchAction",
+          "target": "https://aurajs-delta.vercel.app/docs/{search_term_string}",
+          "query-input": "required name=search_term_string"
+        }
+      },
+      {
+        "@type": "Organization",
+        "name": "Darsh Gupta",
+        "url": "https://github.com/darshgupta",
+        "logo": "https://aurajs-delta.vercel.app/favicon.svg",
+        "sameAs": [
+          "https://github.com/darshgupta/aura.js"
+        ]
+      },
+      {
+        "@type": "SoftwareApplication",
+        "name": "Aura.js",
+        "applicationCategory": "DeveloperApplication",
+        "operatingSystem": "Any",
+        "url": "https://aurajs-delta.vercel.app/",
+        "description": "Aura.js is a lightweight JavaScript framework with 20 modules including routing, state management, hooks, i18n, PWA, API mocking, IndexedDB, and more — all in 11KB gzipped with zero dependencies.",
+        "offers": {
+          "@type": "Offer",
+          "price": "0",
+          "priceCurrency": "USD",
+          "availability": "https://schema.org/InStock"
+        },
+        "downloadUrl": "https://github.com/darshgupta/aura.js",
+        "softwareVersion": "1.0.0",
+        "fileSize": "11KB gzipped",
+        "license": "https://github.com/darshgupta/aura.js/blob/main/LICENSE"
+      },
+      {
+        "@type": "BreadcrumbList",
+        "itemListElement": [
+          {
+            "@type": "ListItem",
+            "position": 1,
+            "name": "Home",
+            "item": "https://aurajs-delta.vercel.app/"
+          }
+        ]
+      }
+    ]
+  }
+  </script>
+  <style>
+    /* ========================================
+       RESET & BASE
+    ======================================== */
+    *, *::before, *::after { margin: 0; padding: 0; box-sizing: border-box; }
+
+    :root {
+      --bg: #000000;
+      --bg-card: #111111;
+      --bg-card-hover: #1a1a1a;
+      --bg-code: #0d0d0d;
+      --text: #f5f5f7;
+      --text-secondary: #86868b;
+      --text-tertiary: #6e6e73;
+      --accent: #2997ff;
+      --accent-hover: #0077ed;
+      --green: #30d158;
+      --orange: #ff9f0a;
+      --pink: #ff375f;
+      --purple: #bf5af2;
+      --teal: #64d2ff;
+      --border: #1d1d1f;
+      --radius: 20px;
+      --radius-sm: 12px;
+      --radius-xs: 8px;
+      --font: -apple-system, BlinkMacSystemFont, 'SF Pro Display', 'SF Pro Text', 'Helvetica Neue', Helvetica, Arial, sans-serif;
+      --mono: 'SF Mono', SFMono-Regular, ui-monospace, 'Cascadia Code', 'Fira Code', Menlo, monospace;
+      --transition: 0.3s cubic-bezier(0.25, 0.1, 0.25, 1);
+    }
+
+    html {
+      scroll-behavior: smooth;
+      -webkit-font-smoothing: antialiased;
+      -moz-osx-font-smoothing: grayscale;
+    }
+
+    body {
+      font-family: var(--font);
+      background: var(--bg);
+      color: var(--text);
+      line-height: 1.5;
+      overflow-x: hidden;
+    }
+
+    /* ========================================
+       NAVIGATION
+    ======================================== */
+    .nav {
+      position: fixed;
+      top: 0;
+      left: 0;
+      right: 0;
+      z-index: 100;
+      backdrop-filter: saturate(180%) blur(20px);
+      -webkit-backdrop-filter: saturate(180%) blur(20px);
+      background: rgba(0, 0, 0, 0.72);
+      border-bottom: 0.5px solid rgba(255, 255, 255, 0.08);
+    }
+
+    .nav-inner {
+      max-width: 1200px;
+      margin: 0 auto;
+      padding: 0 24px;
+      height: 52px;
+      display: flex;
+      align-items: center;
+      justify-content: space-between;
+    }
+
+    .nav-logo {
+      font-size: 20px;
+      font-weight: 700;
+      letter-spacing: -0.5px;
+      background: linear-gradient(135deg, var(--accent), var(--purple));
+      -webkit-background-clip: text;
+      -webkit-text-fill-color: transparent;
+      background-clip: text;
+    }
+
+    .nav-links {
+      display: flex;
+      gap: 32px;
+      list-style: none;
+    }
+
+    .nav-links a {
+      color: var(--text-secondary);
+      text-decoration: none;
+      font-size: 14px;
+      font-weight: 400;
+      transition: color var(--transition);
+    }
+
+    .nav-links a:hover { color: var(--text); }
+    .nav-links a.active { color: var(--text); }
+
+    /* Dropdown menus */
+    .nav-links li {
+      position: relative;
+    }
+
+    .nav-dropdown {
+      position: absolute;
+      top: calc(100% + 12px);
+      left: 50%;
+      transform: translateX(-50%);
+      min-width: 220px;
+      background: rgba(18, 18, 18, 0.96);
+      backdrop-filter: blur(24px);
+      -webkit-backdrop-filter: blur(24px);
+      border: 1px solid rgba(255,255,255,0.08);
+      border-radius: var(--radius-sm);
+      padding: 8px;
+      opacity: 0;
+      visibility: hidden;
+      transition: opacity 0.2s ease, visibility 0.2s ease, transform 0.2s ease;
+      transform: translateX(-50%) translateY(4px);
+      z-index: 200;
+      box-shadow: 0 8px 32px rgba(0,0,0,0.6);
+    }
+
+    .nav-links li:hover > .nav-dropdown {
+      opacity: 1;
+      visibility: visible;
+      transform: translateX(-50%) translateY(0);
+    }
+
+    .nav-dropdown::before {
+      content: '';
+      position: absolute;
+      top: -12px;
+      left: 0;
+      right: 0;
+      height: 12px;
+    }
+
+    .nav-dropdown a {
+      display: flex;
+      align-items: center;
+      gap: 10px;
+      padding: 10px 14px;
+      border-radius: var(--radius-xs);
+      font-size: 13px;
+      color: var(--text-secondary) !important;
+      transition: background 0.15s ease, color 0.15s ease;
+      white-space: nowrap;
+    }
+
+    .nav-dropdown a:hover {
+      background: rgba(255,255,255,0.06);
+      color: var(--text) !important;
+    }
+
+    .nav-dropdown a .dd-icon {
+      width: 28px;
+      height: 28px;
+      border-radius: 6px;
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      font-size: 14px;
+      flex-shrink: 0;
+    }
+
+    .nav-dropdown a .dd-label {
+      display: flex;
+      flex-direction: column;
+    }
+
+    .nav-dropdown a .dd-sublabel {
+      font-size: 11px;
+      color: var(--text-tertiary);
+      margin-top: 1px;
+    }
+
+    .nav-dropdown-wide {
+      min-width: 520px;
+      display: grid;
+      grid-template-columns: 1fr 1fr;
+      gap: 2px;
+    }
+
+    .nav-dropdown .dd-divider {
+      height: 1px;
+      background: rgba(255,255,255,0.06);
+      margin: 6px 0;
+      grid-column: 1 / -1;
+    }
+
+    .nav-dropdown .dd-header {
+      font-size: 11px;
+      font-weight: 600;
+      color: var(--text-tertiary);
+      text-transform: uppercase;
+      letter-spacing: 0.08em;
+      padding: 8px 14px 4px;
+      grid-column: 1 / -1;
+    }
+
+    .nav-caret {
+      font-size: 10px;
+      margin-left: 2px;
+      opacity: 0.5;
+      transition: transform 0.2s ease;
+    }
+
+    .nav-links li:hover .nav-caret {
+      transform: rotate(180deg);
+    }
+
+    .nav-actions {
+      display: flex;
+      gap: 12px;
+      align-items: center;
+    }
+
+    .badge {
+      display: inline-flex;
+      align-items: center;
+      gap: 6px;
+      padding: 4px 12px;
+      border-radius: 100px;
+      font-size: 12px;
+      font-weight: 500;
+      background: rgba(48, 209, 88, 0.12);
+      color: var(--green);
+      border: 1px solid rgba(48, 209, 88, 0.2);
+    }
+
+    .badge-dot {
+      width: 6px;
+      height: 6px;
+      border-radius: 50%;
+      background: var(--green);
+      animation: pulse 2s ease-in-out infinite;
+    }
+
+    @keyframes pulse {
+      0%, 100% { opacity: 1; }
+      50% { opacity: 0.4; }
+    }
+
+    /* ========================================
+       HAMBURGER MENU
+    ======================================== */
+    .hamburger {
+      display: none;
+      flex-direction: column;
+      justify-content: center;
+      gap: 5px;
+      width: 32px;
+      height: 32px;
+      cursor: pointer;
+      background: none;
+      border: none;
+      padding: 4px;
+      z-index: 301;
+    }
+
+    .hamburger span {
+      display: block;
+      width: 24px;
+      height: 2px;
+      background: var(--text);
+      border-radius: 2px;
+      transition: transform 0.3s ease, opacity 0.3s ease;
+    }
+
+    .hamburger.active span:nth-child(1) {
+      transform: translateY(7px) rotate(45deg);
+    }
+
+    .hamburger.active span:nth-child(2) {
+      opacity: 0;
+    }
+
+    .hamburger.active span:nth-child(3) {
+      transform: translateY(-7px) rotate(-45deg);
+    }
+
+    .mobile-overlay {
+      position: fixed;
+      top: 0;
+      left: 0;
+      right: 0;
+      bottom: 0;
+      z-index: 300;
+      background: rgba(0, 0, 0, 0.96);
+      backdrop-filter: blur(24px);
+      -webkit-backdrop-filter: blur(24px);
+      display: flex;
+      flex-direction: column;
+      align-items: center;
+      justify-content: center;
+      gap: 0;
+      opacity: 0;
+      visibility: hidden;
+      transition: opacity 0.35s ease, visibility 0.35s ease;
+    }
+
+    .mobile-overlay.open {
+      opacity: 1;
+      visibility: visible;
+    }
+
+    .mobile-overlay-links {
+      list-style: none;
+      display: flex;
+      flex-direction: column;
+      align-items: center;
+      gap: 8px;
+    }
+
+    .mobile-overlay-links a {
+      color: var(--text-secondary);
+      text-decoration: none;
+      font-size: 24px;
+      font-weight: 600;
+      letter-spacing: -0.02em;
+      padding: 12px 24px;
+      border-radius: var(--radius-xs);
+      transition: color 0.2s ease, background 0.2s ease;
+    }
+
+    .mobile-overlay-links a:hover,
+    .mobile-overlay-links a.active {
+      color: var(--text);
+      background: rgba(255,255,255,0.06);
+    }
+
+    .mobile-overlay-close {
+      position: absolute;
+      top: 16px;
+      right: 24px;
+      background: none;
+      border: none;
+      color: var(--text-secondary);
+      font-size: 32px;
+      cursor: pointer;
+      width: 44px;
+      height: 44px;
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      border-radius: 50%;
+      transition: background 0.2s ease, color 0.2s ease;
+    }
+
+    .mobile-overlay-close:hover {
+      background: rgba(255,255,255,0.08);
+      color: var(--text);
+    }
+
+    /* ========================================
+       HERO
+    ======================================== */
+    .hero {
+      min-height: 100vh;
+      display: flex;
+      flex-direction: column;
+      align-items: center;
+      justify-content: center;
+      text-align: center;
+      padding: 120px 24px 80px;
+      position: relative;
+      overflow: hidden;
+    }
+
+    .hero::before {
+      content: '';
+      position: absolute;
+      top: -200px;
+      left: 50%;
+      transform: translateX(-50%);
+      width: 800px;
+      height: 800px;
+      border-radius: 50%;
+      background: radial-gradient(circle, rgba(41, 151, 255, 0.12) 0%, transparent 70%);
+      pointer-events: none;
+    }
+
+    .hero-eyebrow {
+      font-size: 18px;
+      font-weight: 600;
+      color: var(--accent);
+      letter-spacing: -0.2px;
+      margin-bottom: 16px;
+    }
+
+    .hero h1 {
+      font-size: clamp(48px, 8vw, 96px);
+      font-weight: 700;
+      letter-spacing: -0.04em;
+      line-height: 1.05;
+      margin-bottom: 20px;
+      background: linear-gradient(180deg, #ffffff 0%, rgba(255,255,255,0.6) 100%);
+      -webkit-background-clip: text;
+      -webkit-text-fill-color: transparent;
+      background-clip: text;
+    }
+
+    .hero p {
+      font-size: clamp(18px, 2.5vw, 24px);
+      color: var(--text-secondary);
+      max-width: 600px;
+      margin-bottom: 48px;
+      line-height: 1.4;
+    }
+
+    .hero-cta-wrapper {
+      position: relative;
+      padding: 3px;
+      border-radius: 110px;
+      background: linear-gradient(135deg, var(--accent), var(--purple), var(--teal), var(--accent));
+      background-size: 300% 300%;
+      animation: gradient-border 4s ease infinite;
+    }
+
+    .hero-cta-inner {
+      background: var(--bg);
+      border-radius: 107px;
+      padding: 8px 12px;
+      display: flex;
+      gap: 16px;
+      flex-wrap: wrap;
+      justify-content: center;
+    }
+
+    @keyframes gradient-border {
+      0% { background-position: 0% 50%; }
+      50% { background-position: 100% 50%; }
+      100% { background-position: 0% 50%; }
+    }
+
+    .hero-stats {
+      display: flex;
+      gap: 48px;
+      margin-top: 64px;
+    }
+
+    .hero-stat {
+      text-align: center;
+    }
+
+    .hero-stat-value {
+      font-size: 48px;
+      font-weight: 700;
+      letter-spacing: -0.03em;
+      background: linear-gradient(135deg, var(--accent), var(--teal));
+      -webkit-background-clip: text;
+      -webkit-text-fill-color: transparent;
+      background-clip: text;
+    }
+
+    .hero-stat-label {
+      font-size: 14px;
+      color: var(--text-tertiary);
+      margin-top: 4px;
+    }
+
+    /* ========================================
+       BUTTONS
+    ======================================== */
+    .btn {
+      display: inline-flex;
+      align-items: center;
+      gap: 8px;
+      padding: 14px 28px;
+      border-radius: 100px;
+      font-size: 16px;
+      font-weight: 500;
+      text-decoration: none;
+      border: none;
+      cursor: pointer;
+      transition: all var(--transition);
+      font-family: var(--font);
+    }
+
+    .btn-primary {
+      background: var(--accent);
+      color: #fff;
+    }
+
+    .btn-primary:hover { background: var(--accent-hover); transform: scale(1.02); }
+
+    .btn-secondary {
+      background: transparent;
+      color: var(--accent);
+      border: 1px solid rgba(41, 151, 255, 0.3);
+    }
+
+    .btn-secondary:hover { background: rgba(41, 151, 255, 0.08); }
+
+    .btn-sm {
+      padding: 8px 16px;
+      font-size: 13px;
+      border-radius: 8px;
+    }
+
+    .btn-group {
+      display: flex;
+      gap: 16px;
+      flex-wrap: wrap;
+      justify-content: center;
+    }
+
+    /* ========================================
+       SECTIONS
+    ======================================== */
+    .section {
+      padding: 120px 24px;
+      max-width: 1200px;
+      margin: 0 auto;
+    }
+
+    .section-header {
+      text-align: center;
+      margin-bottom: 72px;
+    }
+
+    .section-eyebrow {
+      font-size: 16px;
+      font-weight: 600;
+      color: var(--accent);
+      text-transform: uppercase;
+      letter-spacing: 0.06em;
+      margin-bottom: 12px;
+    }
+
+    .section-title {
+      font-size: clamp(32px, 5vw, 56px);
+      font-weight: 700;
+      letter-spacing: -0.03em;
+      line-height: 1.1;
+      margin-bottom: 16px;
+    }
+
+    .section-subtitle {
+      font-size: 18px;
+      color: var(--text-secondary);
+      max-width: 560px;
+      margin: 0 auto;
+    }
+
+    /* ========================================
+       FEATURE CARDS GRID
+    ======================================== */
+    .features-grid {
+      display: grid;
+      grid-template-columns: repeat(auto-fit, minmax(340px, 1fr));
+      gap: 20px;
+    }
+
+    .feature-card {
+      background: var(--bg-card);
+      border-radius: var(--radius);
+      padding: 40px 32px;
+      border: 1px solid var(--border);
+      transition: all var(--transition);
+      position: relative;
+      overflow: hidden;
+    }
+
+    .feature-card:hover {
+      background: var(--bg-card-hover);
+      border-color: rgba(255, 255, 255, 0.1);
+      transform: translateY(-4px);
+    }
+
+    .feature-card::before {
+      content: '';
+      position: absolute;
+      top: 0;
+      left: 0;
+      right: 0;
+      height: 1px;
+      background: linear-gradient(90deg, transparent, var(--card-accent, var(--accent)), transparent);
+      opacity: 0;
+      transition: opacity var(--transition);
+    }
+
+    .feature-card:hover::before { opacity: 1; }
+
+    .feature-icon {
+      width: 48px;
+      height: 48px;
+      border-radius: 12px;
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      font-size: 22px;
+      margin-bottom: 20px;
+      background: rgba(41, 151, 255, 0.1);
+    }
+
+    .feature-card h3 {
+      font-size: 22px;
+      font-weight: 600;
+      letter-spacing: -0.02em;
+      margin-bottom: 8px;
+    }
+
+    .feature-card p {
+      color: var(--text-secondary);
+      font-size: 15px;
+      line-height: 1.6;
+      margin-bottom: 20px;
+    }
+
+    .replaces {
+      display: inline-block;
+      font-size: 11px;
+      color: var(--text-tertiary);
+      margin-top: 6px;
+    }
+
+    .replaces strong {
+      color: var(--pink);
+      font-weight: 600;
+      text-decoration: line-through;
+      text-decoration-color: rgba(255,55,95,0.4);
+    }
+
+    /* ========================================
+       CODE BLOCKS
+    ======================================== */
+    .code-block {
+      background: var(--bg-code);
+      border-radius: var(--radius-sm);
+      border: 1px solid var(--border);
+      overflow: hidden;
+    }
+
+    .code-header {
+      display: flex;
+      align-items: center;
+      justify-content: space-between;
+      padding: 12px 20px;
+      border-bottom: 1px solid var(--border);
+      background: rgba(255, 255, 255, 0.02);
+    }
+
+    .code-dots {
+      display: flex;
+      gap: 8px;
+    }
+
+    .code-dot {
+      width: 12px;
+      height: 12px;
+      border-radius: 50%;
+    }
+
+    .code-dot:nth-child(1) { background: #ff5f57; }
+    .code-dot:nth-child(2) { background: #febc2e; }
+    .code-dot:nth-child(3) { background: #28c840; }
+
+    .code-lang {
+      font-size: 12px;
+      color: var(--text-tertiary);
+      font-family: var(--mono);
+    }
+
+    .code-body {
+      padding: 20px;
+      overflow-x: auto;
+    }
+
+    .code-body pre {
+      font-family: var(--mono);
+      font-size: 13px;
+      line-height: 1.7;
+      color: var(--text-secondary);
+      white-space: pre;
+      margin: 0;
+    }
+
+    .code-body .kw { color: var(--pink); }
+    .code-body .fn { color: var(--accent); }
+    .code-body .str { color: var(--green); }
+    .code-body .cm { color: var(--text-tertiary); }
+    .code-body .num { color: var(--orange); }
+    .code-body .op { color: var(--text-secondary); }
+    .code-body .prop { color: var(--teal); }
+    .code-body .obj { color: var(--purple); }
+
+    /* ========================================
+       DEMO SECTION - INTERACTIVE
+    ======================================== */
+    .demo-grid {
+      display: grid;
+      grid-template-columns: 1fr 1fr;
+      gap: 20px;
+    }
+
+    .demo-card {
+      background: var(--bg-card);
+      border-radius: var(--radius);
+      border: 1px solid var(--border);
+      overflow: hidden;
+    }
+
+    .demo-card-header {
+      padding: 20px 24px;
+      border-bottom: 1px solid var(--border);
+      display: flex;
+      align-items: center;
+      justify-content: space-between;
+    }
+
+    .demo-card-title {
+      font-size: 16px;
+      font-weight: 600;
+    }
+
+    .demo-card-body {
+      padding: 24px;
+    }
+
+    .demo-output {
+      background: var(--bg-code);
+      border-radius: var(--radius-xs);
+      padding: 16px 20px;
+      font-family: var(--mono);
+      font-size: 13px;
+      color: var(--green);
+      min-height: 44px;
+      margin-top: 16px;
+      border: 1px solid var(--border);
+      white-space: pre-wrap;
+      word-break: break-all;
+    }
+
+    .demo-label {
+      font-size: 12px;
+      color: var(--text-tertiary);
+      text-transform: uppercase;
+      letter-spacing: 0.08em;
+      margin-bottom: 8px;
+    }
+
+    input[type="text"], input[type="number"], select {
+      width: 100%;
+      padding: 10px 16px;
+      border-radius: var(--radius-xs);
+      border: 1px solid var(--border);
+      background: var(--bg-code);
+      color: var(--text);
+      font-family: var(--font);
+      font-size: 14px;
+      outline: none;
+      transition: border-color var(--transition);
+    }
+
+    input:focus, select:focus {
+      border-color: var(--accent);
+    }
+
+    .input-row {
+      display: flex;
+      gap: 12px;
+      margin-bottom: 12px;
+    }
+
+    .input-row > * { flex: 1; }
+
+    .tag {
+      display: inline-block;
+      padding: 4px 10px;
+      border-radius: 6px;
+      font-size: 12px;
+      font-weight: 500;
+      margin: 2px 4px 2px 0;
+    }
+
+    .tag-blue { background: rgba(41, 151, 255, 0.12); color: var(--accent); }
+    .tag-green { background: rgba(48, 209, 88, 0.12); color: var(--green); }
+    .tag-orange { background: rgba(255, 159, 10, 0.12); color: var(--orange); }
+    .tag-pink { background: rgba(255, 55, 95, 0.12); color: var(--pink); }
+    .tag-purple { background: rgba(191, 90, 242, 0.12); color: var(--purple); }
+    .tag-teal { background: rgba(100, 210, 255, 0.12); color: var(--teal); }
+
+    /* ========================================
+       MODULE SHOWCASE — FULL-WIDTH CARDS
+    ======================================== */
+    .showcase-card {
+      background: var(--bg-card);
+      border-radius: var(--radius);
+      border: 1px solid var(--border);
+      margin-bottom: 20px;
+      overflow: hidden;
+    }
+
+    .showcase-split {
+      display: grid;
+      grid-template-columns: 1fr 1fr;
+    }
+
+    .showcase-info {
+      padding: 48px 40px;
+      display: flex;
+      flex-direction: column;
+      justify-content: center;
+    }
+
+    .showcase-info h3 {
+      font-size: 28px;
+      font-weight: 700;
+      letter-spacing: -0.02em;
+      margin-bottom: 12px;
+    }
+
+    .showcase-info p {
+      color: var(--text-secondary);
+      font-size: 16px;
+      line-height: 1.6;
+      margin-bottom: 24px;
+    }
+
+    .showcase-features {
+      list-style: none;
+      display: flex;
+      flex-wrap: wrap;
+      gap: 8px;
+    }
+
+    .showcase-code {
+      border-left: 1px solid var(--border);
+      display: flex;
+      flex-direction: column;
+    }
+
+    .showcase-code .code-body {
+      flex: 1;
+    }
+
+    /* ========================================
+       DEVICE / METRICS PANEL
+    ======================================== */
+    .metrics-grid {
+      display: grid;
+      grid-template-columns: repeat(4, 1fr);
+      gap: 16px;
+      margin-bottom: 20px;
+    }
+
+    .metric-card {
+      background: var(--bg-card);
+      border-radius: var(--radius-sm);
+      padding: 24px;
+      border: 1px solid var(--border);
+      text-align: center;
+    }
+
+    .metric-value {
+      font-size: 32px;
+      font-weight: 700;
+      letter-spacing: -0.02em;
+      margin-bottom: 4px;
+    }
+
+    .metric-label {
+      font-size: 13px;
+      color: var(--text-tertiary);
+    }
+
+    /* ========================================
+       FOOTER
+    ======================================== */
+    .footer {
+      border-top: 1px solid var(--border);
+      padding: 48px 24px 40px;
+      text-align: center;
+      color: var(--text-tertiary);
+      font-size: 14px;
+    }
+
+    .footer a {
+      color: var(--accent);
+      text-decoration: none;
+    }
+
+    .footer a:hover {
+      color: var(--text);
+    }
+
+    .footer-links {
+      display: flex;
+      gap: 24px;
+      justify-content: center;
+      flex-wrap: wrap;
+      margin-bottom: 20px;
+    }
+
+    .footer-links a {
+      font-size: 14px;
+      font-weight: 500;
+      color: var(--text-secondary);
+      text-decoration: none;
+      transition: color var(--transition);
+    }
+
+    .footer-links a:hover {
+      color: var(--text);
+    }
+
+    .footer-divider {
+      width: 48px;
+      height: 1px;
+      background: var(--border);
+      margin: 16px auto;
+    }
+
+    /* ========================================
+       ANIMATIONS
+    ======================================== */
+    .fade-in {
+      opacity: 0;
+      transform: translateY(30px);
+      transition: opacity 0.6s ease, transform 0.6s ease;
+    }
+
+    .fade-in.visible {
+      opacity: 1;
+      transform: translateY(0);
+    }
+
+    .stagger > * {
+      opacity: 0;
+      transform: translateY(20px);
+    }
+
+    .stagger.visible > * {
+      opacity: 1;
+      transform: translateY(0);
+      transition: opacity 0.5s ease, transform 0.5s ease;
+    }
+
+    .stagger.visible > *:nth-child(1) { transition-delay: 0.1s; }
+    .stagger.visible > *:nth-child(2) { transition-delay: 0.2s; }
+    .stagger.visible > *:nth-child(3) { transition-delay: 0.3s; }
+    .stagger.visible > *:nth-child(4) { transition-delay: 0.4s; }
+    .stagger.visible > *:nth-child(5) { transition-delay: 0.5s; }
+    .stagger.visible > *:nth-child(6) { transition-delay: 0.6s; }
+
+    /* ========================================
+       RESPONSIVE
+    ======================================== */
+    @media (max-width: 768px) {
+      .nav-links { display: none; }
+      .hamburger { display: flex; }
+      .hero-stats { flex-direction: column; gap: 24px; }
+      .features-grid { grid-template-columns: 1fr; }
+      .demo-grid { grid-template-columns: 1fr; }
+      .showcase-split { grid-template-columns: 1fr; }
+      .showcase-code { border-left: none; border-top: 1px solid var(--border); }
+      .showcase-info { padding: 32px 20px; }
+      .metrics-grid { grid-template-columns: repeat(2, 1fr); }
+    }
+
+    /* ========================================
+       SCROLLBAR
+    ======================================== */
+    ::-webkit-scrollbar { width: 8px; height: 8px; }
+    ::-webkit-scrollbar-track { background: transparent; }
+    ::-webkit-scrollbar-thumb { background: var(--border); border-radius: 4px; }
+    ::-webkit-scrollbar-thumb:hover { background: var(--text-tertiary); }
+
+    /* ========================================
+       NO NODE BANNER
+    ======================================== */
+    .no-node {
+      position: relative;
+      overflow: hidden;
+      border-radius: var(--radius);
+      background: linear-gradient(135deg, #0a0a0a 0%, #1a1a2e 100%);
+      border: 1px solid var(--border);
+      padding: 64px 48px;
+      text-align: center;
+      margin-bottom: 80px;
+    }
+
+    .no-node::before {
+      content: '';
+      position: absolute;
+      top: -50%;
+      left: -50%;
+      width: 200%;
+      height: 200%;
+      background: conic-gradient(from 0deg, transparent, rgba(41,151,255,0.06), transparent, rgba(191,90,242,0.06), transparent);
+      animation: rotate 20s linear infinite;
+    }
+
+    @keyframes rotate {
+      to { transform: rotate(360deg); }
+    }
+
+    .no-node-content {
+      position: relative;
+      z-index: 1;
+    }
+
+    .no-node h2 {
+      font-size: clamp(28px, 4vw, 44px);
+      font-weight: 700;
+      letter-spacing: -0.03em;
+      margin-bottom: 16px;
+      line-height: 1.1;
+    }
+
+    .no-node h2 span {
+      background: linear-gradient(135deg, var(--accent), var(--purple));
+      -webkit-background-clip: text;
+      -webkit-text-fill-color: transparent;
+      background-clip: text;
+    }
+
+    .no-node p {
+      color: var(--text-secondary);
+      font-size: 18px;
+      max-width: 640px;
+      margin: 0 auto 32px;
+      line-height: 1.6;
+    }
+
+    .no-node-steps {
+      display: flex;
+      gap: 24px;
+      justify-content: center;
+      flex-wrap: wrap;
+      margin-bottom: 32px;
+    }
+
+    .no-node-step {
+      background: rgba(255,255,255,0.04);
+      border: 1px solid rgba(255,255,255,0.08);
+      border-radius: var(--radius-sm);
+      padding: 24px 28px;
+      text-align: left;
+      min-width: 200px;
+      flex: 0 1 260px;
+    }
+
+    .no-node-step-num {
+      font-size: 13px;
+      font-weight: 600;
+      color: var(--accent);
+      margin-bottom: 8px;
+      letter-spacing: 0.05em;
+    }
+
+    .no-node-step code {
+      display: block;
+      font-family: var(--mono);
+      font-size: 14px;
+      color: var(--green);
+      margin-top: 4px;
+    }
+
+    .no-node-step p {
+      font-size: 14px;
+      color: var(--text-secondary);
+      margin: 0;
+    }
+
+    .vs-badges {
+      display: flex;
+      gap: 12px;
+      justify-content: center;
+      flex-wrap: wrap;
+    }
+
+    .vs-badge {
+      display: inline-flex;
+      align-items: center;
+      gap: 8px;
+      padding: 8px 16px;
+      border-radius: 100px;
+      font-size: 13px;
+      font-weight: 500;
+      border: 1px solid;
+    }
+
+    .vs-badge-no {
+      background: rgba(255,55,95,0.08);
+      border-color: rgba(255,55,95,0.2);
+      color: var(--pink);
+    }
+
+    .vs-badge-yes {
+      background: rgba(48,209,88,0.08);
+      border-color: rgba(48,209,88,0.2);
+      color: var(--green);
+    }
+
+    /* ========================================
+       COMPARISON CHART
+    ======================================== */
+    .comparison-table {
+      width: 100%;
+      border-collapse: separate;
+      border-spacing: 0;
+      border-radius: var(--radius);
+      overflow: hidden;
+      border: 1px solid var(--border);
+      background: var(--bg-card);
+    }
+
+    .comparison-table thead th {
+      padding: 20px 24px;
+      text-align: center;
+      font-size: 15px;
+      font-weight: 600;
+      background: rgba(255,255,255,0.03);
+      border-bottom: 1px solid var(--border);
+    }
+
+    .comparison-table thead th:first-child {
+      text-align: left;
+    }
+
+    .comparison-table thead th.highlight {
+      background: rgba(41,151,255,0.08);
+      color: var(--accent);
+      position: relative;
+    }
+
+    .comparison-table thead th.highlight::after {
+      content: 'YOU ARE HERE';
+      position: absolute;
+      white-space: nowrap;
+      top: -1px;
+      left: 50%;
+      transform: translateX(-50%);
+      font-size: 9px;
+      letter-spacing: 0.1em;
+      padding: 3px 10px;
+      background: var(--accent);
+      color: #fff;
+      border-radius: 0 0 6px 6px;
+    }
+
+    .comparison-table tbody td {
+      padding: 16px 24px;
+      text-align: center;
+      border-bottom: 1px solid rgba(255,255,255,0.04);
+      font-size: 14px;
+      color: var(--text-secondary);
+    }
+
+    .comparison-table tbody td:first-child {
+      text-align: left;
+      font-weight: 500;
+      color: var(--text);
+    }
+
+    .comparison-table tbody td.highlight {
+      background: rgba(41,151,255,0.04);
+      color: var(--text);
+      font-weight: 600;
+    }
+
+    .comparison-table tbody tr:last-child td {
+      border-bottom: none;
+    }
+
+    .comparison-table tbody tr:hover td {
+      background: rgba(255,255,255,0.02);
+    }
+
+    .comparison-table tbody tr:hover td.highlight {
+      background: rgba(41,151,255,0.07);
+    }
+
+    .check { color: var(--green); font-size: 18px; }
+    .cross { color: var(--text-tertiary); font-size: 18px; }
+    .partial { color: var(--orange); font-size: 14px; }
+
+    .bar-chart {
+      display: flex;
+      align-items: flex-end;
+      gap: 20px;
+      justify-content: center;
+      height: 220px;
+      padding: 20px 0;
+      margin-bottom: 12px;
+    }
+
+    .bar-item {
+      display: flex;
+      flex-direction: column;
+      align-items: center;
+      gap: 8px;
+      flex: 0 1 120px;
+    }
+
+    .bar {
+      width: 64px;
+      border-radius: 8px 8px 0 0;
+      position: relative;
+      transition: height 1.5s cubic-bezier(0.22, 1, 0.36, 1);
+      min-height: 4px;
+    }
+
+    .bar-value {
+      position: absolute;
+      top: -28px;
+      left: 50%;
+      transform: translateX(-50%);
+      font-size: 14px;
+      font-weight: 700;
+      white-space: nowrap;
+    }
+
+    .bar-label {
+      font-size: 13px;
+      color: var(--text-secondary);
+      font-weight: 500;
+    }
+
+    @media (max-width: 768px) {
+      .no-node { padding: 40px 24px; }
+      .no-node-steps { flex-direction: column; align-items: center; }
+      .comparison-table { font-size: 12px; }
+      .comparison-table thead th, .comparison-table tbody td { padding: 12px 10px; }
+      .bar-chart { gap: 12px; height: 180px; }
+      .bar { width: 48px; }
+    }
+  </style>
+</head>
+<body>
+
+  <!-- ======================================== NAV ======================================== -->
+  <nav class="nav">
+    <div class="nav-inner">
+      <div class="nav-logo">Aura.js</div>
+      <ul class="nav-links">
+        <li><a href="#hero" class="active">Home</a></li>
+        <li>
+          <a href="#features">Modules <span class="nav-caret">&#9660;</span></a>
+          <div class="nav-dropdown nav-dropdown-wide">
+            <div class="dd-header">Core</div>
+            <a href="#modules"><span class="dd-icon" style="background:rgba(41,151,255,0.1);">&#9737;</span><span class="dd-label">Router<span class="dd-sublabel">SPA routing, params, guards</span></span></a>
+            <a href="#modules"><span class="dd-icon" style="background:rgba(48,209,88,0.1);">&#9881;</span><span class="dd-label">State<span class="dd-sublabel">Reactive, computed, persist</span></span></a>
+            <a href="#modules"><span class="dd-icon" style="background:rgba(255,159,10,0.1);">&#9889;</span><span class="dd-label">Events<span class="dd-sublabel">Pub/sub, wildcards, priority</span></span></a>
+            <a href="#modules"><span class="dd-icon" style="background:rgba(255,55,95,0.1);">&#128462;</span><span class="dd-label">Template<span class="dd-sublabel">Handlebars-style rendering</span></span></a>
+            <a href="#modules"><span class="dd-icon" style="background:rgba(191,90,242,0.1);">&#127760;</span><span class="dd-label">API Client<span class="dd-sublabel">HTTP, interceptors, retry</span></span></a>
+            <a href="#modules"><span class="dd-icon" style="background:rgba(100,210,255,0.1);">&#127463;</span><span class="dd-label">i18n<span class="dd-sublabel">Translation, plurals, Intl</span></span></a>
+            <div class="dd-divider"></div>
+            <div class="dd-header">Platform</div>
+            <a href="#device"><span class="dd-icon" style="background:rgba(41,151,255,0.1);">&#128241;</span><span class="dd-label">Device<span class="dd-sublabel">Detection, fingerprint, battery</span></span></a>
+            <a href="#more-modules"><span class="dd-icon" style="background:rgba(48,209,88,0.1);">&#127759;</span><span class="dd-label">Geolocation<span class="dd-sublabel">GPS, IP fallback, distance</span></span></a>
+            <a href="#more-modules"><span class="dd-icon" style="background:rgba(255,159,10,0.1);">&#9201;</span><span class="dd-label">Performance<span class="dd-sublabel">Timing, memory, measure</span></span></a>
+            <a href="#more-modules"><span class="dd-icon" style="background:rgba(100,210,255,0.1);">&#128073;</span><span class="dd-label">Delegate<span class="dd-sublabel">Event delegation, selectors</span></span></a>
+            <a href="#live-demo"><span class="dd-icon" style="background:rgba(41,151,255,0.1);">&#128451;</span><span class="dd-label">Storage<span class="dd-sublabel">Local, session, cookies, TTL</span></span></a>
+            <a href="#live-demo"><span class="dd-icon" style="background:rgba(191,90,242,0.1);">&#128295;</span><span class="dd-label">Utils<span class="dd-sublabel">Debounce, throttle, slugify</span></span></a>
+            <div class="dd-divider"></div>
+            <div class="dd-header">New</div>
+            <a href="#mock-api" style="background:rgba(255,55,95,0.04);"><span class="dd-icon" style="background:rgba(255,55,95,0.1);">&#128752;</span><span class="dd-label">Mock API<span class="dd-sublabel">Intercept fetch, local JSON</span></span></a>
+            <a href="#new-modules" style="background:rgba(255,55,95,0.04);"><span class="dd-icon" style="background:rgba(48,209,88,0.1);">&#128450;</span><span class="dd-label">IndexedDB<span class="dd-sublabel">Structured client-side DB</span></span></a>
+            <a href="#new-modules" style="background:rgba(255,55,95,0.04);"><span class="dd-icon" style="background:rgba(255,159,10,0.1);">&#128221;</span><span class="dd-label">Logger<span class="dd-sublabel">Levels, transports, tags</span></span></a>
+            <a href="#new-modules" style="background:rgba(255,55,95,0.04);"><span class="dd-icon" style="background:rgba(191,90,242,0.1);">&#128268;</span><span class="dd-label">Hooks<span class="dd-sublabel">useState, useFetch, useEvent</span></span></a>
+            <a href="#new-modules" style="background:rgba(255,55,95,0.04);"><span class="dd-icon" style="background:rgba(100,210,255,0.1);">&#128170;</span><span class="dd-label">tryThis<span class="dd-sublabel">[err, data] tuple pattern</span></span></a>
+            <a href="#new-modules" style="background:rgba(255,55,95,0.04);"><span class="dd-icon" style="background:rgba(41,151,255,0.1);">&#128247;</span><span class="dd-label">PWA<span class="dd-sublabel">Service Worker, caching, install</span></span></a>
+          </div>
+        </li>
+        <li>
+          <a href="docs/router.html">Docs <span class="nav-caret">&#9660;</span></a>
+          <div class="nav-dropdown nav-dropdown-wide">
+            <div class="dd-header">API Reference</div>
+            <a href="docs/router.html"><span class="dd-icon" style="background:rgba(41,151,255,0.1);">&#9737;</span><span class="dd-label">Router</span></a>
+            <a href="docs/state.html"><span class="dd-icon" style="background:rgba(48,209,88,0.1);">&#9881;</span><span class="dd-label">State</span></a>
+            <a href="docs/events.html"><span class="dd-icon" style="background:rgba(255,159,10,0.1);">&#9889;</span><span class="dd-label">Events</span></a>
+            <a href="docs/template.html"><span class="dd-icon" style="background:rgba(255,55,95,0.1);">&#128462;</span><span class="dd-label">Template</span></a>
+            <a href="docs/api.html"><span class="dd-icon" style="background:rgba(191,90,242,0.1);">&#127760;</span><span class="dd-label">API Client</span></a>
+            <a href="docs/i18n.html"><span class="dd-icon" style="background:rgba(100,210,255,0.1);">&#127463;</span><span class="dd-label">i18n</span></a>
+            <a href="docs/device.html"><span class="dd-icon" style="background:rgba(41,151,255,0.1);">&#128241;</span><span class="dd-label">Device</span></a>
+            <a href="docs/geo.html"><span class="dd-icon" style="background:rgba(48,209,88,0.1);">&#127759;</span><span class="dd-label">Geolocation</span></a>
+            <a href="docs/perf.html"><span class="dd-icon" style="background:rgba(255,159,10,0.1);">&#9201;</span><span class="dd-label">Performance</span></a>
+            <a href="docs/delegate.html"><span class="dd-icon" style="background:rgba(100,210,255,0.1);">&#128073;</span><span class="dd-label">Delegate</span></a>
+            <a href="docs/storage.html"><span class="dd-icon" style="background:rgba(41,151,255,0.1);">&#128451;</span><span class="dd-label">Storage</span></a>
+            <a href="docs/utils.html"><span class="dd-icon" style="background:rgba(191,90,242,0.1);">&#128295;</span><span class="dd-label">Utils</span></a>
+            <a href="docs/mock.html"><span class="dd-icon" style="background:rgba(255,55,95,0.1);">&#128752;</span><span class="dd-label">Mock API</span></a>
+            <a href="docs/idb.html"><span class="dd-icon" style="background:rgba(48,209,88,0.1);">&#128450;</span><span class="dd-label">IndexedDB</span></a>
+            <a href="docs/logger.html"><span class="dd-icon" style="background:rgba(255,159,10,0.1);">&#128221;</span><span class="dd-label">Logger</span></a>
+            <a href="docs/hooks.html"><span class="dd-icon" style="background:rgba(191,90,242,0.1);">&#128268;</span><span class="dd-label">Hooks</span></a>
+            <a href="docs/try.html"><span class="dd-icon" style="background:rgba(100,210,255,0.1);">&#128170;</span><span class="dd-label">tryThis</span></a>
+            <a href="docs/pwa.html"><span class="dd-icon" style="background:rgba(41,151,255,0.1);">&#128247;</span><span class="dd-label">PWA</span></a>
+          </div>
+        </li>
+        <li><a href="#comparison">Compare</a></li>
+        <li><a href="#live-demo">Demo</a></li>
+      </ul>
+      <div class="nav-actions">
+        <div class="badge"><span class="badge-dot"></span> v1.0.0</div>
+        <span id="bundle-size" class="badge" style="background: rgba(41,151,255,0.12); color: var(--accent); border-color: rgba(41,151,255,0.2);">~32KB</span>
+        <button class="hamburger" id="hamburger-btn" aria-label="Open menu">
+          <span></span>
+          <span></span>
+          <span></span>
+        </button>
+      </div>
+    </div>
+  </nav>
+
+  <!-- ======================================== MOBILE OVERLAY ======================================== -->
+  <div class="mobile-overlay" id="mobile-overlay">
+    <button class="mobile-overlay-close" id="mobile-close" aria-label="Close menu">&#10005;</button>
+    <ul class="mobile-overlay-links">
+      <li><a href="#hero" class="mobile-nav-link">Home</a></li>
+      <li><a href="#features" class="mobile-nav-link">Modules</a></li>
+      <li><a href="#modules" class="mobile-nav-link">Deep Dive</a></li>
+      <li><a href="#comparison" class="mobile-nav-link">Compare</a></li>
+      <li><a href="#live-demo" class="mobile-nav-link">Demo</a></li>
+      <li><a href="#device" class="mobile-nav-link">Device</a></li>
+      <li><a href="#new-modules" class="mobile-nav-link">New Modules</a></li>
+      <li><a href="docs/router.html" class="mobile-nav-link">Docs</a></li>
+    </ul>
+  </div>
+
+  <!-- ======================================== HERO ======================================== -->
+  <section class="hero" id="hero">
+    <div class="hero-eyebrow">Router + State + Hooks + i18n + PWA + API Mocking + IndexedDB + more</div>
+    <h1>20 packages.<br>One simple script tag.<br>11KB gzipped.</h1>
+    <p>Other frameworks give you rendering. You still need to npm install a router, a state manager, an HTTP client, i18n, mocking, PWA tooling...<br><strong style="color:var(--text);">Aura.js ships all 20 — with zero dependencies and zero build step.</strong></p>
+    <div class="hero-cta-wrapper">
+      <div class="hero-cta-inner">
+        <a href="#live-demo" class="btn btn-primary">Try Live Demo</a>
+        <a href="#modules" class="btn btn-secondary">Explore Modules</a>
+      </div>
+    </div>
+    <div class="hero-stats stagger" id="hero-stats">
+      <div class="hero-stat">
+        <div class="hero-stat-value" id="stat-size">11</div>
+        <div class="hero-stat-label">KB gzipped</div>
+      </div>
+      <div class="hero-stat">
+        <div class="hero-stat-value" id="stat-modules">20</div>
+        <div class="hero-stat-label">Built-in modules</div>
+      </div>
+      <div class="hero-stat">
+        <div class="hero-stat-value" id="stat-replaced">10</div>
+        <div class="hero-stat-label">npm packages replaced</div>
+      </div>
+      <div class="hero-stat">
+        <div class="hero-stat-value" id="stat-deps">0</div>
+        <div class="hero-stat-label">Dependencies</div>
+      </div>
+    </div>
+  </section>
+
+  <!-- ======================================== FEATURES OVERVIEW ======================================== -->
+  <section class="section" id="features">
+    <div class="section-header fade-in">
+      <div class="section-eyebrow">What's inside 11KB?</div>
+      <h2 class="section-title">20 modules. Zero npm installs.</h2>
+      <p class="section-subtitle">React needs react-router + zustand + axios + react-intl + MSW to match this. Aura ships it all.</p>
+    </div>
+
+    <div class="features-grid stagger" id="features-grid">
+      <div class="feature-card" style="--card-accent: var(--accent);">
+        <div class="feature-icon" style="background: rgba(41,151,255,0.1);">&#9737;</div>
+        <h3>Router</h3>
+        <p>SPA routing with dynamic params, wildcards, groups, named routes, middlewares, guards, and full browser history support.</p>
+        <span class="tag tag-blue">16 features</span>
+        <div class="replaces">Replaces <strong>react-router</strong> (16KB)</div>
+      </div>
+
+      <div class="feature-card" style="--card-accent: var(--green);">
+        <div class="feature-icon" style="background: rgba(48,209,88,0.1);">&#9881;</div>
+        <h3>State</h3>
+        <p>Reactive state with subscriptions, computed properties, batch updates, actions, persistence, and the selector pattern.</p>
+        <span class="tag tag-green">13 features</span>
+        <div class="replaces">Replaces <strong>zustand</strong> / <strong>redux</strong> (3-14KB)</div>
+      </div>
+
+      <div class="feature-card" style="--card-accent: var(--orange);">
+        <div class="feature-icon" style="background: rgba(255,159,10,0.1);">&#9889;</div>
+        <h3>Events</h3>
+        <p>Pub/sub with wildcard namespaces, priority ordering, batch operations, and auto-unsubscribe returns.</p>
+        <span class="tag tag-orange">10 features</span>
+      </div>
+
+      <div class="feature-card" style="--card-accent: var(--pink);">
+        <div class="feature-icon" style="background: rgba(255,55,95,0.1);">&#128462;</div>
+        <h3>Template</h3>
+        <p>Handlebars-style templating with #if/#each/#unless, partials, auto-escaping, caching, and i18n integration.</p>
+        <span class="tag tag-pink">12 features</span>
+      </div>
+
+      <div class="feature-card" style="--card-accent: var(--purple);">
+        <div class="feature-icon" style="background: rgba(191,90,242,0.1);">&#127760;</div>
+        <h3>API Client</h3>
+        <p>Full HTTP client with interceptors, timeout, retry with backoff, abort support, file upload with progress tracking.</p>
+        <span class="tag tag-purple">14 features</span>
+        <div class="replaces">Replaces <strong>axios</strong> (14KB)</div>
+      </div>
+
+      <div class="feature-card" style="--card-accent: var(--teal);">
+        <div class="feature-icon" style="background: rgba(100,210,255,0.1);">&#127463;</div>
+        <h3>i18n</h3>
+        <p>Full internationalization with pluralization, fallback languages, Intl formatting, RTL detection, and DOM translation.</p>
+        <span class="tag tag-teal">14 features</span>
+        <div class="replaces">Replaces <strong>react-intl</strong> / <strong>vue-i18n</strong> (40KB)</div>
+      </div>
+
+      <div class="feature-card" style="--card-accent: var(--pink);">
+        <div class="feature-icon" style="background: rgba(255,55,95,0.1);">&#128752;</div>
+        <h3>Mock API</h3>
+        <p>Intercept fetch with zero dependencies. Register routes with inline JSON or local files, persist to localStorage, share between devs.</p>
+        <span class="tag tag-pink">New</span> <span class="tag tag-pink">12 features</span>
+        <div class="replaces">Replaces <strong>MSW</strong> (36KB)</div>
+      </div>
+
+      <div class="feature-card" style="--card-accent: var(--green);">
+        <div class="feature-icon" style="background: rgba(48,209,88,0.1);">&#128450;</div>
+        <h3>IndexedDB</h3>
+        <p>Promise-based IndexedDB wrapper. Stores, indexes, cursors, queries — all the power without the ugly callback API.</p>
+        <span class="tag tag-green">New</span> <span class="tag tag-green">11 features</span>
+        <div class="replaces">Replaces <strong>dexie</strong> / <strong>idb</strong> (12KB)</div>
+      </div>
+
+      <div class="feature-card" style="--card-accent: var(--orange);">
+        <div class="feature-icon" style="background: rgba(255,159,10,0.1);">&#128221;</div>
+        <h3>Logger</h3>
+        <p>Structured logging with levels, tagged loggers, custom transports, history, and auto-emit to the Events system.</p>
+        <span class="tag tag-orange">New</span> <span class="tag tag-orange">10 features</span>
+        <div class="replaces">Replaces <strong>loglevel</strong> / <strong>winston</strong></div>
+      </div>
+
+      <div class="feature-card" style="--card-accent: var(--purple);">
+        <div class="feature-icon" style="background: rgba(191,90,242,0.1);">&#128268;</div>
+        <h3>Hooks</h3>
+        <p>Composable hooks like React — useState, useEvent, useFetch, useStorage, useComputed — wired into Aura's core.</p>
+        <span class="tag tag-purple">New</span> <span class="tag tag-purple">9 hooks</span>
+      </div>
+
+      <div class="feature-card" style="--card-accent: var(--teal);">
+        <div class="feature-icon" style="background: rgba(100,210,255,0.1);">&#128170;</div>
+        <h3>tryThis</h3>
+        <p>Kill try/catch boilerplate. Wrap any sync or async operation and get a clean [error, result] tuple back.</p>
+        <span class="tag tag-teal">New</span> <span class="tag tag-teal">Zero overhead</span>
+      </div>
+
+      <div class="feature-card" style="--card-accent: var(--accent);">
+        <div class="feature-icon" style="background: rgba(41,151,255,0.1);">&#128247;</div>
+        <h3>PWA + Service Worker</h3>
+        <p>Register SW, handle install prompts, cache strategies (cache-first, network-first, stale-while-revalidate), offline support.</p>
+        <span class="tag tag-blue">New</span> <span class="tag tag-blue">Offline ready</span>
+        <div class="replaces">Replaces <strong>workbox</strong> (20KB)</div>
+      </div>
+    </div>
+  </section>
+
+  <!-- ======================================== NO NODE NEEDED ======================================== -->
+  <section class="section" id="no-node">
+    <div class="no-node fade-in">
+      <div class="no-node-content">
+        <h2>Replace 10 npm packages<br><span>with one script tag.</span></h2>
+        <p>Router, state manager, HTTP client, i18n, API mocking, IndexedDB, PWA, hooks, logging, error handling — other frameworks need a dozen packages for this. Aura ships it all in 11KB gzipped. No Node. No build step. No config.</p>
+
+        <div class="no-node-steps">
+          <div class="no-node-step">
+            <div class="no-node-step-num">STEP 1</div>
+            <p>Add one script tag</p>
+            <code>&lt;script src="cdn.jsdelivr.net/npm/@buildwithdarsh/aura.js"&gt;</code>
+          </div>
+          <div class="no-node-step">
+            <div class="no-node-step-num">STEP 2</div>
+            <p>Register routes & state</p>
+            <code>Aura.route('/', handler)</code>
+          </div>
+          <div class="no-node-step">
+            <div class="no-node-step-num">STEP 3</div>
+            <p>Call init. You're done.</p>
+            <code>Aura.init()</code>
+          </div>
+        </div>
+
+        <div class="vs-badges">
+          <span class="vs-badge vs-badge-no">&#10005; No react-router</span>
+          <span class="vs-badge vs-badge-no">&#10005; No zustand / redux</span>
+          <span class="vs-badge vs-badge-no">&#10005; No axios</span>
+          <span class="vs-badge vs-badge-no">&#10005; No react-intl</span>
+          <span class="vs-badge vs-badge-no">&#10005; No MSW</span>
+          <span class="vs-badge vs-badge-no">&#10005; No workbox</span>
+          <span class="vs-badge vs-badge-no">&#10005; No Node.js</span>
+          <span class="vs-badge vs-badge-yes">&#10003; All built in</span>
+          <span class="vs-badge vs-badge-yes">&#10003; 11KB gzipped</span>
+          <span class="vs-badge vs-badge-yes">&#10003; Zero config</span>
+        </div>
+      </div>
+    </div>
+  </section>
+
+  <!-- ======================================== COMPARISON ======================================== -->
+  <section class="section" id="comparison">
+    <div class="section-header fade-in">
+      <div class="section-eyebrow">The real comparison</div>
+      <h2 class="section-title">They give you a view layer.<br>We give you the whole stack.</h2>
+      <p class="section-subtitle">React = 46KB for rendering. Add react-router (16KB), zustand (3KB), axios (14KB), react-intl (40KB), MSW (36KB)... or just use Aura at 11KB total.</p>
+    </div>
+
+    <!-- SIZE BAR CHART -->
+    <div class="showcase-card fade-in" style="padding:40px 32px;">
+      <h3 style="text-align:center;margin-bottom:8px;font-size:20px;">They ship a view layer. This is Aura with everything.</h3>
+      <p style="text-align:center;color:var(--text-tertiary);font-size:14px;margin-bottom:24px;">Bundle size (min+gzip) — remember, Aura includes router, state, hooks, i18n, PWA, mocking, IndexedDB...</p>
+      <div class="bar-chart" id="bar-chart">
+        <div class="bar-item">
+          <div class="bar" style="height:0px;background:var(--accent);" data-height="36">
+            <span class="bar-value" style="color:var(--accent);">~11KB</span>
+          </div>
+          <span class="bar-label">Aura.js</span>
+        </div>
+        <div class="bar-item">
+          <div class="bar" style="height:0px;background:var(--teal);" data-height="56">
+            <span class="bar-value" style="color:var(--teal);">44KB</span>
+          </div>
+          <span class="bar-label">Vue 3</span>
+        </div>
+        <div class="bar-item">
+          <div class="bar" style="height:0px;background:var(--purple);" data-height="65">
+            <span class="bar-value" style="color:var(--purple);">46KB</span>
+          </div>
+          <span class="bar-label">React + ReactDOM</span>
+        </div>
+        <div class="bar-item">
+          <div class="bar" style="height:0px;background:var(--orange);" data-height="120">
+            <span class="bar-value" style="color:var(--orange);">90KB</span>
+          </div>
+          <span class="bar-label">Angular</span>
+        </div>
+        <div class="bar-item">
+          <div class="bar" style="height:0px;background:var(--pink);" data-height="180">
+            <span class="bar-value" style="color:var(--pink);">143KB</span>
+          </div>
+          <span class="bar-label">Next.js runtime</span>
+        </div>
+      </div>
+    </div>
+
+    <!-- FEATURE COMPARISON TABLE -->
+    <div class="fade-in" style="margin-top:20px;">
+      <table class="comparison-table">
+        <thead>
+          <tr>
+            <th>Feature</th>
+            <th class="highlight">Aura.js</th>
+            <th>React</th>
+            <th>Vue 3</th>
+            <th>Svelte</th>
+          </tr>
+        </thead>
+        <tbody>
+          <tr>
+            <td>No Build Step Required</td>
+            <td class="highlight"><span class="check">&#10003;</span></td>
+            <td><span class="cross">&#10007;</span></td>
+            <td><span class="partial">CDN only</span></td>
+            <td><span class="cross">&#10007;</span></td>
+          </tr>
+          <tr>
+            <td>No Node.js Required</td>
+            <td class="highlight"><span class="check">&#10003;</span></td>
+            <td><span class="cross">&#10007;</span></td>
+            <td><span class="partial">CDN only</span></td>
+            <td><span class="cross">&#10007;</span></td>
+          </tr>
+          <tr>
+            <td>Built-in Router</td>
+            <td class="highlight"><span class="check">&#10003;</span></td>
+            <td><span class="cross">&#10007;</span></td>
+            <td><span class="cross">&#10007;</span></td>
+            <td><span class="cross">&#10007;</span></td>
+          </tr>
+          <tr>
+            <td>Built-in State Management</td>
+            <td class="highlight"><span class="check">&#10003;</span></td>
+            <td><span class="cross">&#10007;</span></td>
+            <td><span class="check">&#10003;</span></td>
+            <td><span class="check">&#10003;</span></td>
+          </tr>
+          <tr>
+            <td>Built-in HTTP Client</td>
+            <td class="highlight"><span class="check">&#10003;</span></td>
+            <td><span class="cross">&#10007;</span></td>
+            <td><span class="cross">&#10007;</span></td>
+            <td><span class="cross">&#10007;</span></td>
+          </tr>
+          <tr>
+            <td>Built-in i18n</td>
+            <td class="highlight"><span class="check">&#10003;</span></td>
+            <td><span class="cross">&#10007;</span></td>
+            <td><span class="cross">&#10007;</span></td>
+            <td><span class="cross">&#10007;</span></td>
+          </tr>
+          <tr>
+            <td>Built-in Templating</td>
+            <td class="highlight"><span class="check">&#10003;</span></td>
+            <td><span class="partial">JSX</span></td>
+            <td><span class="check">&#10003;</span></td>
+            <td><span class="check">&#10003;</span></td>
+          </tr>
+          <tr>
+            <td>Device Detection</td>
+            <td class="highlight"><span class="check">&#10003;</span></td>
+            <td><span class="cross">&#10007;</span></td>
+            <td><span class="cross">&#10007;</span></td>
+            <td><span class="cross">&#10007;</span></td>
+          </tr>
+          <tr>
+            <td>Geolocation</td>
+            <td class="highlight"><span class="check">&#10003;</span></td>
+            <td><span class="cross">&#10007;</span></td>
+            <td><span class="cross">&#10007;</span></td>
+            <td><span class="cross">&#10007;</span></td>
+          </tr>
+          <tr>
+            <td>Performance Monitoring</td>
+            <td class="highlight"><span class="check">&#10003;</span></td>
+            <td><span class="partial">DevTools</span></td>
+            <td><span class="partial">DevTools</span></td>
+            <td><span class="cross">&#10007;</span></td>
+          </tr>
+          <tr>
+            <td>Built-in API Mocking</td>
+            <td class="highlight"><span class="check">&#10003;</span></td>
+            <td><span class="partial">MSW (36KB)</span></td>
+            <td><span class="cross">&#10007;</span></td>
+            <td><span class="cross">&#10007;</span></td>
+          </tr>
+          <tr>
+            <td>Built-in IndexedDB</td>
+            <td class="highlight"><span class="check">&#10003;</span></td>
+            <td><span class="cross">&#10007;</span></td>
+            <td><span class="cross">&#10007;</span></td>
+            <td><span class="cross">&#10007;</span></td>
+          </tr>
+          <tr>
+            <td>Composable Hooks</td>
+            <td class="highlight"><span class="check">&#10003;</span></td>
+            <td><span class="check">&#10003;</span></td>
+            <td><span class="partial">Composition API</span></td>
+            <td><span class="cross">&#10007;</span></td>
+          </tr>
+          <tr>
+            <td>PWA + Service Worker</td>
+            <td class="highlight"><span class="check">&#10003;</span></td>
+            <td><span class="cross">&#10007;</span></td>
+            <td><span class="cross">&#10007;</span></td>
+            <td><span class="cross">&#10007;</span></td>
+          </tr>
+          <tr>
+            <td>Zero Dependencies</td>
+            <td class="highlight"><span class="check">&#10003;</span></td>
+            <td><span class="cross">&#10007;</span></td>
+            <td><span class="check">&#10003;</span></td>
+            <td><span class="check">&#10003;</span></td>
+          </tr>
+          <tr>
+            <td>Bundle Size (min+gzip)</td>
+            <td class="highlight" style="color:var(--green);font-weight:700;">~11KB</td>
+            <td>~46KB</td>
+            <td>~44KB</td>
+            <td>~4KB*</td>
+          </tr>
+          <tr>
+            <td>Real cost for equivalent features</td>
+            <td class="highlight" style="color:var(--green);font-weight:700;">11KB (done)</td>
+            <td style="color:var(--pink);">~155KB**</td>
+            <td style="color:var(--orange);">~90KB**</td>
+            <td style="color:var(--orange);">~80KB**</td>
+          </tr>
+          <tr>
+            <td>npm packages needed</td>
+            <td class="highlight" style="color:var(--green);font-weight:700;">0</td>
+            <td>6+</td>
+            <td>5+</td>
+            <td>5+</td>
+          </tr>
+          <tr>
+            <td>Setup Time</td>
+            <td class="highlight" style="color:var(--green);font-weight:700;">10 seconds</td>
+            <td>~5 minutes</td>
+            <td>~5 minutes</td>
+            <td>~5 minutes</td>
+          </tr>
+        </tbody>
+      </table>
+      <p style="text-align:right;color:var(--text-tertiary);font-size:12px;margin-top:8px;">*Svelte compiles away, but requires a build step and Node.js<br>**React + react-router + zustand + axios + react-intl + MSW. Vue + vue-router + pinia + vue-i18n. Svelte + svelte-routing + svelte-i18n.</p>
+    </div>
+  </section>
+
+  <!-- ======================================== MODULE SHOWCASES ======================================== -->
+  <section class="section" id="modules">
+    <div class="section-header fade-in">
+      <div class="section-eyebrow">What's inside</div>
+      <h2 class="section-title">Each module replaces a package.</h2>
+      <p class="section-subtitle">React-router, zustand, axios, react-intl — all replaced. See the APIs.</p>
+    </div>
+
+    <!-- ROUTER -->
+    <div class="showcase-card fade-in">
+      <div class="showcase-split">
+        <div class="showcase-info">
+          <h3>&#9737; Routing</h3>
+          <p>Register routes with dynamic segments, group them under prefixes, add global middleware, and navigate seamlessly — all without page reloads.</p>
+          <ul class="showcase-features">
+            <li class="tag tag-blue">Dynamic Params</li>
+            <li class="tag tag-blue">Wildcards</li>
+            <li class="tag tag-blue">Named Routes</li>
+            <li class="tag tag-blue">Groups</li>
+            <li class="tag tag-blue">Middleware</li>
+            <li class="tag tag-blue">beforeLeave</li>
+            <li class="tag tag-blue">Link Intercept</li>
+            <li class="tag tag-blue">History API</li>
+          </ul>
+        </div>
+        <div class="showcase-code">
+          <div class="code-block" style="border:none;border-radius:0;">
+            <div class="code-header">
+              <div class="code-dots"><div class="code-dot"></div><div class="code-dot"></div><div class="code-dot"></div></div>
+              <span class="code-lang">router.js</span>
+            </div>
+            <div class="code-body"><pre><span class="cm">// Register routes with dynamic params</span>
+<span class="obj">Aura</span>.<span class="fn">route</span>(<span class="str">'/'</span>, (<span class="prop">ctx</span>) <span class="op">=></span> {
+  <span class="obj">Aura</span>.<span class="prop">template</span>.<span class="fn">renderTo</span>(<span class="str">'home'</span>);
+});
+
+<span class="obj">Aura</span>.<span class="fn">route</span>(<span class="str">'/users/:id'</span>, (<span class="prop">ctx</span>) <span class="op">=></span> {
+  <span class="obj">console</span>.<span class="fn">log</span>(<span class="prop">ctx</span>.<span class="prop">params</span>.<span class="prop">id</span>);  <span class="cm">// "42"</span>
+});
+
+<span class="cm">// Group routes under a prefix</span>
+<span class="obj">Aura</span>.<span class="fn">group</span>(<span class="str">'/admin'</span>, (<span class="prop">r</span>) <span class="op">=></span> {
+  <span class="prop">r</span>.<span class="fn">route</span>(<span class="str">'/dashboard'</span>, <span class="prop">handler</span>);
+  <span class="prop">r</span>.<span class="fn">route</span>(<span class="str">'/settings'</span>, <span class="prop">handler</span>);
+});
+
+<span class="cm">// Global auth middleware</span>
+<span class="obj">Aura</span>.<span class="fn">middleware</span>((<span class="prop">ctx</span>) <span class="op">=></span> {
+  <span class="kw">return</span> <span class="fn">isLoggedIn</span>();
+});
+
+<span class="cm">// Catch-all wildcard route</span>
+<span class="obj">Aura</span>.<span class="fn">route</span>(<span class="str">'/files/*'</span>, (<span class="prop">ctx</span>) <span class="op">=></span> {
+  <span class="obj">console</span>.<span class="fn">log</span>(<span class="prop">ctx</span>.<span class="prop">params</span>.<span class="prop">wildcard</span>);
+});</pre></div>
+          </div>
+        </div>
+      </div>
+    </div>
+
+    <!-- STATE -->
+    <div class="showcase-card fade-in">
+      <div class="showcase-split">
+        <div class="showcase-info">
+          <h3>&#9881; State Management</h3>
+          <p>Initialize, read, and update state with automatic change notifications. Use computed properties, batch updates, and persist to localStorage.</p>
+          <ul class="showcase-features">
+            <li class="tag tag-green">Reactive</li>
+            <li class="tag tag-green">Computed</li>
+            <li class="tag tag-green">Batch</li>
+            <li class="tag tag-green">Persist</li>
+            <li class="tag tag-green">Actions</li>
+            <li class="tag tag-green">Selectors</li>
+            <li class="tag tag-green">Reset</li>
+          </ul>
+        </div>
+        <div class="showcase-code">
+          <div class="code-block" style="border:none;border-radius:0;">
+            <div class="code-header">
+              <div class="code-dots"><div class="code-dot"></div><div class="code-dot"></div><div class="code-dot"></div></div>
+              <span class="code-lang">state.js</span>
+            </div>
+            <div class="code-body"><pre><span class="cm">// Initialize with defaults</span>
+<span class="obj">Aura</span>.<span class="prop">state</span>.<span class="fn">init</span>({ <span class="prop">count</span>: <span class="num">0</span>, <span class="prop">user</span>: <span class="kw">null</span> });
+
+<span class="cm">// Reactive subscriptions</span>
+<span class="obj">Aura</span>.<span class="prop">state</span>.<span class="fn">subscribe</span>(<span class="str">'count'</span>, (<span class="prop">val</span>) <span class="op">=></span> {
+  <span class="obj">document</span>.<span class="fn">querySelector</span>(<span class="str">'#count'</span>)
+    .<span class="prop">textContent</span> <span class="op">=</span> <span class="prop">val</span>;
+});
+
+<span class="cm">// Computed properties</span>
+<span class="obj">Aura</span>.<span class="prop">state</span>.<span class="fn">computed</span>(<span class="str">'doubled'</span>, (<span class="prop">s</span>) <span class="op">=></span> <span class="prop">s</span>.<span class="prop">count</span> <span class="op">*</span> <span class="num">2</span>);
+
+<span class="cm">// Batch multiple updates (single emit)</span>
+<span class="obj">Aura</span>.<span class="prop">state</span>.<span class="fn">batch</span>(() <span class="op">=></span> {
+  <span class="obj">Aura</span>.<span class="prop">state</span>.<span class="fn">set</span>(<span class="str">'count'</span>, <span class="num">10</span>);
+  <span class="obj">Aura</span>.<span class="prop">state</span>.<span class="fn">set</span>(<span class="str">'user'</span>, { <span class="prop">name</span>: <span class="str">'Alex'</span> });
+});
+
+<span class="cm">// Persist to localStorage</span>
+<span class="obj">Aura</span>.<span class="prop">state</span>.<span class="fn">persist</span>();</pre></div>
+          </div>
+        </div>
+      </div>
+    </div>
+
+    <!-- API -->
+    <div class="showcase-card fade-in">
+      <div class="showcase-split">
+        <div class="showcase-info">
+          <h3>&#9889; API Client</h3>
+          <p>A batteries-included HTTP client with named interceptors, automatic retry, timeout, abort controller, and file upload with progress tracking.</p>
+          <ul class="showcase-features">
+            <li class="tag tag-purple">GET/POST/PUT/PATCH/DELETE</li>
+            <li class="tag tag-purple">Interceptors</li>
+            <li class="tag tag-purple">Timeout</li>
+            <li class="tag tag-purple">Retry</li>
+            <li class="tag tag-purple">Abort</li>
+            <li class="tag tag-purple">Upload</li>
+          </ul>
+        </div>
+        <div class="showcase-code">
+          <div class="code-block" style="border:none;border-radius:0;">
+            <div class="code-header">
+              <div class="code-dots"><div class="code-dot"></div><div class="code-dot"></div><div class="code-dot"></div></div>
+              <span class="code-lang">api.js</span>
+            </div>
+            <div class="code-body"><pre><span class="cm">// Configure base URL & defaults</span>
+<span class="obj">Aura</span>.<span class="prop">api</span>.<span class="fn">configure</span>({
+  <span class="prop">baseURL</span>: <span class="str">'https://api.example.com'</span>,
+  <span class="prop">timeout</span>: <span class="num">5000</span>,
+  <span class="prop">retry</span>:   <span class="num">3</span>,
+});
+
+<span class="cm">// Named auth interceptor</span>
+<span class="obj">Aura</span>.<span class="prop">api</span>.<span class="fn">addInterceptor</span>(<span class="str">'auth'</span>, (<span class="prop">cfg</span>) <span class="op">=></span> {
+  <span class="prop">cfg</span>.<span class="prop">headers</span>[<span class="str">'Authorization'</span>]
+    <span class="op">=</span> <span class="str">`Bearer </span><span class="op">${</span><span class="prop">token</span><span class="op">}</span><span class="str">`</span>;
+  <span class="kw">return</span> <span class="prop">cfg</span>;
+});
+
+<span class="cm">// Fetch with abort support</span>
+<span class="kw">const</span> <span class="prop">ctrl</span> <span class="op">=</span> <span class="obj">Aura</span>.<span class="prop">api</span>.<span class="fn">createAbortController</span>();
+<span class="kw">const</span> <span class="prop">users</span> <span class="op">=</span> <span class="kw">await</span> <span class="obj">Aura</span>.<span class="prop">api</span>.<span class="fn">get</span>(<span class="str">'/users'</span>, {
+  <span class="prop">signal</span>: <span class="prop">ctrl</span>.<span class="prop">signal</span>,
+  <span class="prop">params</span>: { <span class="prop">page</span>: <span class="num">1</span> }
+});
+
+<span class="cm">// Upload with progress</span>
+<span class="kw">await</span> <span class="obj">Aura</span>.<span class="prop">api</span>.<span class="fn">upload</span>(<span class="str">'/files'</span>, <span class="prop">formData</span>, {
+  <span class="fn">onProgress</span>: (<span class="prop">pct</span>) <span class="op">=></span> <span class="obj">console</span>.<span class="fn">log</span>(<span class="str">`</span><span class="op">${</span><span class="prop">pct</span><span class="op">}</span><span class="str">%`</span>)
+});</pre></div>
+          </div>
+        </div>
+      </div>
+    </div>
+
+    <!-- TEMPLATE -->
+    <div class="showcase-card fade-in">
+      <div class="showcase-split">
+        <div class="showcase-info">
+          <h3>&#128462; Templating</h3>
+          <p>Handlebars-inspired syntax with conditionals, loops, partials, and automatic HTML escaping. Templates are fetched, cached, and translated.</p>
+          <ul class="showcase-features">
+            <li class="tag tag-pink">{{var}}</li>
+            <li class="tag tag-pink">{{{raw}}}</li>
+            <li class="tag tag-pink">#if / #else</li>
+            <li class="tag tag-pink">#each</li>
+            <li class="tag tag-pink">#unless</li>
+            <li class="tag tag-pink">{{> partial}}</li>
+            <li class="tag tag-pink">Cache</li>
+            <li class="tag tag-pink">Auto i18n</li>
+          </ul>
+        </div>
+        <div class="showcase-code">
+          <div class="code-block" style="border:none;border-radius:0;">
+            <div class="code-header">
+              <div class="code-dots"><div class="code-dot"></div><div class="code-dot"></div><div class="code-dot"></div></div>
+              <span class="code-lang">template.html + render.js</span>
+            </div>
+            <div class="code-body"><pre><span class="cm">&lt;!-- template: user-card.html --&gt;</span>
+<span class="op">&lt;</span><span class="kw">div</span><span class="op">&gt;</span>
+  <span class="op">{{</span><span class="prop">#if</span> <span class="prop">premium</span><span class="op">}}</span>
+    <span class="op">&lt;</span><span class="kw">span</span><span class="op">&gt;</span>&#11088; <span class="op">{{</span><span class="prop">name</span><span class="op">}}</span><span class="op">&lt;/</span><span class="kw">span</span><span class="op">&gt;</span>
+  <span class="op">{{</span><span class="kw">else</span><span class="op">}}</span>
+    <span class="op">&lt;</span><span class="kw">span</span><span class="op">&gt;</span><span class="op">{{</span><span class="prop">name</span><span class="op">}}</span><span class="op">&lt;/</span><span class="kw">span</span><span class="op">&gt;</span>
+  <span class="op">{{</span><span class="prop">/if</span><span class="op">}}</span>
+
+  <span class="op">{{</span><span class="prop">#each</span> <span class="prop">skills</span><span class="op">}}</span>
+    <span class="op">&lt;</span><span class="kw">span</span> <span class="prop">class</span><span class="op">=</span><span class="str">"tag"</span><span class="op">&gt;</span><span class="op">{{</span><span class="prop">.</span><span class="op">}}</span><span class="op">&lt;/</span><span class="kw">span</span><span class="op">&gt;</span>
+  <span class="op">{{</span><span class="prop">/each</span><span class="op">}}</span>
+<span class="op">&lt;/</span><span class="kw">div</span><span class="op">&gt;</span>
+
+<span class="cm">// Render with data</span>
+<span class="obj">Aura</span>.<span class="prop">template</span>.<span class="fn">renderString</span>(<span class="prop">tpl</span>, {
+  <span class="prop">name</span>: <span class="str">'Alex'</span>,
+  <span class="prop">premium</span>: <span class="kw">true</span>,
+  <span class="prop">skills</span>: [<span class="str">'JS'</span>, <span class="str">'TS'</span>, <span class="str">'Rust'</span>]
+});</pre></div>
+          </div>
+        </div>
+      </div>
+    </div>
+
+    <!-- I18N -->
+    <div class="showcase-card fade-in">
+      <div class="showcase-split">
+        <div class="showcase-info">
+          <h3>&#127463; Internationalization</h3>
+          <p>Load language files on demand, translate with dot-notation keys and placeholders, handle pluralization, format numbers and dates with Intl.</p>
+          <ul class="showcase-features">
+            <li class="tag tag-teal">Dot Keys</li>
+            <li class="tag tag-teal">Pluralization</li>
+            <li class="tag tag-teal">Fallback Lang</li>
+            <li class="tag tag-teal">Number Format</li>
+            <li class="tag tag-teal">Date Format</li>
+            <li class="tag tag-teal">Relative Time</li>
+            <li class="tag tag-teal">RTL Detection</li>
+            <li class="tag tag-teal">DOM Translate</li>
+          </ul>
+        </div>
+        <div class="showcase-code">
+          <div class="code-block" style="border:none;border-radius:0;">
+            <div class="code-header">
+              <div class="code-dots"><div class="code-dot"></div><div class="code-dot"></div><div class="code-dot"></div></div>
+              <span class="code-lang">i18n.js</span>
+            </div>
+            <div class="code-body"><pre><span class="kw">await</span> <span class="obj">Aura</span>.<span class="prop">i18n</span>.<span class="fn">load</span>(<span class="str">'en'</span>);
+
+<span class="cm">// Dot-notation keys</span>
+<span class="obj">Aura</span>.<span class="prop">i18n</span>.<span class="fn">t</span>(<span class="str">'hero.title'</span>);
+<span class="cm">// => "Build Beautiful Apps"</span>
+
+<span class="cm">// Placeholders</span>
+<span class="obj">Aura</span>.<span class="prop">i18n</span>.<span class="fn">t</span>(<span class="str">'greeting'</span>, { <span class="prop">name</span>: <span class="str">'Alex'</span> });
+<span class="cm">// => "Hello, Alex"</span>
+
+<span class="cm">// Pluralization</span>
+<span class="obj">Aura</span>.<span class="prop">i18n</span>.<span class="fn">plural</span>(<span class="str">'items'</span>, <span class="num">0</span>);  <span class="cm">// "No items"</span>
+<span class="obj">Aura</span>.<span class="prop">i18n</span>.<span class="fn">plural</span>(<span class="str">'items'</span>, <span class="num">1</span>);  <span class="cm">// "1 item"</span>
+<span class="obj">Aura</span>.<span class="prop">i18n</span>.<span class="fn">plural</span>(<span class="str">'items'</span>, <span class="num">42</span>); <span class="cm">// "42 items"</span>
+
+<span class="cm">// Intl formatting</span>
+<span class="obj">Aura</span>.<span class="prop">i18n</span>.<span class="fn">formatNumber</span>(<span class="num">1234567.89</span>);
+<span class="cm">// => "1,234,567.89"</span>
+
+<span class="obj">Aura</span>.<span class="prop">i18n</span>.<span class="fn">formatDate</span>(<span class="kw">new</span> <span class="obj">Date</span>());
+<span class="cm">// => "3/17/2026"</span>
+
+<span class="obj">Aura</span>.<span class="prop">i18n</span>.<span class="fn">formatRelative</span>(<span class="obj">Date</span>.<span class="fn">now</span>() <span class="op">-</span> <span class="num">3600000</span>);
+<span class="cm">// => "1 hour ago"</span></pre></div>
+          </div>
+        </div>
+      </div>
+    </div>
+
+    <!-- EVENTS -->
+    <div class="showcase-card fade-in">
+      <div class="showcase-split">
+        <div class="showcase-info">
+          <h3>&#128264; Events</h3>
+          <p>A lightweight pub/sub system with wildcard namespaces, priority ordering, and auto-unsubscribe returns. The backbone of the framework.</p>
+          <ul class="showcase-features">
+            <li class="tag tag-orange">on / off / emit</li>
+            <li class="tag tag-orange">once</li>
+            <li class="tag tag-orange">Wildcard *</li>
+            <li class="tag tag-orange">Priority</li>
+            <li class="tag tag-orange">Batch</li>
+            <li class="tag tag-orange">Auto Unsub</li>
+          </ul>
+        </div>
+        <div class="showcase-code">
+          <div class="code-block" style="border:none;border-radius:0;">
+            <div class="code-header">
+              <div class="code-dots"><div class="code-dot"></div><div class="code-dot"></div><div class="code-dot"></div></div>
+              <span class="code-lang">events.js</span>
+            </div>
+            <div class="code-body"><pre><span class="cm">// Subscribe — returns unsubscribe function</span>
+<span class="kw">const</span> <span class="prop">unsub</span> <span class="op">=</span> <span class="obj">Aura</span>.<span class="fn">on</span>(<span class="str">'user:login'</span>, (<span class="prop">user</span>) <span class="op">=></span> {
+  <span class="obj">console</span>.<span class="fn">log</span>(<span class="str">'Welcome'</span>, <span class="prop">user</span>.<span class="prop">name</span>);
+});
+
+<span class="cm">// Wildcard — catches all user:* events</span>
+<span class="obj">Aura</span>.<span class="fn">on</span>(<span class="str">'user:*'</span>, (<span class="prop">data</span>) <span class="op">=></span> {
+  <span class="fn">analytics</span>(<span class="prop">data</span>);
+});
+
+<span class="cm">// Priority — higher runs first</span>
+<span class="obj">Aura</span>.<span class="fn">on</span>(<span class="str">'order:placed'</span>, <span class="prop">validate</span>, <span class="num">10</span>);
+<span class="obj">Aura</span>.<span class="fn">on</span>(<span class="str">'order:placed'</span>, <span class="prop">sendEmail</span>, <span class="num">5</span>);
+
+<span class="cm">// One-time listener</span>
+<span class="obj">Aura</span>.<span class="fn">once</span>(<span class="str">'app:ready'</span>, () <span class="op">=></span> <span class="fn">bootstrap</span>());
+
+<span class="cm">// Emit</span>
+<span class="obj">Aura</span>.<span class="fn">emit</span>(<span class="str">'user:login'</span>, { <span class="prop">name</span>: <span class="str">'Alex'</span> });
+
+<span class="cm">// Clean up later</span>
+<span class="fn">unsub</span>();</pre></div>
+          </div>
+        </div>
+      </div>
+    </div>
+  </section>
+
+  <!-- ======================================== MOCK API SHOWCASE ======================================== -->
+  <section class="section" id="mock-api">
+    <div class="section-header fade-in">
+      <div class="section-eyebrow">Replaces MSW (36KB)</div>
+      <h2 class="section-title">Mock API. Built in.</h2>
+      <p class="section-subtitle">Frontend doesn't wait for backend. Mock any route, from inline data or local JSON files. Already inside Aura — no extra install.</p>
+    </div>
+
+    <div class="showcase-card fade-in">
+      <div class="showcase-split">
+        <div class="showcase-info">
+          <h3>&#128752; Mock API</h3>
+          <p>Intercept <code style="color:var(--green);">fetch()</code> globally. Register mock routes with method + URL pattern matching, simulated delays, custom status codes. Persist mocks in localStorage, export/import between devs.</p>
+          <ul class="showcase-features">
+            <li class="tag tag-pink">Fetch Intercept</li>
+            <li class="tag tag-pink">:params</li>
+            <li class="tag tag-pink">JSON Files</li>
+            <li class="tag tag-pink">Delay</li>
+            <li class="tag tag-pink">Status Codes</li>
+            <li class="tag tag-pink">Passthrough</li>
+            <li class="tag tag-pink">localStorage</li>
+            <li class="tag tag-pink">Export / Import</li>
+            <li class="tag tag-pink">Request Log</li>
+          </ul>
+        </div>
+        <div class="showcase-code">
+          <div class="code-block" style="border:none;border-radius:0;">
+            <div class="code-header">
+              <div class="code-dots"><div class="code-dot"></div><div class="code-dot"></div><div class="code-dot"></div></div>
+              <span class="code-lang">mock.js</span>
+            </div>
+            <div class="code-body"><pre><span class="cm">// Inline mock</span>
+<span class="obj">Aura</span>.<span class="prop">mock</span>.<span class="fn">register</span>(<span class="str">'GET'</span>, <span class="str">'/api/users'</span>, {
+  <span class="prop">body</span>: [{ <span class="prop">id</span>: <span class="num">1</span>, <span class="prop">name</span>: <span class="str">'Alex'</span> }],
+  <span class="prop">delay</span>: <span class="num">300</span>
+});
+
+<span class="cm">// Or point to a local JSON file</span>
+<span class="obj">Aura</span>.<span class="prop">mock</span>.<span class="fn">register</span>(<span class="str">'GET'</span>, <span class="str">'/api/products'</span>,
+  <span class="str">'/mocks/products.json'</span>
+);
+
+<span class="cm">// Bulk load — mix inline + files</span>
+<span class="obj">Aura</span>.<span class="prop">mock</span>.<span class="fn">load</span>({
+  <span class="str">'GET /api/users/:id'</span>: {
+    <span class="prop">body</span>: { <span class="prop">id</span>: <span class="num">1</span>, <span class="prop">name</span>: <span class="str">'Alex'</span> }
+  },
+  <span class="str">'POST /api/users'</span>: {
+    <span class="prop">status</span>: <span class="num">201</span>,
+    <span class="prop">body</span>: { <span class="prop">id</span>: <span class="num">2</span> }
+  },
+  <span class="str">'DELETE /api/users/:id'</span>: {
+    <span class="prop">status</span>: <span class="num">204</span>
+  },
+});
+
+<span class="cm">// Enable — intercepts window.fetch</span>
+<span class="obj">Aura</span>.<span class="prop">mock</span>.<span class="fn">enable</span>();
+
+<span class="cm">// Now any fetch() hits the mock</span>
+<span class="kw">const</span> <span class="prop">res</span> <span class="op">=</span> <span class="kw">await</span> <span class="fn">fetch</span>(<span class="str">'/api/users'</span>);
+<span class="cm">// => [{ id: 1, name: 'Alex' }]</span>
+
+<span class="cm">// Persist for next page load</span>
+<span class="obj">Aura</span>.<span class="prop">mock</span>.<span class="fn">save</span>();
+
+<span class="cm">// Share with teammates</span>
+<span class="kw">const</span> <span class="prop">json</span> <span class="op">=</span> <span class="obj">Aura</span>.<span class="prop">mock</span>.<span class="fn">export</span>();</pre></div>
+          </div>
+        </div>
+      </div>
+    </div>
+  </section>
+
+  <!-- ======================================== NEW MODULES SHOWCASE ======================================== -->
+  <section class="section" id="new-modules">
+    <div class="section-header fade-in">
+      <div class="section-eyebrow">Still just 11KB gzipped</div>
+      <h2 class="section-title">Hooks. PWA. IndexedDB.<br>All included.</h2>
+      <p class="section-subtitle">Features that would add 50KB+ of npm packages to a React app — Aura includes them at zero extra cost.</p>
+    </div>
+
+    <!-- HOOKS -->
+    <div class="showcase-card fade-in">
+      <div class="showcase-split">
+        <div class="showcase-info">
+          <h3>&#128268; Hooks</h3>
+          <p>Composable, React-inspired hooks that wire directly into Aura's state, events, API, and storage. Use built-in hooks or register your own.</p>
+          <ul class="showcase-features">
+            <li class="tag tag-purple">useState</li>
+            <li class="tag tag-purple">useEvent</li>
+            <li class="tag tag-purple">useFetch</li>
+            <li class="tag tag-purple">useStorage</li>
+            <li class="tag tag-purple">useComputed</li>
+            <li class="tag tag-purple">useWatch</li>
+            <li class="tag tag-purple">useSetup</li>
+            <li class="tag tag-purple">useI18n</li>
+            <li class="tag tag-purple">Custom Hooks</li>
+          </ul>
+        </div>
+        <div class="showcase-code">
+          <div class="code-block" style="border:none;border-radius:0;">
+            <div class="code-header">
+              <div class="code-dots"><div class="code-dot"></div><div class="code-dot"></div><div class="code-dot"></div></div>
+              <span class="code-lang">hooks.js</span>
+            </div>
+            <div class="code-body"><pre><span class="cm">// Reactive state — returns [getter, setter]</span>
+<span class="kw">const</span> [<span class="prop">count</span>, <span class="prop">setCount</span>] <span class="op">=</span> <span class="obj">Aura</span>.<span class="prop">hooks</span>.<span class="fn">useState</span>(<span class="str">'count'</span>, <span class="num">0</span>);
+<span class="fn">setCount</span>(<span class="num">5</span>);
+<span class="obj">console</span>.<span class="fn">log</span>(<span class="fn">count</span>()); <span class="cm">// 5</span>
+
+<span class="cm">// Auto-fetch with loading state</span>
+<span class="kw">const</span> { <span class="prop">data</span>, <span class="prop">loading</span>, <span class="prop">error</span>, <span class="prop">refetch</span> }
+  <span class="op">=</span> <span class="obj">Aura</span>.<span class="prop">hooks</span>.<span class="fn">useFetch</span>(<span class="str">'/api/users'</span>);
+
+<span class="cm">// localStorage-backed state</span>
+<span class="kw">const</span> [<span class="prop">theme</span>, <span class="prop">setTheme</span>] <span class="op">=</span> <span class="obj">Aura</span>.<span class="prop">hooks</span>.<span class="fn">useStorage</span>(
+  <span class="str">'theme'</span>, <span class="str">'dark'</span>
+);
+
+<span class="cm">// Setup with auto-cleanup</span>
+<span class="kw">const</span> <span class="prop">teardown</span> <span class="op">=</span> <span class="obj">Aura</span>.<span class="prop">hooks</span>.<span class="fn">useSetup</span>(() <span class="op">=></span> {
+  <span class="obj">Aura</span>.<span class="prop">hooks</span>.<span class="fn">useEvent</span>(<span class="str">'resize'</span>, <span class="prop">handler</span>);
+  <span class="obj">Aura</span>.<span class="prop">hooks</span>.<span class="fn">useWatch</span>(<span class="str">'user'</span>, <span class="prop">updateUI</span>);
+});
+<span class="fn">teardown</span>(); <span class="cm">// cleans up all listeners</span></pre></div>
+          </div>
+        </div>
+      </div>
+    </div>
+
+    <!-- TRYTHIS -->
+    <div class="showcase-card fade-in">
+      <div class="showcase-split">
+        <div class="showcase-info">
+          <h3>&#128170; tryThis</h3>
+          <p>Kill try/catch boilerplate forever. Wrap any sync or async operation and get a clean <code style="color:var(--green);">[error, result]</code> tuple. Works with functions, promises, and async functions.</p>
+          <ul class="showcase-features">
+            <li class="tag tag-teal">Sync</li>
+            <li class="tag tag-teal">Async</li>
+            <li class="tag tag-teal">Promises</li>
+            <li class="tag tag-teal">Zero overhead</li>
+            <li class="tag tag-teal">Type-safe</li>
+          </ul>
+        </div>
+        <div class="showcase-code">
+          <div class="code-block" style="border:none;border-radius:0;">
+            <div class="code-header">
+              <div class="code-dots"><div class="code-dot"></div><div class="code-dot"></div><div class="code-dot"></div></div>
+              <span class="code-lang">try.js</span>
+            </div>
+            <div class="code-body"><pre><span class="cm">// Sync — no more try/catch</span>
+<span class="kw">const</span> [<span class="prop">err</span>, <span class="prop">data</span>] <span class="op">=</span> <span class="obj">Aura</span>.<span class="fn">tryThis</span>(
+  () <span class="op">=></span> <span class="obj">JSON</span>.<span class="fn">parse</span>(<span class="prop">rawInput</span>)
+);
+<span class="kw">if</span> (<span class="prop">err</span>) <span class="obj">Aura</span>.<span class="prop">log</span>.<span class="fn">error</span>(<span class="str">'Bad JSON'</span>, <span class="prop">err</span>);
+
+<span class="cm">// Async — just add await</span>
+<span class="kw">const</span> [<span class="prop">err</span>, <span class="prop">users</span>] <span class="op">=</span> <span class="kw">await</span> <span class="obj">Aura</span>.<span class="fn">tryThis</span>(
+  () <span class="op">=></span> <span class="obj">Aura</span>.<span class="prop">api</span>.<span class="fn">get</span>(<span class="str">'/users'</span>)
+);
+
+<span class="cm">// Direct promise</span>
+<span class="kw">const</span> [<span class="prop">err</span>, <span class="prop">res</span>] <span class="op">=</span> <span class="kw">await</span> <span class="obj">Aura</span>.<span class="fn">tryThis</span>(
+  <span class="fn">fetch</span>(<span class="str">'/api/health'</span>)
+);
+
+<span class="cm">// Chain with Logger</span>
+<span class="kw">if</span> (<span class="prop">err</span>) <span class="obj">Aura</span>.<span class="prop">log</span>.<span class="fn">error</span>(<span class="str">'Failed'</span>, <span class="prop">err</span>);
+<span class="kw">else</span> <span class="obj">Aura</span>.<span class="prop">log</span>.<span class="fn">info</span>(<span class="str">'OK'</span>, <span class="prop">res</span>);</pre></div>
+          </div>
+        </div>
+      </div>
+    </div>
+
+    <!-- LOGGER -->
+    <div class="showcase-card fade-in">
+      <div class="showcase-split">
+        <div class="showcase-info">
+          <h3>&#128221; Logger</h3>
+          <p>Structured logging with debug/info/warn/error levels, tagged loggers for namespacing, custom transports, history export, and auto-emit through Aura Events.</p>
+          <ul class="showcase-features">
+            <li class="tag tag-orange">Levels</li>
+            <li class="tag tag-orange">Tagged</li>
+            <li class="tag tag-orange">Transports</li>
+            <li class="tag tag-orange">History</li>
+            <li class="tag tag-orange">Export</li>
+            <li class="tag tag-orange">Events</li>
+          </ul>
+        </div>
+        <div class="showcase-code">
+          <div class="code-block" style="border:none;border-radius:0;">
+            <div class="code-header">
+              <div class="code-dots"><div class="code-dot"></div><div class="code-dot"></div><div class="code-dot"></div></div>
+              <span class="code-lang">logger.js</span>
+            </div>
+            <div class="code-body"><pre><span class="obj">Aura</span>.<span class="prop">log</span>.<span class="fn">info</span>(<span class="str">'App started'</span>);
+<span class="obj">Aura</span>.<span class="prop">log</span>.<span class="fn">warn</span>(<span class="str">'Slow query'</span>, { <span class="prop">ms</span>: <span class="num">1200</span> });
+<span class="obj">Aura</span>.<span class="prop">log</span>.<span class="fn">error</span>(<span class="str">'Failed'</span>, <span class="prop">err</span>);
+
+<span class="cm">// Tagged loggers for namespacing</span>
+<span class="kw">const</span> <span class="prop">auth</span> <span class="op">=</span> <span class="obj">Aura</span>.<span class="prop">log</span>.<span class="fn">tag</span>(<span class="str">'Auth'</span>);
+<span class="prop">auth</span>.<span class="fn">info</span>(<span class="str">'User logged in'</span>);
+<span class="cm">// => [INFO][Auth] User logged in</span>
+
+<span class="cm">// Custom transport (e.g. send to server)</span>
+<span class="obj">Aura</span>.<span class="prop">log</span>.<span class="fn">addTransport</span>((<span class="prop">entry</span>) <span class="op">=></span> {
+  <span class="kw">if</span> (<span class="prop">entry</span>.<span class="prop">level</span> <span class="op">===</span> <span class="str">'error'</span>)
+    <span class="fn">sendToServer</span>(<span class="prop">entry</span>);
+});
+
+<span class="cm">// Listen via Events system</span>
+<span class="obj">Aura</span>.<span class="fn">on</span>(<span class="str">'log:error'</span>, <span class="prop">showToast</span>);
+
+<span class="cm">// Export history as JSON</span>
+<span class="kw">const</span> <span class="prop">json</span> <span class="op">=</span> <span class="obj">Aura</span>.<span class="prop">log</span>.<span class="fn">export</span>(<span class="str">'error'</span>);</pre></div>
+          </div>
+        </div>
+      </div>
+    </div>
+
+    <!-- INDEXEDDB -->
+    <div class="showcase-card fade-in">
+      <div class="showcase-split">
+        <div class="showcase-info">
+          <h3>&#128450; IndexedDB</h3>
+          <p>Promise-based wrapper around the browser's IndexedDB. Define stores with indexes, then get/set/query/iterate with clean async APIs. Perfect for offline data.</p>
+          <ul class="showcase-features">
+            <li class="tag tag-green">Promise API</li>
+            <li class="tag tag-green">Stores</li>
+            <li class="tag tag-green">Indexes</li>
+            <li class="tag tag-green">Queries</li>
+            <li class="tag tag-green">Cursors</li>
+            <li class="tag tag-green">Batch</li>
+          </ul>
+        </div>
+        <div class="showcase-code">
+          <div class="code-block" style="border:none;border-radius:0;">
+            <div class="code-header">
+              <div class="code-dots"><div class="code-dot"></div><div class="code-dot"></div><div class="code-dot"></div></div>
+              <span class="code-lang">idb.js</span>
+            </div>
+            <div class="code-body"><pre><span class="cm">// Open DB with stores</span>
+<span class="kw">await</span> <span class="obj">Aura</span>.<span class="prop">idb</span>.<span class="fn">open</span>(<span class="str">'myApp'</span>, <span class="num">1</span>, [{
+  <span class="prop">name</span>: <span class="str">'users'</span>,
+  <span class="prop">keyPath</span>: <span class="str">'id'</span>,
+  <span class="prop">indexes</span>: [
+    { <span class="prop">name</span>: <span class="str">'email'</span>, <span class="prop">keyPath</span>: <span class="str">'email'</span>, <span class="prop">unique</span>: <span class="kw">true</span> }
+  ]
+}]);
+
+<span class="cm">// CRUD</span>
+<span class="kw">await</span> <span class="obj">Aura</span>.<span class="prop">idb</span>.<span class="fn">set</span>(<span class="str">'users'</span>, {
+  <span class="prop">id</span>: <span class="num">1</span>, <span class="prop">name</span>: <span class="str">'Alex'</span>, <span class="prop">email</span>: <span class="str">'a@b.com'</span>
+});
+
+<span class="kw">const</span> <span class="prop">user</span> <span class="op">=</span> <span class="kw">await</span> <span class="obj">Aura</span>.<span class="prop">idb</span>.<span class="fn">get</span>(<span class="str">'users'</span>, <span class="num">1</span>);
+<span class="kw">const</span> <span class="prop">all</span> <span class="op">=</span> <span class="kw">await</span> <span class="obj">Aura</span>.<span class="prop">idb</span>.<span class="fn">getAll</span>(<span class="str">'users'</span>);
+
+<span class="cm">// Query by index</span>
+<span class="kw">const</span> <span class="prop">found</span> <span class="op">=</span> <span class="kw">await</span> <span class="obj">Aura</span>.<span class="prop">idb</span>.<span class="fn">query</span>(<span class="str">'users'</span>,
+  <span class="str">'email'</span>, <span class="str">'a@b.com'</span>
+);</pre></div>
+          </div>
+        </div>
+      </div>
+    </div>
+
+    <!-- PWA + SERVICE WORKER -->
+    <div class="showcase-card fade-in">
+      <div class="showcase-split">
+        <div class="showcase-info">
+          <h3>&#128247; PWA + Service Worker</h3>
+          <p>Turn any Aura app into a PWA. Register a service worker, handle install prompts, define caching strategies, precache assets, and go offline — all from JavaScript.</p>
+          <ul class="showcase-features">
+            <li class="tag tag-blue">SW Register</li>
+            <li class="tag tag-blue">Install Prompt</li>
+            <li class="tag tag-blue">Cache Strategies</li>
+            <li class="tag tag-blue">Precache</li>
+            <li class="tag tag-blue">Offline</li>
+            <li class="tag tag-blue">Auto Update</li>
+          </ul>
+        </div>
+        <div class="showcase-code">
+          <div class="code-block" style="border:none;border-radius:0;">
+            <div class="code-header">
+              <div class="code-dots"><div class="code-dot"></div><div class="code-dot"></div><div class="code-dot"></div></div>
+              <span class="code-lang">pwa.js</span>
+            </div>
+            <div class="code-body"><pre><span class="cm">// Register service worker</span>
+<span class="kw">await</span> <span class="obj">Aura</span>.<span class="prop">pwa</span>.<span class="fn">register</span>(<span class="str">'/aura-sw.js'</span>);
+
+<span class="cm">// Cache images aggressively</span>
+<span class="obj">Aura</span>.<span class="prop">pwa</span>.<span class="fn">addStrategy</span>({
+  <span class="prop">name</span>: <span class="str">'images'</span>,
+  <span class="prop">strategy</span>: <span class="str">'cache-first'</span>,
+  <span class="prop">match</span>: <span class="str">/\.(png|jpg|svg)$/</span>,
+  <span class="prop">maxAge</span>: <span class="num">7</span> <span class="op">*</span> <span class="num">24</span> <span class="op">*</span> <span class="num">3600000</span>
+});
+
+<span class="cm">// API calls — network first, cache fallback</span>
+<span class="obj">Aura</span>.<span class="prop">pwa</span>.<span class="fn">addStrategy</span>({
+  <span class="prop">name</span>: <span class="str">'api'</span>,
+  <span class="prop">strategy</span>: <span class="str">'network-first'</span>,
+  <span class="prop">match</span>: <span class="str">'/api/'</span>
+});
+
+<span class="cm">// Precache critical assets</span>
+<span class="obj">Aura</span>.<span class="prop">pwa</span>.<span class="fn">precache</span>([
+  <span class="str">'/'</span>, <span class="str">'/app.js'</span>, <span class="str">'/styles.css'</span>
+]);
+
+<span class="cm">// Handle install prompt</span>
+<span class="obj">Aura</span>.<span class="prop">pwa</span>.<span class="fn">onInstallPrompt</span>(() <span class="op">=></span> {
+  <span class="fn">showInstallBanner</span>();
+});</pre></div>
+          </div>
+        </div>
+      </div>
+    </div>
+  </section>
+
+  <!-- ======================================== LIVE INTERACTIVE DEMO ======================================== -->
+  <section class="section" id="live-demo">
+    <div class="section-header fade-in">
+      <div class="section-eyebrow">Interactive</div>
+      <h2 class="section-title">Try it live.</h2>
+      <p class="section-subtitle">Every demo below is running real Aura.js code — right here in your browser.</p>
+    </div>
+
+    <div class="demo-grid stagger" id="demo-grid">
+
+      <!-- EVENTS DEMO -->
+      <div class="demo-card">
+        <div class="demo-card-header">
+          <span class="demo-card-title">&#128264; Events</span>
+          <span class="tag tag-orange">Pub/Sub</span>
+        </div>
+        <div class="demo-card-body">
+          <div class="demo-label">Emit an Event</div>
+          <div class="input-row">
+            <input type="text" id="event-name" placeholder="Event name" value="hello" />
+            <input type="text" id="event-data" placeholder="Data" value="world" />
+          </div>
+          <div class="btn-group" style="justify-content:flex-start;">
+            <button class="btn btn-primary btn-sm" id="btn-emit">Emit</button>
+            <button class="btn btn-secondary btn-sm" id="btn-subscribe">Subscribe</button>
+          </div>
+          <div class="demo-output" id="events-output">Click "Subscribe" then "Emit"</div>
+        </div>
+      </div>
+
+      <!-- STATE DEMO -->
+      <div class="demo-card">
+        <div class="demo-card-header">
+          <span class="demo-card-title">&#9881; State</span>
+          <span class="tag tag-green">Reactive</span>
+        </div>
+        <div class="demo-card-body">
+          <div class="demo-label">Counter with Computed</div>
+          <div class="btn-group" style="justify-content:flex-start;margin-bottom:12px;">
+            <button class="btn btn-primary btn-sm" id="btn-inc">+ Increment</button>
+            <button class="btn btn-secondary btn-sm" id="btn-dec">- Decrement</button>
+            <button class="btn btn-secondary btn-sm" id="btn-reset">Reset</button>
+          </div>
+          <div class="demo-output" id="state-output">count: 0 | doubled: 0</div>
+        </div>
+      </div>
+
+      <!-- TEMPLATE DEMO -->
+      <div class="demo-card">
+        <div class="demo-card-header">
+          <span class="demo-card-title">&#128462; Template</span>
+          <span class="tag tag-pink">Render</span>
+        </div>
+        <div class="demo-card-body">
+          <div class="demo-label">Live Template Rendering</div>
+          <input type="text" id="tpl-name" placeholder="Your name" value="Alex" style="margin-bottom:12px;" />
+          <button class="btn btn-primary btn-sm" id="btn-render">Render</button>
+          <div class="demo-output" id="template-output"></div>
+        </div>
+      </div>
+
+      <!-- I18N DEMO -->
+      <div class="demo-card">
+        <div class="demo-card-header">
+          <span class="demo-card-title">&#127463; i18n</span>
+          <span class="tag tag-teal">Translation</span>
+        </div>
+        <div class="demo-card-body">
+          <div class="demo-label">Switch Language</div>
+          <div class="btn-group" style="justify-content:flex-start;margin-bottom:12px;">
+            <button class="btn btn-primary btn-sm i18n-btn" data-lang="en">English</button>
+            <button class="btn btn-secondary btn-sm i18n-btn" data-lang="es">Espa&ntilde;ol</button>
+          </div>
+          <div class="demo-output" id="i18n-output">Loading...</div>
+        </div>
+      </div>
+
+      <!-- UTILS DEMO -->
+      <div class="demo-card">
+        <div class="demo-card-header">
+          <span class="demo-card-title">&#128295; Utils</span>
+          <span class="tag tag-purple">Utilities</span>
+        </div>
+        <div class="demo-card-body">
+          <div class="demo-label">Transform Text</div>
+          <input type="text" id="utils-input" placeholder="Type something..." value="hello beautiful world" style="margin-bottom:12px;" />
+          <div class="btn-group" style="justify-content:flex-start;">
+            <button class="btn btn-sm btn-primary util-btn" data-fn="titleCase">Title</button>
+            <button class="btn btn-sm btn-secondary util-btn" data-fn="uppercase">UPPER</button>
+            <button class="btn btn-sm btn-secondary util-btn" data-fn="slugify">slug</button>
+            <button class="btn btn-sm btn-secondary util-btn" data-fn="mask">Mask</button>
+          </div>
+          <div class="demo-output" id="utils-output"></div>
+        </div>
+      </div>
+
+      <!-- STORAGE DEMO -->
+      <div class="demo-card">
+        <div class="demo-card-header">
+          <span class="demo-card-title">&#128451; Storage</span>
+          <span class="tag tag-blue">Persist</span>
+        </div>
+        <div class="demo-card-body">
+          <div class="demo-label">Namespaced Storage</div>
+          <div class="input-row">
+            <input type="text" id="storage-key" placeholder="Key" value="demo_key" />
+            <input type="text" id="storage-val" placeholder="Value" value="Aura rocks!" />
+          </div>
+          <div class="btn-group" style="justify-content:flex-start;">
+            <button class="btn btn-sm btn-primary" id="btn-store-set">Set</button>
+            <button class="btn btn-sm btn-secondary" id="btn-store-get">Get</button>
+            <button class="btn btn-sm btn-secondary" id="btn-store-keys">All Keys</button>
+          </div>
+          <div class="demo-output" id="storage-output"></div>
+        </div>
+      </div>
+    </div>
+  </section>
+
+  <!-- ======================================== DEVICE INFO ======================================== -->
+  <section class="section" id="device">
+    <div class="section-header fade-in">
+      <div class="section-eyebrow">Detection</div>
+      <h2 class="section-title">Know your user.</h2>
+      <p class="section-subtitle">Real-time device, browser, network, and capability detection.</p>
+    </div>
+
+    <div class="metrics-grid stagger" id="metrics-grid">
+      <div class="metric-card">
+        <div class="metric-value" id="m-device" style="color:var(--accent);">—</div>
+        <div class="metric-label">Device Type</div>
+      </div>
+      <div class="metric-card">
+        <div class="metric-value" id="m-os" style="color:var(--green);">—</div>
+        <div class="metric-label">OS</div>
+      </div>
+      <div class="metric-card">
+        <div class="metric-value" id="m-screen" style="color:var(--orange);">—</div>
+        <div class="metric-label">Screen</div>
+      </div>
+      <div class="metric-card">
+        <div class="metric-value" id="m-online" style="color:var(--teal);">—</div>
+        <div class="metric-label">Network</div>
+      </div>
+    </div>
+
+    <div class="demo-grid stagger">
+      <div class="demo-card">
+        <div class="demo-card-header">
+          <span class="demo-card-title">&#128270; Device Details</span>
+        </div>
+        <div class="demo-card-body">
+          <div class="demo-output" id="device-output" style="min-height:140px;">Detecting...</div>
+        </div>
+      </div>
+      <div class="demo-card">
+        <div class="demo-card-header">
+          <span class="demo-card-title">&#128272; Fingerprint &amp; Perf</span>
+        </div>
+        <div class="demo-card-body">
+          <button class="btn btn-sm btn-primary" id="btn-fingerprint">Generate Fingerprint</button>
+          <div class="demo-output" id="fp-output" style="min-height:100px;margin-top:12px;">Click to generate</div>
+        </div>
+      </div>
+    </div>
+  </section>
+
+  <!-- ======================================== MORE MODULES (compact grid) ======================================== -->
+  <section class="section" id="more-modules">
+    <div class="section-header fade-in">
+      <div class="section-eyebrow">And More</div>
+      <h2 class="section-title">Every tool you need.</h2>
+    </div>
+
+    <div class="features-grid stagger">
+      <div class="feature-card" style="--card-accent: var(--green);">
+        <div class="feature-icon" style="background:rgba(48,209,88,0.1);">&#127759;</div>
+        <h3>Geolocation</h3>
+        <p>Browser GPS with IP fallback, Haversine distance calculation, live position watching, and permission-aware detection.</p>
+        <div class="code-block" style="margin-top:16px;">
+          <div class="code-body"><pre><span class="kw">const</span> <span class="prop">loc</span> <span class="op">=</span> <span class="kw">await</span> <span class="obj">Aura</span>.<span class="prop">geo</span>.<span class="fn">detect</span>();
+<span class="cm">// { latitude, longitude, source }</span>
+
+<span class="kw">const</span> <span class="prop">km</span> <span class="op">=</span> <span class="obj">Aura</span>.<span class="prop">geo</span>.<span class="fn">distance</span>(
+  <span class="num">40.7</span>, <span class="num">-74.0</span>, <span class="num">51.5</span>, <span class="num">-0.1</span>
+); <span class="cm">// => 5570</span></pre></div>
+        </div>
+      </div>
+
+      <div class="feature-card" style="--card-accent: var(--orange);">
+        <div class="feature-icon" style="background:rgba(255,159,10,0.1);">&#9201;</div>
+        <h3>Performance</h3>
+        <p>Measure any sync/async operation, set threshold filters, auto-report via events, and access memory heap info.</p>
+        <div class="code-block" style="margin-top:16px;">
+          <div class="code-body"><pre><span class="obj">Aura</span>.<span class="prop">perf</span>.<span class="fn">start</span>(<span class="str">'api-call'</span>);
+<span class="kw">await</span> <span class="fn">fetchData</span>();
+<span class="obj">Aura</span>.<span class="prop">perf</span>.<span class="fn">end</span>(<span class="str">'api-call'</span>);
+
+<span class="cm">// Or measure async directly</span>
+<span class="kw">await</span> <span class="obj">Aura</span>.<span class="prop">perf</span>.<span class="fn">measure</span>(<span class="str">'task'</span>,
+  <span class="kw">async</span> () <span class="op">=></span> <span class="fn">heavyWork</span>()
+);</pre></div>
+        </div>
+      </div>
+
+      <div class="feature-card" style="--card-accent: var(--teal);">
+        <div class="feature-icon" style="background:rgba(100,210,255,0.1);">&#128073;</div>
+        <h3>Event Delegation</h3>
+        <p>Efficient container-based event delegation with CSS selectors. Works with dynamically added elements.</p>
+        <div class="code-block" style="margin-top:16px;">
+          <div class="code-body"><pre><span class="cm">// Delegate on the app container</span>
+<span class="obj">Aura</span>.<span class="prop">delegate</span>.<span class="fn">on</span>(<span class="str">'click'</span>,
+  <span class="str">'.btn-delete'</span>,
+  (<span class="prop">e</span>, <span class="prop">el</span>) <span class="op">=></span> <span class="fn">remove</span>(<span class="prop">el</span>.<span class="prop">dataset</span>.<span class="prop">id</span>)
+);
+
+<span class="cm">// One-time delegation</span>
+<span class="obj">Aura</span>.<span class="prop">delegate</span>.<span class="fn">once</span>(<span class="str">'click'</span>,
+  <span class="str">'.onboard-btn'</span>, <span class="prop">handler</span>
+);</pre></div>
+        </div>
+      </div>
+    </div>
+  </section>
+
+  <!-- ======================================== FOOTER ======================================== -->
+  <footer class="footer">
+    <div class="footer-links">
+      <a href="https://github.com/darshgupta/aura.js" rel="noopener" target="_blank">GitHub</a>
+      <a href="docs/router.html">Docs</a>
+      <a href="#live-demo">Demo</a>
+      <a href="https://github.com/darshgupta/aura.js/blob/main/LICENSE" rel="noopener" target="_blank">License</a>
+    </div>
+    <div class="footer-divider"></div>
+    <p>Aura.js &mdash; 20 modules, 11KB gzipped, 0 dependencies. Replaces react-router + zustand + axios + react-intl + MSW + workbox + dexie + winston. One script tag.</p>
+    <p style="margin-top:8px;color:var(--text-tertiary);">&copy; 2026 <a href="https://github.com/darshgupta" rel="noopener" target="_blank">Darsh Gupta</a>. All rights reserved.</p>
+  </footer>
+
+  <!-- ======================================== SCRIPTS ======================================== -->
+  <script src="dist/aura.umd.js"></script>
+  <script>
+    // ============================================================
+    // SCROLL ANIMATIONS
+    // ============================================================
+    const observer = new IntersectionObserver(
+      (entries) => entries.forEach(e => { if (e.isIntersecting) e.target.classList.add('visible'); }),
+      { threshold: 0.15 }
+    );
+    document.querySelectorAll('.fade-in, .stagger').forEach(el => observer.observe(el));
+
+    // ============================================================
+    // SCROLL-SPY: Highlight active nav link based on scroll
+    // ============================================================
+    const navLinksForSpy = document.querySelectorAll('.nav-links > li > a[href^="#"]');
+    const spySections = [];
+    navLinksForSpy.forEach(link => {
+      const href = link.getAttribute('href');
+      if (href && href.startsWith('#')) {
+        const section = document.querySelector(href);
+        if (section) spySections.push({ el: section, link: link, id: href });
+      }
+    });
+
+    // Also track sections linked from dropdown
+    const allSectionIds = ['#hero', '#features', '#no-node', '#comparison', '#modules', '#mock-api', '#new-modules', '#live-demo', '#device', '#more-modules'];
+
+    const spyObserver = new IntersectionObserver(
+      (entries) => {
+        entries.forEach(entry => {
+          if (entry.isIntersecting) {
+            const id = '#' + entry.target.id;
+            // Find the best matching top-level nav link
+            let bestLink = null;
+            navLinksForSpy.forEach(link => {
+              const href = link.getAttribute('href');
+              if (href === id) bestLink = link;
+            });
+            // Map sub-sections to their parent nav links
+            if (!bestLink) {
+              if (['#modules', '#mock-api', '#new-modules', '#more-modules'].includes(id)) {
+                navLinksForSpy.forEach(link => {
+                  if (link.getAttribute('href') === '#features') bestLink = link;
+                });
+              } else if (['#device'].includes(id)) {
+                navLinksForSpy.forEach(link => {
+                  if (link.getAttribute('href') === '#live-demo') bestLink = link;
+                });
+              }
+            }
+            if (bestLink) {
+              navLinksForSpy.forEach(l => l.classList.remove('active'));
+              bestLink.classList.add('active');
+            }
+          }
+        });
+      },
+      { threshold: 0.2, rootMargin: '-80px 0px -50% 0px' }
+    );
+
+    allSectionIds.forEach(id => {
+      const el = document.querySelector(id);
+      if (el) spyObserver.observe(el);
+    });
+
+    // Manual click still works
+    document.querySelectorAll('.nav-links a[href^="#"]').forEach(link => {
+      link.addEventListener('click', () => {
+        navLinksForSpy.forEach(l => l.classList.remove('active'));
+        // Find top-level parent
+        const topLink = link.closest('.nav-links > li')?.querySelector(':scope > a');
+        if (topLink) topLink.classList.add('active');
+      });
+    });
+
+    // ============================================================
+    // HAMBURGER MENU
+    // ============================================================
+    const hamburgerBtn = document.getElementById('hamburger-btn');
+    const mobileOverlay = document.getElementById('mobile-overlay');
+    const mobileClose = document.getElementById('mobile-close');
+
+    function openMobileMenu() {
+      mobileOverlay.classList.add('open');
+      hamburgerBtn.classList.add('active');
+      document.body.style.overflow = 'hidden';
+    }
+
+    function closeMobileMenu() {
+      mobileOverlay.classList.remove('open');
+      hamburgerBtn.classList.remove('active');
+      document.body.style.overflow = '';
+    }
+
+    hamburgerBtn.addEventListener('click', () => {
+      if (mobileOverlay.classList.contains('open')) {
+        closeMobileMenu();
+      } else {
+        openMobileMenu();
+      }
+    });
+
+    mobileClose.addEventListener('click', closeMobileMenu);
+
+    document.querySelectorAll('.mobile-nav-link').forEach(link => {
+      link.addEventListener('click', closeMobileMenu);
+    });
+
+    // ============================================================
+    // 1. EVENTS DEMO
+    // ============================================================
+    const evtOut = document.getElementById('events-output');
+    let evtLog = [];
+
+    document.getElementById('btn-subscribe').addEventListener('click', () => {
+      const name = document.getElementById('event-name').value || 'hello';
+      Aura.on(name, (data) => {
+        evtLog.push(`[${new Date().toLocaleTimeString()}] "${name}" => ${JSON.stringify(data)}`);
+        if (evtLog.length > 5) evtLog.shift();
+        evtOut.textContent = evtLog.join('\n');
+      });
+      evtOut.textContent = `Subscribed to "${name}". Now click Emit.`;
+    });
+
+    document.getElementById('btn-emit').addEventListener('click', () => {
+      const name = document.getElementById('event-name').value || 'hello';
+      const data = document.getElementById('event-data').value || '';
+      Aura.emit(name, data);
+    });
+
+    // ============================================================
+    // 2. STATE DEMO
+    // ============================================================
+    Aura.state.init({ count: 0 });
+    Aura.state.computed('doubled', (s) => (s.count || 0) * 2);
+
+    const stateOut = document.getElementById('state-output');
+    const updateStateDisplay = () => {
+      stateOut.textContent = `count: ${Aura.state.get('count')} | doubled: ${Aura.state.get('doubled')}`;
+    };
+
+    Aura.state.subscribe('count', updateStateDisplay);
+
+    document.getElementById('btn-inc').addEventListener('click', () => {
+      Aura.state.set('count', (Aura.state.get('count') || 0) + 1);
+    });
+    document.getElementById('btn-dec').addEventListener('click', () => {
+      Aura.state.set('count', (Aura.state.get('count') || 0) - 1);
+    });
+    document.getElementById('btn-reset').addEventListener('click', () => {
+      Aura.state.set('count', 0);
+    });
+    updateStateDisplay();
+
+    // ============================================================
+    // 3. TEMPLATE DEMO
+    // ============================================================
+    const tplOut = document.getElementById('template-output');
+    const templateStr = `{{#if name}}Hello, <strong>{{name}}</strong>! {{/if}}{{#each tags}}<span class="tag tag-blue" style="margin:2px">{{.}}</span> {{/each}}{{#unless hidden}}This is visible.{{/unless}}`;
+
+    document.getElementById('btn-render').addEventListener('click', () => {
+      const name = document.getElementById('tpl-name').value;
+      const result = Aura.template.renderString(templateStr, {
+        name,
+        tags: ['Aura.js', 'Lightweight', 'Fast'],
+        hidden: false,
+      });
+      tplOut.innerHTML = result;
+    });
+    // Auto-render on load
+    document.getElementById('btn-render').click();
+
+    // ============================================================
+    // 4. I18N DEMO
+    // ============================================================
+    const i18nOut = document.getElementById('i18n-output');
+
+    Aura.i18n.configure({ basePath: './i18n' });
+
+    async function loadAndDisplay(lang) {
+      await Aura.i18n.load(lang);
+      const lines = [
+        `Language: ${Aura.i18n.getLang().toUpperCase()}`,
+        `Title: ${Aura.i18n.t('hero.title')}`,
+        `Greeting: ${Aura.i18n.t('greeting', { name: 'Alex' })}`,
+        `Plural(0): ${Aura.i18n.plural('items', 0)}`,
+        `Plural(1): ${Aura.i18n.plural('items', 1)}`,
+        `Plural(42): ${Aura.i18n.plural('items', 42)}`,
+        `Number: ${Aura.i18n.formatNumber(1234567.89)}`,
+        `Date: ${Aura.i18n.formatDate(new Date())}`,
+        `RTL: ${Aura.i18n.isRTL() ? 'Yes' : 'No'}`,
+      ];
+      i18nOut.textContent = lines.join('\n');
+    }
+
+    loadAndDisplay('en');
+
+    document.querySelectorAll('.i18n-btn').forEach(btn => {
+      btn.addEventListener('click', () => {
+        document.querySelectorAll('.i18n-btn').forEach(b => {
+          b.classList.remove('btn-primary');
+          b.classList.add('btn-secondary');
+        });
+        btn.classList.remove('btn-secondary');
+        btn.classList.add('btn-primary');
+        loadAndDisplay(btn.dataset.lang);
+      });
+    });
+
+    // ============================================================
+    // 5. UTILS DEMO
+    // ============================================================
+    const utilsOut = document.getElementById('utils-output');
+
+    document.querySelectorAll('.util-btn').forEach(btn => {
+      btn.addEventListener('click', () => {
+        const input = document.getElementById('utils-input').value;
+        const fn = btn.dataset.fn;
+        const result = Aura.utils[fn](input);
+        utilsOut.textContent = `${fn}("${input}")\n=> "${result}"`;
+      });
+    });
+
+    // ============================================================
+    // 6. STORAGE DEMO
+    // ============================================================
+    const storageOut = document.getElementById('storage-output');
+
+    document.getElementById('btn-store-set').addEventListener('click', () => {
+      const key = document.getElementById('storage-key').value;
+      const val = document.getElementById('storage-val').value;
+      Aura.storage.local.set(key, val);
+      storageOut.textContent = `Set "${key}" => "${val}"`;
+    });
+
+    document.getElementById('btn-store-get').addEventListener('click', () => {
+      const key = document.getElementById('storage-key').value;
+      const val = Aura.storage.local.get(key);
+      storageOut.textContent = `Get "${key}" => ${JSON.stringify(val)}`;
+    });
+
+    document.getElementById('btn-store-keys').addEventListener('click', () => {
+      const keys = Aura.storage.local.keys();
+      storageOut.textContent = `Keys (${keys.length}):\n${keys.join('\n') || '(empty)'}`;
+    });
+
+    // ============================================================
+    // 7. DEVICE INFO
+    // ============================================================
+    const info = Aura.device.info;
+    document.getElementById('m-device').textContent = info.deviceType.charAt(0).toUpperCase() + info.deviceType.slice(1);
+    document.getElementById('m-os').textContent = info.os.toUpperCase();
+    document.getElementById('m-screen').textContent = `${info.screen.width}×${info.screen.height}`;
+    document.getElementById('m-online').textContent = Aura.device.isOnline() ? 'Online' : 'Offline';
+
+    const net = Aura.device.getNetwork();
+    const deviceOut = document.getElementById('device-output');
+    deviceOut.textContent = [
+      `Device ID:    ${info.id}`,
+      `Browser:      ${info.browser.platform}`,
+      `Language:     ${info.browser.language}`,
+      `Touch:        ${info.touch ? 'Yes' : 'No'}`,
+      `Pixel Ratio:  ${info.screen.pixelRatio}x`,
+      `Dark Mode:    ${Aura.device.prefersDarkMode() ? 'Yes' : 'No'}`,
+      `Connection:   ${net.effectiveType || 'unknown'}`,
+      `Downlink:     ${net.downlink ? net.downlink + ' Mbps' : 'N/A'}`,
+    ].join('\n');
+
+    // Live online/offline detection
+    Aura.device.onOnlineChange((online) => {
+      document.getElementById('m-online').textContent = online ? 'Online' : 'Offline';
+      document.getElementById('m-online').style.color = online ? 'var(--teal)' : 'var(--pink)';
+    });
+
+    // ============================================================
+    // 8. FINGERPRINT & PERF
+    // ============================================================
+    document.getElementById('btn-fingerprint').addEventListener('click', async () => {
+      const fpOut = document.getElementById('fp-output');
+
+      Aura.perf.start('fingerprint');
+      const fp = await Aura.device.fingerprint();
+      const entry = Aura.perf.end('fingerprint');
+
+      const mem = Aura.perf.getMemory();
+      fpOut.textContent = [
+        `Fingerprint: ${fp}`,
+        `Generated in: ${entry ? entry.duration.toFixed(2) + 'ms' : 'N/A'}`,
+        `Heap Used: ${mem ? (mem.used / 1048576).toFixed(1) + ' MB' : 'N/A'}`,
+        `Heap Total: ${mem ? (mem.total / 1048576).toFixed(1) + ' MB' : 'N/A'}`,
+      ].join('\n');
+    });
+
+    // ============================================================
+    // BAR CHART ANIMATION
+    // ============================================================
+    const barObserver = new IntersectionObserver(
+      ([entry]) => {
+        if (entry.isIntersecting) {
+          document.querySelectorAll('#bar-chart .bar').forEach(bar => {
+            const h = bar.getAttribute('data-height');
+            if (h) bar.style.height = h + 'px';
+          });
+          barObserver.disconnect();
+        }
+      },
+      { threshold: 0.3 }
+    );
+    const barChart = document.getElementById('bar-chart');
+    if (barChart) barObserver.observe(barChart);
+
+    // ============================================================
+    // HERO COUNTER ANIMATION
+    // ============================================================
+    function animateValue(el, target, suffix = '', duration = 1500) {
+      const num = parseInt(target) || 0;
+      if (!num) { el.textContent = target; return; }
+      let start = 0;
+      const step = (ts) => {
+        if (!start) start = ts;
+        const progress = Math.min((ts - start) / duration, 1);
+        const eased = 1 - Math.pow(1 - progress, 3);
+        el.textContent = Math.round(num * eased) + suffix;
+        if (progress < 1) requestAnimationFrame(step);
+      };
+      requestAnimationFrame(step);
+    }
+
+    // Animate stats when hero comes into view
+    const heroObserver = new IntersectionObserver(
+      ([entry]) => {
+        if (entry.isIntersecting) {
+          animateValue(document.getElementById('stat-size'), '11', '');
+          animateValue(document.getElementById('stat-modules'), '20', '');
+          animateValue(document.getElementById('stat-replaced'), '10', '+');
+          animateValue(document.getElementById('stat-deps'), '0', '');
+          heroObserver.disconnect();
+        }
+      },
+      { threshold: 0.3 }
+    );
+    heroObserver.observe(document.getElementById('hero-stats'));
+  </script>
+  <noscript>
+    <style>.hero, .section, .footer { display: block !important; visibility: visible !important; opacity: 1 !important; }</style>
+    <div style="background:#111;color:#f5f5f7;padding:40px 24px;text-align:center;font-family:system-ui,sans-serif;">
+      <h2 style="margin-bottom:12px;">Aura.js — Lightweight JavaScript Framework</h2>
+      <p style="max-width:600px;margin:0 auto 20px;">Aura.js provides 20 built-in modules — routing, state management, hooks, i18n, PWA, API mocking, IndexedDB, and more — in just 11KB gzipped with zero dependencies. Please enable JavaScript for the full interactive experience.</p>
+      <p><a href="https://github.com/darshgupta/aura.js" style="color:#2997ff;">View on GitHub</a></p>
+    </div>
+  </noscript>
+</body>
+</html>

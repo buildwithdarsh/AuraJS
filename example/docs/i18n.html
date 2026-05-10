@@ -1,0 +1,591 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+  <title>i18n — Aura.js Docs</title>
+  <meta name="description" content="Aura.js i18n API — easy internationalization with translations, pluralization, number and date formatting, RTL detection, and DOM translation. Full reference." />
+  <meta name="robots" content="index, follow" />
+  <meta property="og:title" content="i18n — Aura.js Docs" />
+  <meta property="og:description" content="Aura.js i18n API — easy internationalization with translations, pluralization, number and date formatting, RTL detection, and DOM translation. Full reference." />
+  <meta property="og:type" content="article" />
+  <meta property="og:url" content="https://aurajs-delta.vercel.app/docs/i18n.html" />
+  <meta property="og:image" content="https://aurajs-delta.vercel.app/og-image.png" />
+  <meta property="og:site_name" content="Aura.js" />
+  <meta name="twitter:card" content="summary_large_image" />
+  <meta name="twitter:title" content="i18n — Aura.js Docs" />
+  <meta name="twitter:description" content="Aura.js i18n API — easy internationalization with translations, pluralization, number and date formatting, RTL detection, and DOM translation. Full reference." />
+  <meta name="twitter:image" content="https://aurajs-delta.vercel.app/og-image.png" />
+  <link rel="canonical" href="https://aurajs-delta.vercel.app/docs/i18n.html" />
+  <link rel="icon" href="../favicon.svg" type="image/svg+xml" />
+  <script type="application/ld+json">
+  {
+    "@context": "https://schema.org",
+    "@graph": [
+      {
+        "@type": "TechArticle",
+        "headline": "i18n — Aura.js Docs",
+        "description": "Aura.js i18n API — easy internationalization with translations, pluralization, number and date formatting, RTL detection, and DOM translation.",
+        "url": "https://aurajs-delta.vercel.app/docs/i18n.html",
+        "image": "https://aurajs-delta.vercel.app/og-image.png",
+        "datePublished": "2026-03-17",
+        "dateModified": "2026-03-17",
+        "author": { "@type": "Organization", "name": "Darsh Gupta", "url": "https://github.com/darshgupta" },
+        "publisher": { "@type": "Organization", "name": "Darsh Gupta", "url": "https://github.com/darshgupta", "logo": { "@type": "ImageObject", "url": "https://aurajs-delta.vercel.app/favicon.svg" } },
+        "mainEntityOfPage": "https://aurajs-delta.vercel.app/docs/i18n.html",
+        "inLanguage": "en"
+      },
+      {
+        "@type": "BreadcrumbList",
+        "itemListElement": [
+          { "@type": "ListItem", "position": 1, "name": "Home", "item": "https://aurajs-delta.vercel.app/" },
+          { "@type": "ListItem", "position": 2, "name": "Docs", "item": "https://aurajs-delta.vercel.app/docs/router.html" },
+          { "@type": "ListItem", "position": 3, "name": "i18n", "item": "https://aurajs-delta.vercel.app/docs/i18n.html" }
+        ]
+      }
+    ]
+  }
+  </script>
+  <style>
+    *, *::before, *::after { margin: 0; padding: 0; box-sizing: border-box; }
+    :root {
+      --bg: #000000; --bg-card: #111111; --bg-code: #0d0d0d;
+      --text: #f5f5f7; --text-secondary: #86868b; --text-tertiary: #6e6e73;
+      --accent: #2997ff; --accent-hover: #0077ed; --green: #30d158;
+      --orange: #ff9f0a; --pink: #ff375f; --purple: #bf5af2; --teal: #64d2ff;
+      --border: #1d1d1f; --radius: 20px; --radius-sm: 12px; --radius-xs: 8px;
+      --font: -apple-system, BlinkMacSystemFont, 'SF Pro Display', 'Helvetica Neue', sans-serif;
+      --mono: 'SF Mono', SFMono-Regular, ui-monospace, 'Cascadia Code', Menlo, monospace;
+      --transition: 0.3s cubic-bezier(0.25, 0.1, 0.25, 1);
+    }
+    html { scroll-behavior: smooth; -webkit-font-smoothing: antialiased; }
+    body { font-family: var(--font); background: var(--bg); color: var(--text); line-height: 1.6; }
+
+    /* Nav */
+    .doc-nav { position: fixed; top: 0; left: 0; right: 0; z-index: 100; backdrop-filter: saturate(180%) blur(20px); background: rgba(0,0,0,0.72); border-bottom: 0.5px solid rgba(255,255,255,0.08); }
+    .doc-nav-inner { max-width: 1200px; margin: 0 auto; padding: 0 24px; height: 52px; display: flex; align-items: center; gap: 24px; }
+    .doc-nav-logo { font-size: 20px; font-weight: 700; background: linear-gradient(135deg, var(--accent), var(--purple)); -webkit-background-clip: text; -webkit-text-fill-color: transparent; text-decoration: none; }
+    .doc-nav-links { display: flex; gap: 20px; list-style: none; margin-left: auto; }
+    .doc-nav-links a { color: var(--text-secondary); text-decoration: none; font-size: 14px; transition: color var(--transition); }
+    .doc-nav-links a:hover { color: var(--text); }
+
+    /* Layout */
+    .doc-layout { display: grid; grid-template-columns: 240px 1fr; max-width: 1200px; margin: 0 auto; padding-top: 52px; min-height: 100vh; }
+
+    /* Sidebar */
+    .doc-sidebar { position: sticky; top: 52px; height: calc(100vh - 52px); overflow-y: auto; padding: 32px 24px; border-right: 1px solid var(--border); }
+    .doc-sidebar h4 { font-size: 11px; font-weight: 600; text-transform: uppercase; letter-spacing: 0.08em; color: var(--text-tertiary); margin: 24px 0 8px; }
+    .doc-sidebar h4:first-child { margin-top: 0; }
+    .doc-sidebar a { display: block; padding: 6px 12px; border-radius: 6px; font-size: 13px; color: var(--text-secondary); text-decoration: none; transition: all 0.15s ease; }
+    .doc-sidebar a:hover { background: rgba(255,255,255,0.04); color: var(--text); }
+    .doc-sidebar a.active { background: rgba(41,151,255,0.1); color: var(--accent); }
+
+    /* Content */
+    .doc-content { padding: 48px 48px 120px; max-width: 800px; }
+    .doc-content h1 { font-size: 40px; font-weight: 700; letter-spacing: -0.03em; margin-bottom: 8px; }
+    .doc-content .doc-lead { font-size: 18px; color: var(--text-secondary); margin-bottom: 48px; line-height: 1.5; }
+    .doc-content h2 { font-size: 24px; font-weight: 600; letter-spacing: -0.02em; margin: 48px 0 16px; padding-bottom: 8px; border-bottom: 1px solid var(--border); }
+    .doc-content h3 { font-size: 18px; font-weight: 600; margin: 32px 0 12px; color: var(--text); }
+    .doc-content p { color: var(--text-secondary); margin-bottom: 16px; }
+    .doc-content ul, .doc-content ol { color: var(--text-secondary); margin-bottom: 16px; padding-left: 24px; }
+    .doc-content li { margin-bottom: 6px; }
+    .doc-content code { font-family: var(--mono); font-size: 13px; background: rgba(255,255,255,0.06); padding: 2px 7px; border-radius: 4px; color: var(--pink); }
+    .doc-content a { color: var(--accent); text-decoration: none; }
+    .doc-content a:hover { text-decoration: underline; }
+
+    /* Code blocks */
+    .code-block { background: var(--bg-code); border-radius: var(--radius-sm); border: 1px solid var(--border); margin-bottom: 24px; overflow: hidden; }
+    .code-header { display: flex; align-items: center; justify-content: space-between; padding: 10px 16px; border-bottom: 1px solid var(--border); background: rgba(255,255,255,0.02); }
+    .code-dots { display: flex; gap: 6px; }
+    .code-dot { width: 10px; height: 10px; border-radius: 50%; }
+    .code-dot:nth-child(1) { background: #ff5f57; }
+    .code-dot:nth-child(2) { background: #febc2e; }
+    .code-dot:nth-child(3) { background: #28c840; }
+    .code-lang { font-size: 12px; color: var(--text-tertiary); font-family: var(--mono); }
+    .code-body { padding: 16px; overflow-x: auto; }
+    .code-body pre { font-family: var(--mono); font-size: 13px; line-height: 1.7; color: var(--text-secondary); margin: 0; }
+    .code-body .kw { color: var(--pink); }
+    .code-body .fn { color: var(--accent); }
+    .code-body .str { color: var(--green); }
+    .code-body .cm { color: var(--text-tertiary); }
+    .code-body .num { color: var(--orange); }
+    .code-body .prop { color: var(--teal); }
+    .code-body .obj { color: var(--purple); }
+
+    /* Method signature */
+    .method-sig { background: rgba(41,151,255,0.06); border: 1px solid rgba(41,151,255,0.15); border-radius: var(--radius-xs); padding: 12px 16px; margin-bottom: 12px; font-family: var(--mono); font-size: 13px; color: var(--accent); overflow-x: auto; }
+
+    /* Param table */
+    .param-table { width: 100%; border-collapse: collapse; margin-bottom: 24px; }
+    .param-table th { text-align: left; font-size: 12px; font-weight: 600; color: var(--text-tertiary); text-transform: uppercase; letter-spacing: 0.06em; padding: 8px 12px; border-bottom: 1px solid var(--border); }
+    .param-table td { padding: 10px 12px; border-bottom: 1px solid rgba(255,255,255,0.04); font-size: 14px; color: var(--text-secondary); }
+    .param-table td:first-child { font-family: var(--mono); font-size: 13px; color: var(--pink); }
+    .param-table td:nth-child(2) { font-family: var(--mono); font-size: 13px; color: var(--orange); }
+
+    /* Tags */
+    .tag { display: inline-block; padding: 3px 8px; border-radius: 4px; font-size: 11px; font-weight: 500; }
+    .tag-blue { background: rgba(41,151,255,0.12); color: var(--accent); }
+    .tag-green { background: rgba(48,209,88,0.12); color: var(--green); }
+    .tag-orange { background: rgba(255,159,10,0.12); color: var(--orange); }
+    .tag-pink { background: rgba(255,55,95,0.12); color: var(--pink); }
+
+    /* Responsive */
+    @media (max-width: 768px) {
+      .doc-layout { grid-template-columns: 1fr; }
+      .doc-sidebar { display: none; }
+      .doc-content { padding: 24px; }
+    }
+
+    ::-webkit-scrollbar { width: 8px; }
+    ::-webkit-scrollbar-track { background: transparent; }
+    ::-webkit-scrollbar-thumb { background: var(--border); border-radius: 4px; }
+  </style>
+</head>
+<body>
+  <nav class="doc-nav">
+    <div class="doc-nav-inner">
+      <a href="../index.html" class="doc-nav-logo">Aura.js</a>
+      <ul class="doc-nav-links">
+        <li><a href="../index.html">Home</a></li>
+        <li><a href="router.html">Router</a></li>
+        <li><a href="state.html">State</a></li>
+        <li><a href="events.html">Events</a></li>
+        <li><a href="template.html">Template</a></li>
+        <li><a href="api.html">API</a></li>
+        <li><a href="i18n.html">i18n</a></li>
+        <li><a href="mock.html">Mock</a></li>
+      </ul>
+    </div>
+  </nav>
+
+  <div class="doc-layout">
+    <aside class="doc-sidebar">
+      <h4>All Modules</h4>
+      <a href="router.html">Router</a>
+      <a href="state.html">State</a>
+      <a href="events.html">Events</a>
+      <a href="template.html">Template</a>
+      <a href="api.html">API</a>
+      <a href="i18n.html" class="active">i18n</a>
+      <a href="mock.html">Mock</a>
+
+      <h4>On This Page</h4>
+      <a href="#quick-start">Quick Start</a>
+      <a href="#configure">configure()</a>
+      <a href="#load">load()</a>
+      <a href="#setLang">setLang()</a>
+      <a href="#getLang">getLang()</a>
+      <a href="#t">t()</a>
+      <a href="#plural">plural()</a>
+      <a href="#formatNumber">formatNumber()</a>
+      <a href="#formatDate">formatDate()</a>
+      <a href="#formatRelative">formatRelative()</a>
+      <a href="#isRTL">isRTL()</a>
+      <a href="#translateDOM">translateDOM()</a>
+    </aside>
+
+    <main class="doc-content">
+      <h1>i18n</h1>
+      <p class="doc-lead">
+        A complete internationalization module with JSON-based translation loading, interpolated string parameters,
+        pluralization rules, number/date/relative-time formatting via the <code>Intl</code> API, RTL detection,
+        and automatic DOM translation using <code>data-i18n</code> attributes.
+      </p>
+
+      <!-- Quick Start -->
+      <h2 id="quick-start">Quick Start</h2>
+      <p>Configure the i18n module, load a language file, and start translating strings and DOM elements.</p>
+
+      <div class="code-block">
+        <div class="code-header">
+          <div class="code-dots"><span class="code-dot"></span><span class="code-dot"></span><span class="code-dot"></span></div>
+          <span class="code-lang">js</span>
+        </div>
+        <div class="code-body"><pre><span class="kw">import</span> <span class="obj">Aura</span> <span class="kw">from</span> <span class="str">'@buildwithdarsh/aura.js'</span>;
+
+<span class="cm">// Configure i18n</span>
+<span class="obj">Aura</span>.<span class="prop">i18n</span>.<span class="fn">configure</span>({
+  <span class="prop">basePath</span>: <span class="str">'/i18n'</span>,
+  <span class="prop">defaultLang</span>: <span class="str">'en'</span>,
+  <span class="prop">fallbackLang</span>: <span class="str">'en'</span>
+});
+
+<span class="cm">// Load a language (fetches /i18n/en.json)</span>
+<span class="kw">await</span> <span class="obj">Aura</span>.<span class="prop">i18n</span>.<span class="fn">load</span>(<span class="str">'en'</span>);
+
+<span class="cm">// Translate a key</span>
+<span class="kw">const</span> greeting = <span class="obj">Aura</span>.<span class="prop">i18n</span>.<span class="fn">t</span>(<span class="str">'home.welcome'</span>, { <span class="prop">name</span>: <span class="str">'Alice'</span> });
+<span class="cm">// en.json: { "home": { "welcome": "Hello, {name}!" } }</span>
+<span class="cm">// =&gt; "Hello, Alice!"</span>
+
+<span class="cm">// Auto-translate all [data-i18n] elements</span>
+<span class="obj">Aura</span>.<span class="prop">i18n</span>.<span class="fn">translateDOM</span>(<span class="obj">document</span>.<span class="prop">body</span>);</pre></div>
+      </div>
+
+      <!-- Types -->
+      <h2 id="types">Types</h2>
+      <h3>I18nConfig</h3>
+      <p>Configuration object accepted by <code>configure()</code>. All fields are optional (partial).</p>
+      <table class="param-table">
+        <thead><tr><th>Property</th><th>Type</th><th>Description</th></tr></thead>
+        <tbody>
+          <tr><td>basePath</td><td>string</td><td>Root URL path for loading JSON translation files. Default: <code>'/i18n'</code>.</td></tr>
+          <tr><td>defaultLang</td><td>string</td><td>Language code used as the active language. Default: <code>'en'</code>.</td></tr>
+          <tr><td>fallbackLang</td><td>string</td><td>Language code used when a key is not found in the active language. Default: <code>'en'</code>.</td></tr>
+        </tbody>
+      </table>
+
+      <!-- configure() -->
+      <h2 id="configure">configure() <span class="tag tag-blue">core</span></h2>
+      <p>Update the i18n configuration. Only provided fields are changed.</p>
+      <div class="method-sig">Aura.i18n.configure(config: Partial&lt;I18nConfig&gt;): void</div>
+      <table class="param-table">
+        <thead><tr><th>Param</th><th>Type</th><th>Description</th></tr></thead>
+        <tbody>
+          <tr><td>config</td><td>Partial&lt;I18nConfig&gt;</td><td>Object with optional <code>basePath</code>, <code>defaultLang</code>, and <code>fallbackLang</code> fields.</td></tr>
+        </tbody>
+      </table>
+      <div class="code-block">
+        <div class="code-header">
+          <div class="code-dots"><span class="code-dot"></span><span class="code-dot"></span><span class="code-dot"></span></div>
+          <span class="code-lang">js</span>
+        </div>
+        <div class="code-body"><pre><span class="obj">Aura</span>.<span class="prop">i18n</span>.<span class="fn">configure</span>({
+  <span class="prop">basePath</span>: <span class="str">'/locales'</span>,
+  <span class="prop">defaultLang</span>: <span class="str">'fr'</span>,
+  <span class="prop">fallbackLang</span>: <span class="str">'en'</span>
+});</pre></div>
+      </div>
+
+      <!-- load() -->
+      <h2 id="load">load() <span class="tag tag-blue">core</span></h2>
+      <p>Fetch a JSON translation file from <code>basePath/lang.json</code> and set it as the active language. If the language has already been loaded, it is served from the internal cache. After loading, the active language is switched to the given code.</p>
+      <div class="method-sig">Aura.i18n.load(lang: string): Promise&lt;void&gt;</div>
+      <table class="param-table">
+        <thead><tr><th>Param</th><th>Type</th><th>Description</th></tr></thead>
+        <tbody>
+          <tr><td>lang</td><td>string</td><td>Language code to load and activate (e.g. <code>'en'</code>, <code>'fr'</code>, <code>'ar'</code>).</td></tr>
+        </tbody>
+      </table>
+      <div class="code-block">
+        <div class="code-header">
+          <div class="code-dots"><span class="code-dot"></span><span class="code-dot"></span><span class="code-dot"></span></div>
+          <span class="code-lang">js</span>
+        </div>
+        <div class="code-body"><pre><span class="cm">// Load and activate English</span>
+<span class="kw">await</span> <span class="obj">Aura</span>.<span class="prop">i18n</span>.<span class="fn">load</span>(<span class="str">'en'</span>);
+
+<span class="cm">// Switch to French</span>
+<span class="kw">await</span> <span class="obj">Aura</span>.<span class="prop">i18n</span>.<span class="fn">load</span>(<span class="str">'fr'</span>);
+
+<span class="cm">// Pre-load multiple languages</span>
+<span class="kw">await</span> <span class="obj">Promise</span>.<span class="fn">all</span>([
+  <span class="obj">Aura</span>.<span class="prop">i18n</span>.<span class="fn">load</span>(<span class="str">'en'</span>),
+  <span class="obj">Aura</span>.<span class="prop">i18n</span>.<span class="fn">load</span>(<span class="str">'fr'</span>),
+  <span class="obj">Aura</span>.<span class="prop">i18n</span>.<span class="fn">load</span>(<span class="str">'de'</span>)
+]);</pre></div>
+      </div>
+
+      <!-- setLang() (via load) -->
+      <h2 id="setLang">setLang() <span class="tag tag-blue">core</span></h2>
+      <p>Switch the active language. This is equivalent to calling <code>load()</code>, which both fetches (if needed) and sets the active language. You can also add translations manually and configure the default language.</p>
+      <div class="method-sig">Aura.i18n.load(lang: string): Promise&lt;void&gt;</div>
+      <p>Alternatively, use <code>configure()</code> to set the language synchronously if translations are already loaded:</p>
+      <div class="method-sig">Aura.i18n.configure({ defaultLang: lang }): void</div>
+      <div class="code-block">
+        <div class="code-header">
+          <div class="code-dots"><span class="code-dot"></span><span class="code-dot"></span><span class="code-dot"></span></div>
+          <span class="code-lang">js</span>
+        </div>
+        <div class="code-body"><pre><span class="cm">// Switch language (loads if needed)</span>
+<span class="kw">await</span> <span class="obj">Aura</span>.<span class="prop">i18n</span>.<span class="fn">load</span>(<span class="str">'de'</span>);
+
+<span class="cm">// Or add translations manually and switch synchronously</span>
+<span class="obj">Aura</span>.<span class="prop">i18n</span>.<span class="fn">addTranslations</span>(<span class="str">'es'</span>, {
+  <span class="prop">greeting</span>: <span class="str">'Hola, {name}!'</span>
+});
+<span class="obj">Aura</span>.<span class="prop">i18n</span>.<span class="fn">configure</span>({ <span class="prop">defaultLang</span>: <span class="str">'es'</span> });
+
+<span class="cm">// Re-translate the DOM after switching</span>
+<span class="obj">Aura</span>.<span class="prop">i18n</span>.<span class="fn">translateDOM</span>(<span class="obj">document</span>.<span class="prop">body</span>);</pre></div>
+      </div>
+
+      <!-- getLang() -->
+      <h2 id="getLang">getLang() <span class="tag tag-green">utility</span></h2>
+      <p>Return the currently active language code.</p>
+      <div class="method-sig">Aura.i18n.getLang(): string</div>
+      <p>This method takes no parameters.</p>
+      <div class="code-block">
+        <div class="code-header">
+          <div class="code-dots"><span class="code-dot"></span><span class="code-dot"></span><span class="code-dot"></span></div>
+          <span class="code-lang">js</span>
+        </div>
+        <div class="code-body"><pre><span class="kw">const</span> lang = <span class="obj">Aura</span>.<span class="prop">i18n</span>.<span class="fn">getLang</span>();
+<span class="obj">console</span>.<span class="fn">log</span>(lang); <span class="cm">// "en"</span>
+
+<span class="cm">// Set the HTML lang attribute</span>
+<span class="obj">document</span>.<span class="prop">documentElement</span>.<span class="prop">lang</span> = <span class="obj">Aura</span>.<span class="prop">i18n</span>.<span class="fn">getLang</span>();</pre></div>
+      </div>
+
+      <!-- t() -->
+      <h2 id="t">t() <span class="tag tag-blue">core</span></h2>
+      <p>Translate a key to the active language. Supports dot-notation for nested keys and <code>{param}</code> interpolation. Falls back to the fallback language if the key is not found in the active language. Returns the raw key string if no translation exists in either language.</p>
+      <div class="method-sig">Aura.i18n.t(key: string, params?: Record&lt;string, string | number&gt;): string</div>
+      <table class="param-table">
+        <thead><tr><th>Param</th><th>Type</th><th>Description</th></tr></thead>
+        <tbody>
+          <tr><td>key</td><td>string</td><td>Dot-notation translation key (e.g. <code>'nav.home'</code>, <code>'errors.notFound'</code>).</td></tr>
+          <tr><td>params</td><td>Record&lt;string, string | number&gt;</td><td>Optional interpolation values. Replaces <code>{name}</code> placeholders in the translated string.</td></tr>
+        </tbody>
+      </table>
+      <div class="code-block">
+        <div class="code-header">
+          <div class="code-dots"><span class="code-dot"></span><span class="code-dot"></span><span class="code-dot"></span></div>
+          <span class="code-lang">json</span>
+        </div>
+        <div class="code-body"><pre><span class="cm">// en.json</span>
+{
+  <span class="str">"nav"</span>: {
+    <span class="str">"home"</span>: <span class="str">"Home"</span>,
+    <span class="str">"profile"</span>: <span class="str">"Profile"</span>
+  },
+  <span class="str">"greeting"</span>: <span class="str">"Hello, {name}! You have {count} messages."</span>
+}</pre></div>
+      </div>
+      <div class="code-block">
+        <div class="code-header">
+          <div class="code-dots"><span class="code-dot"></span><span class="code-dot"></span><span class="code-dot"></span></div>
+          <span class="code-lang">js</span>
+        </div>
+        <div class="code-body"><pre><span class="cm">// Simple key</span>
+<span class="obj">Aura</span>.<span class="prop">i18n</span>.<span class="fn">t</span>(<span class="str">'nav.home'</span>); <span class="cm">// =&gt; "Home"</span>
+
+<span class="cm">// With interpolation</span>
+<span class="obj">Aura</span>.<span class="prop">i18n</span>.<span class="fn">t</span>(<span class="str">'greeting'</span>, { <span class="prop">name</span>: <span class="str">'Alice'</span>, <span class="prop">count</span>: <span class="num">5</span> });
+<span class="cm">// =&gt; "Hello, Alice! You have 5 messages."</span>
+
+<span class="cm">// Missing key returns the key itself</span>
+<span class="obj">Aura</span>.<span class="prop">i18n</span>.<span class="fn">t</span>(<span class="str">'missing.key'</span>); <span class="cm">// =&gt; "missing.key"</span></pre></div>
+      </div>
+
+      <!-- plural() -->
+      <h2 id="plural">plural() <span class="tag tag-blue">core</span></h2>
+      <p>Translate a key with pluralization. Looks up suffixed keys (<code>key_zero</code>, <code>key_one</code>, <code>key_other</code>) based on the count. Uses the default rule (0 = zero, 1 = one, else = other) unless a custom plural rule is set with <code>setPluralRule()</code>. The <code>count</code> value is automatically available as an interpolation parameter.</p>
+      <div class="method-sig">Aura.i18n.plural(key: string, count: number, params?: Record&lt;string, string | number&gt;): string</div>
+      <table class="param-table">
+        <thead><tr><th>Param</th><th>Type</th><th>Description</th></tr></thead>
+        <tbody>
+          <tr><td>key</td><td>string</td><td>Base translation key. Suffixes <code>_zero</code>, <code>_one</code>, <code>_other</code> (etc.) are appended automatically.</td></tr>
+          <tr><td>count</td><td>number</td><td>The count used to determine which plural form to use.</td></tr>
+          <tr><td>params</td><td>Record&lt;string, string | number&gt;</td><td>Optional additional interpolation values (merged with <code>{ count }</code>).</td></tr>
+        </tbody>
+      </table>
+      <div class="code-block">
+        <div class="code-header">
+          <div class="code-dots"><span class="code-dot"></span><span class="code-dot"></span><span class="code-dot"></span></div>
+          <span class="code-lang">json</span>
+        </div>
+        <div class="code-body"><pre><span class="cm">// en.json</span>
+{
+  <span class="str">"items_zero"</span>: <span class="str">"No items"</span>,
+  <span class="str">"items_one"</span>: <span class="str">"One item"</span>,
+  <span class="str">"items_other"</span>: <span class="str">"{count} items"</span>
+}</pre></div>
+      </div>
+      <div class="code-block">
+        <div class="code-header">
+          <div class="code-dots"><span class="code-dot"></span><span class="code-dot"></span><span class="code-dot"></span></div>
+          <span class="code-lang">js</span>
+        </div>
+        <div class="code-body"><pre><span class="obj">Aura</span>.<span class="prop">i18n</span>.<span class="fn">plural</span>(<span class="str">'items'</span>, <span class="num">0</span>);  <span class="cm">// =&gt; "No items"</span>
+<span class="obj">Aura</span>.<span class="prop">i18n</span>.<span class="fn">plural</span>(<span class="str">'items'</span>, <span class="num">1</span>);  <span class="cm">// =&gt; "One item"</span>
+<span class="obj">Aura</span>.<span class="prop">i18n</span>.<span class="fn">plural</span>(<span class="str">'items'</span>, <span class="num">42</span>); <span class="cm">// =&gt; "42 items"</span>
+
+<span class="cm">// Custom plural rule for a language</span>
+<span class="obj">Aura</span>.<span class="prop">i18n</span>.<span class="fn">setPluralRule</span>(<span class="str">'ar'</span>, (n) =&gt; {
+  <span class="kw">if</span> (n === <span class="num">0</span>) <span class="kw">return</span> <span class="str">'zero'</span>;
+  <span class="kw">if</span> (n === <span class="num">1</span>) <span class="kw">return</span> <span class="str">'one'</span>;
+  <span class="kw">if</span> (n === <span class="num">2</span>) <span class="kw">return</span> <span class="str">'two'</span>;
+  <span class="kw">if</span> (n &gt;= <span class="num">3</span> &amp;&amp; n &lt;= <span class="num">10</span>) <span class="kw">return</span> <span class="str">'few'</span>;
+  <span class="kw">if</span> (n &gt;= <span class="num">11</span> &amp;&amp; n &lt;= <span class="num">99</span>) <span class="kw">return</span> <span class="str">'many'</span>;
+  <span class="kw">return</span> <span class="str">'other'</span>;
+});</pre></div>
+      </div>
+
+      <!-- formatNumber() -->
+      <h2 id="formatNumber">formatNumber() <span class="tag tag-green">formatting</span></h2>
+      <p>Format a number using <code>Intl.NumberFormat</code> with the active language locale. Supports all standard <code>Intl.NumberFormatOptions</code> including currency, percentage, and unit formatting.</p>
+      <div class="method-sig">Aura.i18n.formatNumber(n: number, options?: Intl.NumberFormatOptions): string</div>
+      <table class="param-table">
+        <thead><tr><th>Param</th><th>Type</th><th>Description</th></tr></thead>
+        <tbody>
+          <tr><td>n</td><td>number</td><td>The number to format.</td></tr>
+          <tr><td>options</td><td>Intl.NumberFormatOptions</td><td>Optional formatting options (style, currency, minimumFractionDigits, etc.).</td></tr>
+        </tbody>
+      </table>
+      <div class="code-block">
+        <div class="code-header">
+          <div class="code-dots"><span class="code-dot"></span><span class="code-dot"></span><span class="code-dot"></span></div>
+          <span class="code-lang">js</span>
+        </div>
+        <div class="code-body"><pre><span class="cm">// Basic number formatting (locale-aware)</span>
+<span class="obj">Aura</span>.<span class="prop">i18n</span>.<span class="fn">formatNumber</span>(<span class="num">1234567.89</span>);
+<span class="cm">// en =&gt; "1,234,567.89"</span>
+<span class="cm">// de =&gt; "1.234.567,89"</span>
+
+<span class="cm">// Currency</span>
+<span class="obj">Aura</span>.<span class="prop">i18n</span>.<span class="fn">formatNumber</span>(<span class="num">99.99</span>, {
+  <span class="prop">style</span>: <span class="str">'currency'</span>,
+  <span class="prop">currency</span>: <span class="str">'USD'</span>
+});
+<span class="cm">// =&gt; "$99.99"</span>
+
+<span class="cm">// Percentage</span>
+<span class="obj">Aura</span>.<span class="prop">i18n</span>.<span class="fn">formatNumber</span>(<span class="num">0.85</span>, { <span class="prop">style</span>: <span class="str">'percent'</span> });
+<span class="cm">// =&gt; "85%"</span></pre></div>
+      </div>
+
+      <!-- formatDate() -->
+      <h2 id="formatDate">formatDate() <span class="tag tag-green">formatting</span></h2>
+      <p>Format a date using <code>Intl.DateTimeFormat</code> with the active language locale. Accepts a <code>Date</code> object or a Unix timestamp (milliseconds).</p>
+      <div class="method-sig">Aura.i18n.formatDate(date: Date | number, options?: Intl.DateTimeFormatOptions): string</div>
+      <table class="param-table">
+        <thead><tr><th>Param</th><th>Type</th><th>Description</th></tr></thead>
+        <tbody>
+          <tr><td>date</td><td>Date | number</td><td>A Date object or Unix timestamp in milliseconds.</td></tr>
+          <tr><td>options</td><td>Intl.DateTimeFormatOptions</td><td>Optional formatting options (dateStyle, timeStyle, weekday, year, month, day, etc.).</td></tr>
+        </tbody>
+      </table>
+      <div class="code-block">
+        <div class="code-header">
+          <div class="code-dots"><span class="code-dot"></span><span class="code-dot"></span><span class="code-dot"></span></div>
+          <span class="code-lang">js</span>
+        </div>
+        <div class="code-body"><pre><span class="kw">const</span> now = <span class="kw">new</span> <span class="obj">Date</span>();
+
+<span class="cm">// Default formatting</span>
+<span class="obj">Aura</span>.<span class="prop">i18n</span>.<span class="fn">formatDate</span>(now);
+<span class="cm">// en =&gt; "3/17/2026"</span>
+
+<span class="cm">// Long format</span>
+<span class="obj">Aura</span>.<span class="prop">i18n</span>.<span class="fn">formatDate</span>(now, {
+  <span class="prop">weekday</span>: <span class="str">'long'</span>,
+  <span class="prop">year</span>: <span class="str">'numeric'</span>,
+  <span class="prop">month</span>: <span class="str">'long'</span>,
+  <span class="prop">day</span>: <span class="str">'numeric'</span>
+});
+<span class="cm">// en =&gt; "Tuesday, March 17, 2026"</span>
+
+<span class="cm">// From a timestamp</span>
+<span class="obj">Aura</span>.<span class="prop">i18n</span>.<span class="fn">formatDate</span>(<span class="num">1774000000000</span>, {
+  <span class="prop">dateStyle</span>: <span class="str">'medium'</span>,
+  <span class="prop">timeStyle</span>: <span class="str">'short'</span>
+});</pre></div>
+      </div>
+
+      <!-- formatRelative() -->
+      <h2 id="formatRelative">formatRelative() <span class="tag tag-green">formatting</span></h2>
+      <p>Format a date as a human-readable relative time string (e.g. "5 minutes ago", "in 3 hours") using <code>Intl.RelativeTimeFormat</code>. Automatically selects the best unit (seconds, minutes, hours, or days) based on the time difference from now.</p>
+      <div class="method-sig">Aura.i18n.formatRelative(date: Date | number, options?: Intl.RelativeTimeFormatOptions): string</div>
+      <table class="param-table">
+        <thead><tr><th>Param</th><th>Type</th><th>Description</th></tr></thead>
+        <tbody>
+          <tr><td>date</td><td>Date | number</td><td>A Date object or Unix timestamp in milliseconds.</td></tr>
+          <tr><td>options</td><td>Intl.RelativeTimeFormatOptions</td><td>Optional formatting options (numeric, style). Defaults to automatic.</td></tr>
+        </tbody>
+      </table>
+      <div class="code-block">
+        <div class="code-header">
+          <div class="code-dots"><span class="code-dot"></span><span class="code-dot"></span><span class="code-dot"></span></div>
+          <span class="code-lang">js</span>
+        </div>
+        <div class="code-body"><pre><span class="cm">// 30 seconds ago</span>
+<span class="obj">Aura</span>.<span class="prop">i18n</span>.<span class="fn">formatRelative</span>(<span class="obj">Date</span>.<span class="fn">now</span>() - <span class="num">30000</span>);
+<span class="cm">// =&gt; "30 seconds ago"</span>
+
+<span class="cm">// 2 hours from now</span>
+<span class="obj">Aura</span>.<span class="prop">i18n</span>.<span class="fn">formatRelative</span>(<span class="obj">Date</span>.<span class="fn">now</span>() + <span class="num">7200000</span>);
+<span class="cm">// =&gt; "in 2 hours"</span>
+
+<span class="cm">// 3 days ago</span>
+<span class="kw">const</span> threeDaysAgo = <span class="kw">new</span> <span class="obj">Date</span>();
+threeDaysAgo.<span class="fn">setDate</span>(threeDaysAgo.<span class="fn">getDate</span>() - <span class="num">3</span>);
+<span class="obj">Aura</span>.<span class="prop">i18n</span>.<span class="fn">formatRelative</span>(threeDaysAgo);
+<span class="cm">// =&gt; "3 days ago"</span>
+
+<span class="cm">// With short style</span>
+<span class="obj">Aura</span>.<span class="prop">i18n</span>.<span class="fn">formatRelative</span>(<span class="obj">Date</span>.<span class="fn">now</span>() - <span class="num">60000</span>, {
+  <span class="prop">style</span>: <span class="str">'short'</span>
+});
+<span class="cm">// =&gt; "1 min. ago"</span></pre></div>
+      </div>
+
+      <!-- isRTL() -->
+      <h2 id="isRTL">isRTL() <span class="tag tag-green">utility</span></h2>
+      <p>Check whether the active language is a right-to-left script. Returns <code>true</code> for Arabic, Hebrew, Farsi, Urdu, Pashto, Sindhi, Yiddish, and Divehi.</p>
+      <div class="method-sig">Aura.i18n.isRTL(): boolean</div>
+      <p>This method takes no parameters.</p>
+      <div class="code-block">
+        <div class="code-header">
+          <div class="code-dots"><span class="code-dot"></span><span class="code-dot"></span><span class="code-dot"></span></div>
+          <span class="code-lang">js</span>
+        </div>
+        <div class="code-body"><pre><span class="cm">// Set document direction based on language</span>
+<span class="obj">document</span>.<span class="prop">documentElement</span>.<span class="prop">dir</span> = <span class="obj">Aura</span>.<span class="prop">i18n</span>.<span class="fn">isRTL</span>() ? <span class="str">'rtl'</span> : <span class="str">'ltr'</span>;
+
+<span class="cm">// Conditionally load RTL stylesheet</span>
+<span class="kw">if</span> (<span class="obj">Aura</span>.<span class="prop">i18n</span>.<span class="fn">isRTL</span>()) {
+  <span class="kw">const</span> link = <span class="obj">document</span>.<span class="fn">createElement</span>(<span class="str">'link'</span>);
+  link.<span class="prop">rel</span> = <span class="str">'stylesheet'</span>;
+  link.<span class="prop">href</span> = <span class="str">'/css/rtl.css'</span>;
+  <span class="obj">document</span>.<span class="prop">head</span>.<span class="fn">appendChild</span>(link);
+}</pre></div>
+      </div>
+
+      <!-- translateDOM() -->
+      <h2 id="translateDOM">translateDOM() <span class="tag tag-blue">core</span></h2>
+      <p>Automatically translate all elements within a container that have a <code>data-i18n</code> attribute. Also handles <code>data-i18n-placeholder</code> and <code>data-i18n-title</code> attributes for input placeholders and tooltip titles. Interpolation parameters are read from <code>data-i18n-*</code> attributes.</p>
+      <div class="method-sig">Aura.i18n.translateDOM(container: Element): void</div>
+      <table class="param-table">
+        <thead><tr><th>Param</th><th>Type</th><th>Description</th></tr></thead>
+        <tbody>
+          <tr><td>container</td><td>Element</td><td>The DOM element to scan for <code>data-i18n</code> attributes. All descendants are translated.</td></tr>
+        </tbody>
+      </table>
+      <div class="code-block">
+        <div class="code-header">
+          <div class="code-dots"><span class="code-dot"></span><span class="code-dot"></span><span class="code-dot"></span></div>
+          <span class="code-lang">html</span>
+        </div>
+        <div class="code-body"><pre><span class="cm">&lt;!-- Text content translation --&gt;</span>
+&lt;h1 <span class="prop">data-i18n</span>=<span class="str">"home.title"</span>&gt;&lt;/h1&gt;
+
+<span class="cm">&lt;!-- With interpolation parameters --&gt;</span>
+&lt;p <span class="prop">data-i18n</span>=<span class="str">"greeting"</span> <span class="prop">data-i18n-name</span>=<span class="str">"Alice"</span>&gt;&lt;/p&gt;
+
+<span class="cm">&lt;!-- Placeholder translation --&gt;</span>
+&lt;input <span class="prop">data-i18n-placeholder</span>=<span class="str">"search.placeholder"</span> /&gt;
+
+<span class="cm">&lt;!-- Title (tooltip) translation --&gt;</span>
+&lt;button <span class="prop">data-i18n</span>=<span class="str">"actions.save"</span>
+        <span class="prop">data-i18n-title</span>=<span class="str">"actions.save.tooltip"</span>&gt;&lt;/button&gt;</pre></div>
+      </div>
+      <div class="code-block">
+        <div class="code-header">
+          <div class="code-dots"><span class="code-dot"></span><span class="code-dot"></span><span class="code-dot"></span></div>
+          <span class="code-lang">js</span>
+        </div>
+        <div class="code-body"><pre><span class="cm">// Translate the entire page</span>
+<span class="obj">Aura</span>.<span class="prop">i18n</span>.<span class="fn">translateDOM</span>(<span class="obj">document</span>.<span class="prop">body</span>);
+
+<span class="cm">// Or translate a specific section after dynamic rendering</span>
+<span class="kw">const</span> modal = <span class="obj">document</span>.<span class="fn">querySelector</span>(<span class="str">'.modal'</span>);
+<span class="obj">Aura</span>.<span class="prop">i18n</span>.<span class="fn">translateDOM</span>(modal);
+
+<span class="cm">// Note: renderTo() calls translateDOM() automatically</span></pre></div>
+      </div>
+
+    </main>
+  </div>
+</body>
+</html>

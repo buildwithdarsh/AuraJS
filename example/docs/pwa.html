@@ -1,0 +1,650 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+  <title>PWA — Aura.js Docs</title>
+  <meta name="description" content="Aura.js PWA API — easy Progressive Web App setup with service worker registration, install prompts, caching strategies, and update management. Full reference." />
+  <meta name="robots" content="index, follow" />
+  <meta property="og:title" content="PWA — Aura.js Docs" />
+  <meta property="og:description" content="Aura.js PWA API — easy Progressive Web App setup with service worker registration, install prompts, caching strategies, and update management. Full reference." />
+  <meta property="og:type" content="article" />
+  <meta property="og:url" content="https://aurajs-delta.vercel.app/docs/pwa.html" />
+  <meta property="og:image" content="https://aurajs-delta.vercel.app/og-image.png" />
+  <meta property="og:site_name" content="Aura.js" />
+  <meta name="twitter:card" content="summary_large_image" />
+  <meta name="twitter:title" content="PWA — Aura.js Docs" />
+  <meta name="twitter:description" content="Aura.js PWA API — easy Progressive Web App setup with service worker registration, install prompts, caching strategies, and update management. Full reference." />
+  <meta name="twitter:image" content="https://aurajs-delta.vercel.app/og-image.png" />
+  <link rel="canonical" href="https://aurajs-delta.vercel.app/docs/pwa.html" />
+  <link rel="icon" href="../favicon.svg" type="image/svg+xml" />
+  <script type="application/ld+json">
+  {
+    "@context": "https://schema.org",
+    "@graph": [
+      {
+        "@type": "TechArticle",
+        "headline": "PWA — Aura.js Docs",
+        "description": "Aura.js PWA API — easy Progressive Web App setup with service worker registration, install prompts, caching strategies, and update management.",
+        "url": "https://aurajs-delta.vercel.app/docs/pwa.html",
+        "image": "https://aurajs-delta.vercel.app/og-image.png",
+        "datePublished": "2026-03-17",
+        "dateModified": "2026-03-17",
+        "author": { "@type": "Organization", "name": "Darsh Gupta", "url": "https://github.com/darshgupta" },
+        "publisher": { "@type": "Organization", "name": "Darsh Gupta", "url": "https://github.com/darshgupta", "logo": { "@type": "ImageObject", "url": "https://aurajs-delta.vercel.app/favicon.svg" } },
+        "mainEntityOfPage": "https://aurajs-delta.vercel.app/docs/pwa.html",
+        "inLanguage": "en"
+      },
+      {
+        "@type": "BreadcrumbList",
+        "itemListElement": [
+          { "@type": "ListItem", "position": 1, "name": "Home", "item": "https://aurajs-delta.vercel.app/" },
+          { "@type": "ListItem", "position": 2, "name": "Docs", "item": "https://aurajs-delta.vercel.app/docs/router.html" },
+          { "@type": "ListItem", "position": 3, "name": "PWA", "item": "https://aurajs-delta.vercel.app/docs/pwa.html" }
+        ]
+      }
+    ]
+  }
+  </script>
+  <style>
+    *, *::before, *::after { margin: 0; padding: 0; box-sizing: border-box; }
+    :root {
+      --bg: #000000; --bg-card: #111111; --bg-code: #0d0d0d;
+      --text: #f5f5f7; --text-secondary: #86868b; --text-tertiary: #6e6e73;
+      --accent: #2997ff; --accent-hover: #0077ed; --green: #30d158;
+      --orange: #ff9f0a; --pink: #ff375f; --purple: #bf5af2; --teal: #64d2ff;
+      --border: #1d1d1f; --radius: 20px; --radius-sm: 12px; --radius-xs: 8px;
+      --font: -apple-system, BlinkMacSystemFont, 'SF Pro Display', 'Helvetica Neue', sans-serif;
+      --mono: 'SF Mono', SFMono-Regular, ui-monospace, 'Cascadia Code', Menlo, monospace;
+      --transition: 0.3s cubic-bezier(0.25, 0.1, 0.25, 1);
+    }
+    html { scroll-behavior: smooth; -webkit-font-smoothing: antialiased; }
+    body { font-family: var(--font); background: var(--bg); color: var(--text); line-height: 1.6; }
+    .doc-nav { position: fixed; top: 0; left: 0; right: 0; z-index: 100; backdrop-filter: saturate(180%) blur(20px); background: rgba(0,0,0,0.72); border-bottom: 0.5px solid rgba(255,255,255,0.08); }
+    .doc-nav-inner { max-width: 1200px; margin: 0 auto; padding: 0 24px; height: 52px; display: flex; align-items: center; gap: 24px; }
+    .doc-nav-logo { font-size: 20px; font-weight: 700; background: linear-gradient(135deg, var(--accent), var(--purple)); -webkit-background-clip: text; -webkit-text-fill-color: transparent; text-decoration: none; }
+    .doc-nav-links { display: flex; gap: 20px; list-style: none; margin-left: auto; flex-wrap: wrap; }
+    .doc-nav-links a { color: var(--text-secondary); text-decoration: none; font-size: 14px; transition: color var(--transition); }
+    .doc-nav-links a:hover { color: var(--text); }
+    .doc-layout { display: grid; grid-template-columns: 240px 1fr; max-width: 1200px; margin: 0 auto; padding-top: 52px; min-height: 100vh; }
+    .doc-sidebar { position: sticky; top: 52px; height: calc(100vh - 52px); overflow-y: auto; padding: 32px 24px; border-right: 1px solid var(--border); }
+    .doc-sidebar h4 { font-size: 11px; font-weight: 600; text-transform: uppercase; letter-spacing: 0.08em; color: var(--text-tertiary); margin: 24px 0 8px; }
+    .doc-sidebar h4:first-child { margin-top: 0; }
+    .doc-sidebar a { display: block; padding: 6px 12px; border-radius: 6px; font-size: 13px; color: var(--text-secondary); text-decoration: none; transition: all 0.15s ease; }
+    .doc-sidebar a:hover { background: rgba(255,255,255,0.04); color: var(--text); }
+    .doc-sidebar a.active { background: rgba(41,151,255,0.1); color: var(--accent); }
+    .doc-content { padding: 48px 48px 120px; max-width: 800px; }
+    .doc-content h1 { font-size: 40px; font-weight: 700; letter-spacing: -0.03em; margin-bottom: 8px; }
+    .doc-content .doc-lead { font-size: 18px; color: var(--text-secondary); margin-bottom: 48px; line-height: 1.5; }
+    .doc-content h2 { font-size: 24px; font-weight: 600; letter-spacing: -0.02em; margin: 48px 0 16px; padding-bottom: 8px; border-bottom: 1px solid var(--border); }
+    .doc-content h3 { font-size: 18px; font-weight: 600; margin: 32px 0 12px; color: var(--text); }
+    .doc-content p { color: var(--text-secondary); margin-bottom: 16px; }
+    .doc-content ul, .doc-content ol { color: var(--text-secondary); margin-bottom: 16px; padding-left: 24px; }
+    .doc-content li { margin-bottom: 6px; }
+    .doc-content code { font-family: var(--mono); font-size: 13px; background: rgba(255,255,255,0.06); padding: 2px 7px; border-radius: 4px; color: var(--pink); }
+    .doc-content a { color: var(--accent); text-decoration: none; }
+    .code-block { background: var(--bg-code); border-radius: var(--radius-sm); border: 1px solid var(--border); margin-bottom: 24px; overflow: hidden; }
+    .code-header { display: flex; align-items: center; justify-content: space-between; padding: 10px 16px; border-bottom: 1px solid var(--border); background: rgba(255,255,255,0.02); }
+    .code-dots { display: flex; gap: 6px; }
+    .code-dot { width: 10px; height: 10px; border-radius: 50%; }
+    .code-dot:nth-child(1) { background: #ff5f57; }
+    .code-dot:nth-child(2) { background: #febc2e; }
+    .code-dot:nth-child(3) { background: #28c840; }
+    .code-lang { font-size: 12px; color: var(--text-tertiary); font-family: var(--mono); }
+    .code-body { padding: 16px; overflow-x: auto; }
+    .code-body pre { font-family: var(--mono); font-size: 13px; line-height: 1.7; color: var(--text-secondary); margin: 0; }
+    .code-body .kw { color: var(--pink); }
+    .code-body .fn { color: var(--accent); }
+    .code-body .str { color: var(--green); }
+    .code-body .cm { color: var(--text-tertiary); }
+    .code-body .num { color: var(--orange); }
+    .code-body .prop { color: var(--teal); }
+    .code-body .obj { color: var(--purple); }
+    .method-sig { background: rgba(41,151,255,0.06); border: 1px solid rgba(41,151,255,0.15); border-radius: var(--radius-xs); padding: 12px 16px; margin-bottom: 12px; font-family: var(--mono); font-size: 13px; color: var(--accent); overflow-x: auto; }
+    .param-table { width: 100%; border-collapse: collapse; margin-bottom: 24px; }
+    .param-table th { text-align: left; font-size: 12px; font-weight: 600; color: var(--text-tertiary); text-transform: uppercase; letter-spacing: 0.06em; padding: 8px 12px; border-bottom: 1px solid var(--border); }
+    .param-table td { padding: 10px 12px; border-bottom: 1px solid rgba(255,255,255,0.04); font-size: 14px; color: var(--text-secondary); }
+    .param-table td:first-child { font-family: var(--mono); font-size: 13px; color: var(--pink); }
+    .param-table td:nth-child(2) { font-family: var(--mono); font-size: 13px; color: var(--orange); }
+    @media (max-width: 768px) { .doc-layout { grid-template-columns: 1fr; } .doc-sidebar { display: none; } .doc-content { padding: 24px; } }
+    ::-webkit-scrollbar { width: 8px; } ::-webkit-scrollbar-track { background: transparent; } ::-webkit-scrollbar-thumb { background: var(--border); border-radius: 4px; }
+  </style>
+</head>
+<body>
+  <nav class="doc-nav">
+    <div class="doc-nav-inner">
+      <a href="../index.html" class="doc-nav-logo">Aura.js</a>
+      <ul class="doc-nav-links">
+        <li><a href="../index.html">Home</a></li>
+        <li><a href="router.html">Router</a></li>
+        <li><a href="state.html">State</a></li>
+        <li><a href="events.html">Events</a></li>
+        <li><a href="api.html">API</a></li>
+        <li><a href="hooks.html">Hooks</a></li>
+        <li><a href="idb.html">IDB</a></li>
+        <li><a href="logger.html">Logger</a></li>
+        <li><a href="try.html">tryThis</a></li>
+        <li><a href="pwa.html">PWA</a></li>
+        <li><a href="mock.html">Mock</a></li>
+      </ul>
+    </div>
+  </nav>
+
+  <div class="doc-layout">
+    <aside class="doc-sidebar">
+      <h4>All Modules</h4>
+      <a href="router.html">Router</a>
+      <a href="state.html">State</a>
+      <a href="events.html">Events</a>
+      <a href="api.html">API</a>
+      <a href="hooks.html">Hooks</a>
+      <a href="idb.html">IDB</a>
+      <a href="logger.html">Logger</a>
+      <a href="try.html">tryThis</a>
+      <a href="pwa.html" class="active">PWA</a>
+      <a href="mock.html">Mock</a>
+
+      <h4>On This Page</h4>
+      <a href="#quick-start">Quick Start</a>
+      <a href="#service-worker-setup">Service Worker Setup</a>
+      <a href="#register">register()</a>
+      <a href="#unregister">unregister()</a>
+      <a href="#oninstallprompt">onInstallPrompt()</a>
+      <a href="#promptinstall">promptInstall()</a>
+      <a href="#isstandalone">isStandalone()</a>
+      <a href="#onupdate">onUpdate()</a>
+      <a href="#checkforupdate">checkForUpdate()</a>
+      <a href="#skipwaiting">skipWaiting()</a>
+      <a href="#addstrategy">addStrategy()</a>
+      <a href="#precache">precache()</a>
+      <a href="#clearcache">clearCache()</a>
+      <a href="#registration">registration</a>
+      <a href="#issupported">isSupported</a>
+      <a href="#caching-strategies">Caching Strategies</a>
+    </aside>
+
+    <main class="doc-content">
+      <h1>PWA</h1>
+      <p class="doc-lead">
+        Full Progressive Web App support including service worker lifecycle management, install prompts,
+        caching strategies, and offline-first capabilities. The PWA module communicates with a companion
+        service worker file (<code>aura-sw.js</code>) via <code>postMessage</code> to configure caching
+        at runtime. Access everything through <code>Aura.pwa</code>.
+      </p>
+
+      <!-- ============================================================ -->
+      <h2 id="quick-start">Quick Start</h2>
+      <p>Register the service worker, define caching strategies, and handle install prompts in just a few lines.</p>
+
+      <div class="code-block">
+        <div class="code-header">
+          <div class="code-dots"><div class="code-dot"></div><div class="code-dot"></div><div class="code-dot"></div></div>
+          <span class="code-lang">js</span>
+        </div>
+        <div class="code-body"><pre><span class="cm">// 1. Define caching strategies before registering</span>
+<span class="obj">Aura</span>.<span class="obj">pwa</span>.<span class="fn">addStrategy</span>({
+  <span class="prop">name</span>: <span class="str">'images'</span>,
+  <span class="prop">strategy</span>: <span class="str">'cache-first'</span>,
+  <span class="prop">match</span>: <span class="kw">/</span><span class="str">\.(png|jpg|webp|svg)$</span><span class="kw">/</span>,
+  <span class="prop">maxAge</span>: <span class="num">7</span> * <span class="num">24</span> * <span class="num">60</span> * <span class="num">60</span> * <span class="num">1000</span>
+});
+
+<span class="cm">// 2. Register the service worker</span>
+<span class="kw">await</span> <span class="obj">Aura</span>.<span class="obj">pwa</span>.<span class="fn">register</span>(<span class="str">'/aura-sw.js'</span>);
+
+<span class="cm">// 3. Precache critical assets</span>
+<span class="obj">Aura</span>.<span class="obj">pwa</span>.<span class="fn">precache</span>([<span class="str">'/index.html'</span>, <span class="str">'/styles.css'</span>, <span class="str">'/app.js'</span>]);
+
+<span class="cm">// 4. Handle install prompt</span>
+<span class="obj">Aura</span>.<span class="obj">pwa</span>.<span class="fn">onInstallPrompt</span>(() =&gt; {
+  <span class="fn">showInstallBanner</span>();
+});</pre></div>
+      </div>
+
+      <!-- ============================================================ -->
+      <h2 id="service-worker-setup">Service Worker Setup</h2>
+      <p>Aura ships with a companion service worker file called <code>aura-sw.js</code>. Place it in your project root (or public directory) so the browser can register it at the top-level scope.</p>
+
+      <h3>How it works</h3>
+      <ul>
+        <li>The service worker listens for <code>postMessage</code> events from the main thread.</li>
+        <li><code>Aura.pwa.addStrategy()</code> sends a <code>AURA_STRATEGIES</code> message with serialized strategy configs.</li>
+        <li><code>Aura.pwa.precache()</code> sends a <code>AURA_PRECACHE</code> message with a list of URLs.</li>
+        <li><code>Aura.pwa.skipWaiting()</code> sends a <code>SKIP_WAITING</code> message to activate a waiting worker.</li>
+        <li>On <strong>install</strong>, the SW precaches any URLs it has received.</li>
+        <li>On <strong>activate</strong>, it cleans up old versioned caches and calls <code>clients.claim()</code>.</li>
+        <li>On <strong>fetch</strong>, it matches the request URL against registered strategies and applies the appropriate caching behavior.</li>
+      </ul>
+
+      <h3>File structure</h3>
+      <div class="code-block">
+        <div class="code-header">
+          <div class="code-dots"><div class="code-dot"></div><div class="code-dot"></div><div class="code-dot"></div></div>
+          <span class="code-lang">text</span>
+        </div>
+        <div class="code-body"><pre>your-project/
+  aura-sw.js        <span class="cm">&lt;-- Service worker (from Aura)</span>
+  index.html
+  app.js            <span class="cm">&lt;-- Aura.pwa.register('/aura-sw.js')</span>
+  manifest.json</pre></div>
+      </div>
+
+      <h3>Cache versioning</h3>
+      <p>The service worker uses a <code>CACHE_PREFIX</code> of <code>"aura-cache-"</code> and a <code>CACHE_VERSION</code> of <code>"v1"</code>. Each strategy gets its own named cache in the format <code>aura-cache-{name}-v1</code>. Precached assets go into <code>aura-cache-precache-v1</code>. Old caches with the prefix but a different version are automatically deleted on activation.</p>
+
+      <!-- ============================================================ -->
+      <h2 id="register">register()</h2>
+      <p>Register a service worker at the given path. Sends any previously configured strategies to the worker once it activates. Returns the <code>ServiceWorkerRegistration</code> on success, or <code>null</code> if service workers are not supported or registration fails.</p>
+
+      <div class="method-sig">async register(swPath: string, opts?: { scope?: string }): Promise&lt;ServiceWorkerRegistration | null&gt;</div>
+
+      <table class="param-table">
+        <thead><tr><th>Param</th><th>Type</th><th>Description</th></tr></thead>
+        <tbody>
+          <tr><td>swPath</td><td>string</td><td>Path to the service worker file.</td></tr>
+          <tr><td>opts.scope</td><td>string?</td><td>Scope for the SW registration. Defaults to <code>"/"</code>.</td></tr>
+        </tbody>
+      </table>
+
+      <p><strong>Returns:</strong> <code>Promise&lt;ServiceWorkerRegistration | null&gt;</code></p>
+
+      <div class="code-block">
+        <div class="code-header">
+          <div class="code-dots"><div class="code-dot"></div><div class="code-dot"></div><div class="code-dot"></div></div>
+          <span class="code-lang">js</span>
+        </div>
+        <div class="code-body"><pre><span class="cm">// Basic registration</span>
+<span class="kw">const</span> <span class="prop">reg</span> = <span class="kw">await</span> <span class="obj">Aura</span>.<span class="obj">pwa</span>.<span class="fn">register</span>(<span class="str">'/aura-sw.js'</span>);
+
+<span class="cm">// With custom scope</span>
+<span class="kw">const</span> <span class="prop">reg</span> = <span class="kw">await</span> <span class="obj">Aura</span>.<span class="obj">pwa</span>.<span class="fn">register</span>(<span class="str">'/sw.js'</span>, { <span class="prop">scope</span>: <span class="str">'/app/'</span> });
+
+<span class="cm">// Guard against unsupported browsers</span>
+<span class="kw">if</span> (<span class="prop">reg</span>) {
+  console.<span class="fn">log</span>(<span class="str">'SW registered'</span>, <span class="prop">reg</span>.<span class="prop">scope</span>);
+}</pre></div>
+      </div>
+
+      <!-- ============================================================ -->
+      <h2 id="unregister">unregister()</h2>
+      <p>Unregister the current service worker.</p>
+
+      <div class="method-sig">async unregister(): Promise&lt;boolean&gt;</div>
+
+      <p>Takes no arguments. Returns <code>true</code> if successfully unregistered, <code>false</code> if no SW was registered.</p>
+
+      <div class="code-block">
+        <div class="code-header">
+          <div class="code-dots"><div class="code-dot"></div><div class="code-dot"></div><div class="code-dot"></div></div>
+          <span class="code-lang">js</span>
+        </div>
+        <div class="code-body"><pre><span class="kw">const</span> <span class="prop">success</span> = <span class="kw">await</span> <span class="obj">Aura</span>.<span class="obj">pwa</span>.<span class="fn">unregister</span>();
+console.<span class="fn">log</span>(<span class="str">'Unregistered:'</span>, <span class="prop">success</span>);</pre></div>
+      </div>
+
+      <!-- ============================================================ -->
+      <h2 id="oninstallprompt">onInstallPrompt()</h2>
+      <p>Register a handler for the <code>beforeinstallprompt</code> event. If the event has already fired before this is called, the handler is invoked immediately with the captured event.</p>
+
+      <div class="method-sig">onInstallPrompt(handler: (e: Event) =&gt; void): void</div>
+
+      <table class="param-table">
+        <thead><tr><th>Param</th><th>Type</th><th>Description</th></tr></thead>
+        <tbody>
+          <tr><td>handler</td><td>(e: Event) =&gt; void</td><td>Callback that receives the <code>beforeinstallprompt</code> event.</td></tr>
+        </tbody>
+      </table>
+
+      <div class="code-block">
+        <div class="code-header">
+          <div class="code-dots"><div class="code-dot"></div><div class="code-dot"></div><div class="code-dot"></div></div>
+          <span class="code-lang">js</span>
+        </div>
+        <div class="code-body"><pre><span class="obj">Aura</span>.<span class="obj">pwa</span>.<span class="fn">onInstallPrompt</span>((<span class="prop">e</span>) =&gt; {
+  <span class="cm">// Show your custom install UI</span>
+  <span class="prop">installBanner</span>.<span class="prop">style</span>.<span class="prop">display</span> = <span class="str">'flex'</span>;
+});</pre></div>
+      </div>
+
+      <!-- ============================================================ -->
+      <h2 id="promptinstall">promptInstall()</h2>
+      <p>Trigger the native install prompt. Must be called after <code>onInstallPrompt</code> has captured the event. Returns whether the user accepted.</p>
+
+      <div class="method-sig">async promptInstall(): Promise&lt;boolean&gt;</div>
+
+      <p>Takes no arguments. Returns <code>true</code> if the user accepted the install, <code>false</code> otherwise.</p>
+
+      <div class="code-block">
+        <div class="code-header">
+          <div class="code-dots"><div class="code-dot"></div><div class="code-dot"></div><div class="code-dot"></div></div>
+          <span class="code-lang">js</span>
+        </div>
+        <div class="code-body"><pre><span class="prop">installBtn</span>.<span class="fn">addEventListener</span>(<span class="str">'click'</span>, <span class="kw">async</span> () =&gt; {
+  <span class="kw">const</span> <span class="prop">accepted</span> = <span class="kw">await</span> <span class="obj">Aura</span>.<span class="obj">pwa</span>.<span class="fn">promptInstall</span>();
+  <span class="kw">if</span> (<span class="prop">accepted</span>) {
+    console.<span class="fn">log</span>(<span class="str">'App installed!'</span>);
+    <span class="prop">installBanner</span>.<span class="prop">style</span>.<span class="prop">display</span> = <span class="str">'none'</span>;
+  }
+});</pre></div>
+      </div>
+
+      <!-- ============================================================ -->
+      <h2 id="isstandalone">isStandalone()</h2>
+      <p>Check if the app is currently running in standalone mode (installed PWA). Works on both Chromium and Safari.</p>
+
+      <div class="method-sig">isStandalone(): boolean</div>
+
+      <p>Takes no arguments. Returns <code>true</code> if running as an installed PWA.</p>
+
+      <div class="code-block">
+        <div class="code-header">
+          <div class="code-dots"><div class="code-dot"></div><div class="code-dot"></div><div class="code-dot"></div></div>
+          <span class="code-lang">js</span>
+        </div>
+        <div class="code-body"><pre><span class="kw">if</span> (<span class="obj">Aura</span>.<span class="obj">pwa</span>.<span class="fn">isStandalone</span>()) {
+  <span class="cm">// Hide browser-specific UI</span>
+  <span class="prop">addressBar</span>.<span class="prop">style</span>.<span class="prop">display</span> = <span class="str">'none'</span>;
+  console.<span class="fn">log</span>(<span class="str">'Running as installed PWA'</span>);
+}</pre></div>
+      </div>
+
+      <!-- ============================================================ -->
+      <h2 id="onupdate">onUpdate()</h2>
+      <p>Listen for service worker updates. The handler fires when a new SW is installed while a previous one is still controlling the page (i.e., an update is available).</p>
+
+      <div class="method-sig">onUpdate(handler: (reg: ServiceWorkerRegistration) =&gt; void): void</div>
+
+      <table class="param-table">
+        <thead><tr><th>Param</th><th>Type</th><th>Description</th></tr></thead>
+        <tbody>
+          <tr><td>handler</td><td>(reg) =&gt; void</td><td>Callback that receives the <code>ServiceWorkerRegistration</code>.</td></tr>
+        </tbody>
+      </table>
+
+      <div class="code-block">
+        <div class="code-header">
+          <div class="code-dots"><div class="code-dot"></div><div class="code-dot"></div><div class="code-dot"></div></div>
+          <span class="code-lang">js</span>
+        </div>
+        <div class="code-body"><pre><span class="obj">Aura</span>.<span class="obj">pwa</span>.<span class="fn">onUpdate</span>((<span class="prop">reg</span>) =&gt; {
+  <span class="kw">if</span> (<span class="fn">confirm</span>(<span class="str">'A new version is available. Reload?'</span>)) {
+    <span class="obj">Aura</span>.<span class="obj">pwa</span>.<span class="fn">skipWaiting</span>();
+    window.<span class="prop">location</span>.<span class="fn">reload</span>();
+  }
+});</pre></div>
+      </div>
+
+      <!-- ============================================================ -->
+      <h2 id="checkforupdate">checkForUpdate()</h2>
+      <p>Force a service worker update check. Useful for long-lived tabs where you want to periodically check for new versions.</p>
+
+      <div class="method-sig">async checkForUpdate(): Promise&lt;void&gt;</div>
+
+      <p>Takes no arguments. Triggers an update check on the current registration.</p>
+
+      <div class="code-block">
+        <div class="code-header">
+          <div class="code-dots"><div class="code-dot"></div><div class="code-dot"></div><div class="code-dot"></div></div>
+          <span class="code-lang">js</span>
+        </div>
+        <div class="code-body"><pre><span class="cm">// Check for updates every 30 minutes</span>
+<span class="fn">setInterval</span>(() =&gt; {
+  <span class="obj">Aura</span>.<span class="obj">pwa</span>.<span class="fn">checkForUpdate</span>();
+}, <span class="num">30</span> * <span class="num">60</span> * <span class="num">1000</span>);
+
+<span class="cm">// Or check on visibility change</span>
+document.<span class="fn">addEventListener</span>(<span class="str">'visibilitychange'</span>, () =&gt; {
+  <span class="kw">if</span> (document.<span class="prop">visibilityState</span> === <span class="str">'visible'</span>) {
+    <span class="obj">Aura</span>.<span class="obj">pwa</span>.<span class="fn">checkForUpdate</span>();
+  }
+});</pre></div>
+      </div>
+
+      <!-- ============================================================ -->
+      <h2 id="skipwaiting">skipWaiting()</h2>
+      <p>Tell a waiting service worker to activate immediately. Sends a <code>SKIP_WAITING</code> message to the waiting worker. Typically called after the user confirms they want to update.</p>
+
+      <div class="method-sig">skipWaiting(): void</div>
+
+      <p>Takes no arguments. No-ops if there is no waiting worker.</p>
+
+      <div class="code-block">
+        <div class="code-header">
+          <div class="code-dots"><div class="code-dot"></div><div class="code-dot"></div><div class="code-dot"></div></div>
+          <span class="code-lang">js</span>
+        </div>
+        <div class="code-body"><pre><span class="cm">// Activate the new worker and reload</span>
+<span class="obj">Aura</span>.<span class="obj">pwa</span>.<span class="fn">skipWaiting</span>();
+window.<span class="prop">location</span>.<span class="fn">reload</span>();</pre></div>
+      </div>
+
+      <!-- ============================================================ -->
+      <h2 id="addstrategy">addStrategy()</h2>
+      <p>Add a caching strategy that the service worker will apply to matching requests. If the SW is already active, the strategy is sent immediately via <code>postMessage</code>.</p>
+
+      <div class="method-sig">addStrategy(strategy: CacheStrategy): void</div>
+
+      <h3>CacheStrategy interface</h3>
+      <table class="param-table">
+        <thead><tr><th>Property</th><th>Type</th><th>Description</th></tr></thead>
+        <tbody>
+          <tr><td>name</td><td>string</td><td>Unique cache name (used as part of the cache key).</td></tr>
+          <tr><td>strategy</td><td>string</td><td>One of: <code>'cache-first'</code>, <code>'network-first'</code>, <code>'stale-while-revalidate'</code>, <code>'network-only'</code>, <code>'cache-only'</code>.</td></tr>
+          <tr><td>match</td><td>string | RegExp</td><td>URL pattern. Strings use <code>includes()</code> matching; RegExp uses <code>.test()</code>.</td></tr>
+          <tr><td>maxAge</td><td>number?</td><td>Maximum cache age in milliseconds. Only used by <code>cache-first</code>.</td></tr>
+        </tbody>
+      </table>
+
+      <div class="code-block">
+        <div class="code-header">
+          <div class="code-dots"><div class="code-dot"></div><div class="code-dot"></div><div class="code-dot"></div></div>
+          <span class="code-lang">js</span>
+        </div>
+        <div class="code-body"><pre><span class="cm">// Cache images aggressively</span>
+<span class="obj">Aura</span>.<span class="obj">pwa</span>.<span class="fn">addStrategy</span>({
+  <span class="prop">name</span>: <span class="str">'images'</span>,
+  <span class="prop">strategy</span>: <span class="str">'cache-first'</span>,
+  <span class="prop">match</span>: <span class="kw">/</span><span class="str">\.(png|jpg|webp|gif|svg)$</span><span class="kw">/</span>,
+  <span class="prop">maxAge</span>: <span class="num">7</span> * <span class="num">24</span> * <span class="num">60</span> * <span class="num">60</span> * <span class="num">1000</span>  <span class="cm">// 7 days</span>
+});
+
+<span class="cm">// API calls: network first with cache fallback</span>
+<span class="obj">Aura</span>.<span class="obj">pwa</span>.<span class="fn">addStrategy</span>({
+  <span class="prop">name</span>: <span class="str">'api'</span>,
+  <span class="prop">strategy</span>: <span class="str">'network-first'</span>,
+  <span class="prop">match</span>: <span class="str">'/api/'</span>
+});
+
+<span class="cm">// Static assets: serve stale, update in background</span>
+<span class="obj">Aura</span>.<span class="obj">pwa</span>.<span class="fn">addStrategy</span>({
+  <span class="prop">name</span>: <span class="str">'static'</span>,
+  <span class="prop">strategy</span>: <span class="str">'stale-while-revalidate'</span>,
+  <span class="prop">match</span>: <span class="kw">/</span><span class="str">\.(css|js|woff2?)$</span><span class="kw">/</span>
+});</pre></div>
+      </div>
+
+      <!-- ============================================================ -->
+      <h2 id="precache">precache()</h2>
+      <p>Send a list of URLs to the service worker for precaching. The SW will add them to the <code>aura-cache-precache-v1</code> cache. Only works after the SW is active.</p>
+
+      <div class="method-sig">precache(urls: string[]): void</div>
+
+      <table class="param-table">
+        <thead><tr><th>Param</th><th>Type</th><th>Description</th></tr></thead>
+        <tbody>
+          <tr><td>urls</td><td>string[]</td><td>Array of URLs to precache.</td></tr>
+        </tbody>
+      </table>
+
+      <div class="code-block">
+        <div class="code-header">
+          <div class="code-dots"><div class="code-dot"></div><div class="code-dot"></div><div class="code-dot"></div></div>
+          <span class="code-lang">js</span>
+        </div>
+        <div class="code-body"><pre><span class="obj">Aura</span>.<span class="obj">pwa</span>.<span class="fn">precache</span>([
+  <span class="str">'/'</span>,
+  <span class="str">'/index.html'</span>,
+  <span class="str">'/styles.css'</span>,
+  <span class="str">'/app.js'</span>,
+  <span class="str">'/offline.html'</span>,
+  <span class="str">'/icons/logo-192.png'</span>
+]);</pre></div>
+      </div>
+
+      <!-- ============================================================ -->
+      <h2 id="clearcache">clearCache()</h2>
+      <p>Delete a specific named cache or all caches. Useful for forcing a fresh start or clearing storage.</p>
+
+      <div class="method-sig">async clearCache(name?: string): Promise&lt;boolean&gt;</div>
+
+      <table class="param-table">
+        <thead><tr><th>Param</th><th>Type</th><th>Description</th></tr></thead>
+        <tbody>
+          <tr><td>name</td><td>string?</td><td>Cache name to delete. If omitted, deletes <em>all</em> caches.</td></tr>
+        </tbody>
+      </table>
+
+      <p><strong>Returns:</strong> <code>true</code> when complete.</p>
+
+      <div class="code-block">
+        <div class="code-header">
+          <div class="code-dots"><div class="code-dot"></div><div class="code-dot"></div><div class="code-dot"></div></div>
+          <span class="code-lang">js</span>
+        </div>
+        <div class="code-body"><pre><span class="cm">// Clear a specific cache</span>
+<span class="kw">await</span> <span class="obj">Aura</span>.<span class="obj">pwa</span>.<span class="fn">clearCache</span>(<span class="str">'aura-cache-images-v1'</span>);
+
+<span class="cm">// Nuclear option: clear everything</span>
+<span class="kw">await</span> <span class="obj">Aura</span>.<span class="obj">pwa</span>.<span class="fn">clearCache</span>();</pre></div>
+      </div>
+
+      <!-- ============================================================ -->
+      <h2 id="registration">registration</h2>
+      <p>Getter that returns the current <code>ServiceWorkerRegistration</code>, or <code>null</code> if not registered.</p>
+
+      <div class="method-sig">get registration: ServiceWorkerRegistration | null</div>
+
+      <div class="code-block">
+        <div class="code-header">
+          <div class="code-dots"><div class="code-dot"></div><div class="code-dot"></div><div class="code-dot"></div></div>
+          <span class="code-lang">js</span>
+        </div>
+        <div class="code-body"><pre><span class="kw">const</span> <span class="prop">reg</span> = <span class="obj">Aura</span>.<span class="obj">pwa</span>.<span class="prop">registration</span>;
+<span class="kw">if</span> (<span class="prop">reg</span>) {
+  console.<span class="fn">log</span>(<span class="str">'SW scope:'</span>, <span class="prop">reg</span>.<span class="prop">scope</span>);
+  console.<span class="fn">log</span>(<span class="str">'Active:'</span>, <span class="prop">reg</span>.<span class="prop">active</span>?.<span class="prop">state</span>);
+}</pre></div>
+      </div>
+
+      <!-- ============================================================ -->
+      <h2 id="issupported">isSupported</h2>
+      <p>Getter that returns whether the browser supports service workers.</p>
+
+      <div class="method-sig">get isSupported: boolean</div>
+
+      <div class="code-block">
+        <div class="code-header">
+          <div class="code-dots"><div class="code-dot"></div><div class="code-dot"></div><div class="code-dot"></div></div>
+          <span class="code-lang">js</span>
+        </div>
+        <div class="code-body"><pre><span class="kw">if</span> (<span class="obj">Aura</span>.<span class="obj">pwa</span>.<span class="prop">isSupported</span>) {
+  <span class="kw">await</span> <span class="obj">Aura</span>.<span class="obj">pwa</span>.<span class="fn">register</span>(<span class="str">'/aura-sw.js'</span>);
+} <span class="kw">else</span> {
+  console.<span class="fn">log</span>(<span class="str">'Service workers not supported'</span>);
+}</pre></div>
+      </div>
+
+      <!-- ============================================================ -->
+      <h2 id="caching-strategies">Caching Strategies Guide</h2>
+      <p>The Aura service worker supports five caching strategies. Choose the right one based on the type of resource and your freshness requirements.</p>
+
+      <h3>cache-first</h3>
+      <p>Serve from cache if available (and not expired via <code>maxAge</code>). Falls back to network, then caches the response. If both cache and network fail, serves a stale cached version if one exists. Best for static assets that rarely change.</p>
+      <ul>
+        <li>Use for: images, fonts, icons</li>
+        <li>Supports <code>maxAge</code> for cache expiration</li>
+      </ul>
+
+      <h3>network-first</h3>
+      <p>Try the network first. If the request succeeds, cache the response. If the network fails, fall back to the cached version. Best for data that should be fresh but must work offline.</p>
+      <ul>
+        <li>Use for: API responses, dynamic HTML pages</li>
+      </ul>
+
+      <h3>stale-while-revalidate</h3>
+      <p>Return the cached version immediately (if available) while fetching an updated version in the background. The next request will get the fresh data. Best for content where speed matters more than absolute freshness.</p>
+      <ul>
+        <li>Use for: CSS, JS bundles, frequently accessed pages</li>
+      </ul>
+
+      <h3>network-only</h3>
+      <p>Always go to the network. No caching at all. Best for requests that must never be stale (e.g., authentication, payments).</p>
+      <ul>
+        <li>Use for: login endpoints, checkout flows, analytics</li>
+      </ul>
+
+      <h3>cache-only</h3>
+      <p>Only serve from cache. Never goes to the network. Returns a 404 if the item is not cached. Best for precached assets that you know will always be available.</p>
+      <ul>
+        <li>Use for: app shell, offline fallback page</li>
+      </ul>
+
+      <h3>Full example: multi-strategy setup</h3>
+      <div class="code-block">
+        <div class="code-header">
+          <div class="code-dots"><div class="code-dot"></div><div class="code-dot"></div><div class="code-dot"></div></div>
+          <span class="code-lang">js</span>
+        </div>
+        <div class="code-body"><pre><span class="cm">// Images: cache aggressively for 7 days</span>
+<span class="obj">Aura</span>.<span class="obj">pwa</span>.<span class="fn">addStrategy</span>({
+  <span class="prop">name</span>: <span class="str">'images'</span>,
+  <span class="prop">strategy</span>: <span class="str">'cache-first'</span>,
+  <span class="prop">match</span>: <span class="kw">/</span><span class="str">\.(png|jpg|webp|gif|svg|ico)$</span><span class="kw">/</span>,
+  <span class="prop">maxAge</span>: <span class="num">7</span> * <span class="num">24</span> * <span class="num">60</span> * <span class="num">60</span> * <span class="num">1000</span>
+});
+
+<span class="cm">// Fonts: cache first, long expiry</span>
+<span class="obj">Aura</span>.<span class="obj">pwa</span>.<span class="fn">addStrategy</span>({
+  <span class="prop">name</span>: <span class="str">'fonts'</span>,
+  <span class="prop">strategy</span>: <span class="str">'cache-first'</span>,
+  <span class="prop">match</span>: <span class="kw">/</span><span class="str">\.(woff2?|ttf|otf|eot)$</span><span class="kw">/</span>,
+  <span class="prop">maxAge</span>: <span class="num">30</span> * <span class="num">24</span> * <span class="num">60</span> * <span class="num">60</span> * <span class="num">1000</span>
+});
+
+<span class="cm">// Static assets: fast but stays updated</span>
+<span class="obj">Aura</span>.<span class="obj">pwa</span>.<span class="fn">addStrategy</span>({
+  <span class="prop">name</span>: <span class="str">'static'</span>,
+  <span class="prop">strategy</span>: <span class="str">'stale-while-revalidate'</span>,
+  <span class="prop">match</span>: <span class="kw">/</span><span class="str">\.(css|js)$</span><span class="kw">/</span>
+});
+
+<span class="cm">// API: fresh data with offline fallback</span>
+<span class="obj">Aura</span>.<span class="obj">pwa</span>.<span class="fn">addStrategy</span>({
+  <span class="prop">name</span>: <span class="str">'api'</span>,
+  <span class="prop">strategy</span>: <span class="str">'network-first'</span>,
+  <span class="prop">match</span>: <span class="str">'/api/'</span>
+});
+
+<span class="cm">// Auth: never cache</span>
+<span class="obj">Aura</span>.<span class="obj">pwa</span>.<span class="fn">addStrategy</span>({
+  <span class="prop">name</span>: <span class="str">'auth'</span>,
+  <span class="prop">strategy</span>: <span class="str">'network-only'</span>,
+  <span class="prop">match</span>: <span class="str">'/auth/'</span>
+});
+
+<span class="cm">// Register after strategies are configured</span>
+<span class="kw">await</span> <span class="obj">Aura</span>.<span class="obj">pwa</span>.<span class="fn">register</span>(<span class="str">'/aura-sw.js'</span>);
+
+<span class="cm">// Precache the app shell</span>
+<span class="obj">Aura</span>.<span class="obj">pwa</span>.<span class="fn">precache</span>([<span class="str">'/'</span>, <span class="str">'/index.html'</span>, <span class="str">'/offline.html'</span>]);
+
+<span class="cm">// Handle updates gracefully</span>
+<span class="obj">Aura</span>.<span class="obj">pwa</span>.<span class="fn">onUpdate</span>(() =&gt; {
+  <span class="fn">showToast</span>(<span class="str">'Update available — click to refresh'</span>);
+});</pre></div>
+      </div>
+
+    </main>
+  </div>
+</body>
+</html>

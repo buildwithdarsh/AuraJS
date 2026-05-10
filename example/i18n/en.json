@@ -1,0 +1,23 @@
+{
+  "hero": {
+    "title": "Build Beautiful Apps",
+    "subtitle": "The lightweight framework that does it all"
+  },
+  "nav": {
+    "home": "Home",
+    "features": "Features",
+    "docs": "Docs",
+    "demo": "Demo"
+  },
+  "features": {
+    "routing": "Routing",
+    "state": "State",
+    "api": "API",
+    "i18n": "i18n"
+  },
+  "greeting": "Hello, {name}",
+  "items_zero": "No items",
+  "items_one": "{count} item",
+  "items_other": "{count} items",
+  "footer": "Built with Flxy.js"
+}

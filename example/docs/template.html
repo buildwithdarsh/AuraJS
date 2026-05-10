@@ -1,0 +1,602 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+  <title>Template — Aura.js Docs</title>
+  <meta name="description" content="Aura.js Template API — simple string-based templating with variables, conditionals, loops, partials, and caching. Quick start guide and full method reference." />
+  <meta name="robots" content="index, follow" />
+  <meta property="og:title" content="Template — Aura.js Docs" />
+  <meta property="og:description" content="Aura.js Template API — simple string-based templating with variables, conditionals, loops, partials, and caching. Quick start guide and full method reference." />
+  <meta property="og:type" content="article" />
+  <meta property="og:url" content="https://aurajs-delta.vercel.app/docs/template.html" />
+  <meta property="og:image" content="https://aurajs-delta.vercel.app/og-image.png" />
+  <meta property="og:site_name" content="Aura.js" />
+  <meta name="twitter:card" content="summary_large_image" />
+  <meta name="twitter:title" content="Template — Aura.js Docs" />
+  <meta name="twitter:description" content="Aura.js Template API — simple string-based templating with variables, conditionals, loops, partials, and caching. Quick start guide and full method reference." />
+  <meta name="twitter:image" content="https://aurajs-delta.vercel.app/og-image.png" />
+  <link rel="canonical" href="https://aurajs-delta.vercel.app/docs/template.html" />
+  <link rel="icon" href="../favicon.svg" type="image/svg+xml" />
+  <script type="application/ld+json">
+  {
+    "@context": "https://schema.org",
+    "@graph": [
+      {
+        "@type": "TechArticle",
+        "headline": "Template — Aura.js Docs",
+        "description": "Aura.js Template API — simple string-based templating with variables, conditionals, loops, partials, and caching.",
+        "url": "https://aurajs-delta.vercel.app/docs/template.html",
+        "image": "https://aurajs-delta.vercel.app/og-image.png",
+        "datePublished": "2026-03-17",
+        "dateModified": "2026-03-17",
+        "author": { "@type": "Organization", "name": "Darsh Gupta", "url": "https://github.com/darshgupta" },
+        "publisher": { "@type": "Organization", "name": "Darsh Gupta", "url": "https://github.com/darshgupta", "logo": { "@type": "ImageObject", "url": "https://aurajs-delta.vercel.app/favicon.svg" } },
+        "mainEntityOfPage": "https://aurajs-delta.vercel.app/docs/template.html",
+        "inLanguage": "en"
+      },
+      {
+        "@type": "BreadcrumbList",
+        "itemListElement": [
+          { "@type": "ListItem", "position": 1, "name": "Home", "item": "https://aurajs-delta.vercel.app/" },
+          { "@type": "ListItem", "position": 2, "name": "Docs", "item": "https://aurajs-delta.vercel.app/docs/router.html" },
+          { "@type": "ListItem", "position": 3, "name": "Template", "item": "https://aurajs-delta.vercel.app/docs/template.html" }
+        ]
+      }
+    ]
+  }
+  </script>
+  <style>
+    *, *::before, *::after { margin: 0; padding: 0; box-sizing: border-box; }
+    :root {
+      --bg: #000000; --bg-card: #111111; --bg-code: #0d0d0d;
+      --text: #f5f5f7; --text-secondary: #86868b; --text-tertiary: #6e6e73;
+      --accent: #2997ff; --accent-hover: #0077ed; --green: #30d158;
+      --orange: #ff9f0a; --pink: #ff375f; --purple: #bf5af2; --teal: #64d2ff;
+      --border: #1d1d1f; --radius: 20px; --radius-sm: 12px; --radius-xs: 8px;
+      --font: -apple-system, BlinkMacSystemFont, 'SF Pro Display', 'Helvetica Neue', sans-serif;
+      --mono: 'SF Mono', SFMono-Regular, ui-monospace, 'Cascadia Code', Menlo, monospace;
+      --transition: 0.3s cubic-bezier(0.25, 0.1, 0.25, 1);
+    }
+    html { scroll-behavior: smooth; -webkit-font-smoothing: antialiased; }
+    body { font-family: var(--font); background: var(--bg); color: var(--text); line-height: 1.6; }
+
+    /* Nav */
+    .doc-nav { position: fixed; top: 0; left: 0; right: 0; z-index: 100; backdrop-filter: saturate(180%) blur(20px); background: rgba(0,0,0,0.72); border-bottom: 0.5px solid rgba(255,255,255,0.08); }
+    .doc-nav-inner { max-width: 1200px; margin: 0 auto; padding: 0 24px; height: 52px; display: flex; align-items: center; gap: 24px; }
+    .doc-nav-logo { font-size: 20px; font-weight: 700; background: linear-gradient(135deg, var(--accent), var(--purple)); -webkit-background-clip: text; -webkit-text-fill-color: transparent; text-decoration: none; }
+    .doc-nav-links { display: flex; gap: 20px; list-style: none; margin-left: auto; }
+    .doc-nav-links a { color: var(--text-secondary); text-decoration: none; font-size: 14px; transition: color var(--transition); }
+    .doc-nav-links a:hover { color: var(--text); }
+
+    /* Layout */
+    .doc-layout { display: grid; grid-template-columns: 240px 1fr; max-width: 1200px; margin: 0 auto; padding-top: 52px; min-height: 100vh; }
+
+    /* Sidebar */
+    .doc-sidebar { position: sticky; top: 52px; height: calc(100vh - 52px); overflow-y: auto; padding: 32px 24px; border-right: 1px solid var(--border); }
+    .doc-sidebar h4 { font-size: 11px; font-weight: 600; text-transform: uppercase; letter-spacing: 0.08em; color: var(--text-tertiary); margin: 24px 0 8px; }
+    .doc-sidebar h4:first-child { margin-top: 0; }
+    .doc-sidebar a { display: block; padding: 6px 12px; border-radius: 6px; font-size: 13px; color: var(--text-secondary); text-decoration: none; transition: all 0.15s ease; }
+    .doc-sidebar a:hover { background: rgba(255,255,255,0.04); color: var(--text); }
+    .doc-sidebar a.active { background: rgba(41,151,255,0.1); color: var(--accent); }
+
+    /* Content */
+    .doc-content { padding: 48px 48px 120px; max-width: 800px; }
+    .doc-content h1 { font-size: 40px; font-weight: 700; letter-spacing: -0.03em; margin-bottom: 8px; }
+    .doc-content .doc-lead { font-size: 18px; color: var(--text-secondary); margin-bottom: 48px; line-height: 1.5; }
+    .doc-content h2 { font-size: 24px; font-weight: 600; letter-spacing: -0.02em; margin: 48px 0 16px; padding-bottom: 8px; border-bottom: 1px solid var(--border); }
+    .doc-content h3 { font-size: 18px; font-weight: 600; margin: 32px 0 12px; color: var(--text); }
+    .doc-content p { color: var(--text-secondary); margin-bottom: 16px; }
+    .doc-content ul, .doc-content ol { color: var(--text-secondary); margin-bottom: 16px; padding-left: 24px; }
+    .doc-content li { margin-bottom: 6px; }
+    .doc-content code { font-family: var(--mono); font-size: 13px; background: rgba(255,255,255,0.06); padding: 2px 7px; border-radius: 4px; color: var(--pink); }
+    .doc-content a { color: var(--accent); text-decoration: none; }
+    .doc-content a:hover { text-decoration: underline; }
+
+    /* Code blocks */
+    .code-block { background: var(--bg-code); border-radius: var(--radius-sm); border: 1px solid var(--border); margin-bottom: 24px; overflow: hidden; }
+    .code-header { display: flex; align-items: center; justify-content: space-between; padding: 10px 16px; border-bottom: 1px solid var(--border); background: rgba(255,255,255,0.02); }
+    .code-dots { display: flex; gap: 6px; }
+    .code-dot { width: 10px; height: 10px; border-radius: 50%; }
+    .code-dot:nth-child(1) { background: #ff5f57; }
+    .code-dot:nth-child(2) { background: #febc2e; }
+    .code-dot:nth-child(3) { background: #28c840; }
+    .code-lang { font-size: 12px; color: var(--text-tertiary); font-family: var(--mono); }
+    .code-body { padding: 16px; overflow-x: auto; }
+    .code-body pre { font-family: var(--mono); font-size: 13px; line-height: 1.7; color: var(--text-secondary); margin: 0; }
+    .code-body .kw { color: var(--pink); }
+    .code-body .fn { color: var(--accent); }
+    .code-body .str { color: var(--green); }
+    .code-body .cm { color: var(--text-tertiary); }
+    .code-body .num { color: var(--orange); }
+    .code-body .prop { color: var(--teal); }
+    .code-body .obj { color: var(--purple); }
+
+    /* Method signature */
+    .method-sig { background: rgba(41,151,255,0.06); border: 1px solid rgba(41,151,255,0.15); border-radius: var(--radius-xs); padding: 12px 16px; margin-bottom: 12px; font-family: var(--mono); font-size: 13px; color: var(--accent); overflow-x: auto; }
+
+    /* Param table */
+    .param-table { width: 100%; border-collapse: collapse; margin-bottom: 24px; }
+    .param-table th { text-align: left; font-size: 12px; font-weight: 600; color: var(--text-tertiary); text-transform: uppercase; letter-spacing: 0.06em; padding: 8px 12px; border-bottom: 1px solid var(--border); }
+    .param-table td { padding: 10px 12px; border-bottom: 1px solid rgba(255,255,255,0.04); font-size: 14px; color: var(--text-secondary); }
+    .param-table td:first-child { font-family: var(--mono); font-size: 13px; color: var(--pink); }
+    .param-table td:nth-child(2) { font-family: var(--mono); font-size: 13px; color: var(--orange); }
+
+    /* Tags */
+    .tag { display: inline-block; padding: 3px 8px; border-radius: 4px; font-size: 11px; font-weight: 500; }
+    .tag-blue { background: rgba(41,151,255,0.12); color: var(--accent); }
+    .tag-green { background: rgba(48,209,88,0.12); color: var(--green); }
+    .tag-orange { background: rgba(255,159,10,0.12); color: var(--orange); }
+    .tag-pink { background: rgba(255,55,95,0.12); color: var(--pink); }
+
+    /* Responsive */
+    @media (max-width: 768px) {
+      .doc-layout { grid-template-columns: 1fr; }
+      .doc-sidebar { display: none; }
+      .doc-content { padding: 24px; }
+    }
+
+    ::-webkit-scrollbar { width: 8px; }
+    ::-webkit-scrollbar-track { background: transparent; }
+    ::-webkit-scrollbar-thumb { background: var(--border); border-radius: 4px; }
+  </style>
+</head>
+<body>
+  <nav class="doc-nav">
+    <div class="doc-nav-inner">
+      <a href="../index.html" class="doc-nav-logo">Aura.js</a>
+      <ul class="doc-nav-links">
+        <li><a href="../index.html">Home</a></li>
+        <li><a href="router.html">Router</a></li>
+        <li><a href="state.html">State</a></li>
+        <li><a href="events.html">Events</a></li>
+        <li><a href="template.html">Template</a></li>
+        <li><a href="api.html">API</a></li>
+        <li><a href="i18n.html">i18n</a></li>
+        <li><a href="mock.html">Mock</a></li>
+      </ul>
+    </div>
+  </nav>
+
+  <div class="doc-layout">
+    <aside class="doc-sidebar">
+      <h4>All Modules</h4>
+      <a href="router.html">Router</a>
+      <a href="state.html">State</a>
+      <a href="events.html">Events</a>
+      <a href="template.html" class="active">Template</a>
+      <a href="api.html">API</a>
+      <a href="i18n.html">i18n</a>
+      <a href="mock.html">Mock</a>
+
+      <h4>On This Page</h4>
+      <a href="#quick-start">Quick Start</a>
+      <a href="#configure">configure()</a>
+      <a href="#renderString">renderString()</a>
+      <a href="#renderTo">renderTo()</a>
+      <a href="#render">render()</a>
+      <a href="#resolvePartials">resolvePartials()</a>
+      <a href="#setDefaultData">setDefaultData()</a>
+      <a href="#preload">preload()</a>
+      <a href="#addToCache">addToCache()</a>
+      <a href="#clearCache">clearCache()</a>
+      <a href="#syntax">Template Syntax</a>
+    </aside>
+
+    <main class="doc-content">
+      <h1>Template</h1>
+      <p class="doc-lead">
+        A lightweight Handlebars-inspired template engine with support for conditionals, loops, partials,
+        HTML escaping, raw output, and automatic i18n DOM translation. Templates are loaded from HTML files,
+        cached in memory, and compiled with a simple data-binding syntax.
+      </p>
+
+      <!-- Quick Start -->
+      <h2 id="quick-start">Quick Start</h2>
+      <p>Configure the template base path, register a route, and render a template into the container element with a single call.</p>
+
+      <div class="code-block">
+        <div class="code-header">
+          <div class="code-dots"><span class="code-dot"></span><span class="code-dot"></span><span class="code-dot"></span></div>
+          <span class="code-lang">js</span>
+        </div>
+        <div class="code-body"><pre><span class="kw">import</span> <span class="obj">Aura</span> <span class="kw">from</span> <span class="str">'@buildwithdarsh/aura.js'</span>;
+
+<span class="cm">// Configure template paths</span>
+<span class="obj">Aura</span>.<span class="prop">template</span>.<span class="fn">configure</span>({
+  <span class="prop">basePath</span>: <span class="str">'/templates'</span>,
+  <span class="prop">container</span>: <span class="str">'#app'</span>,
+  <span class="prop">loadingHTML</span>: <span class="str">'&lt;div class="spinner"&gt;Loading...&lt;/div&gt;'</span>
+});
+
+<span class="cm">// Render a template into the container</span>
+<span class="kw">await</span> <span class="obj">Aura</span>.<span class="prop">template</span>.<span class="fn">renderTo</span>(<span class="str">'home'</span>, {
+  <span class="prop">title</span>: <span class="str">'Welcome'</span>,
+  <span class="prop">items</span>: [<span class="str">'Alpha'</span>, <span class="str">'Beta'</span>, <span class="str">'Gamma'</span>]
+});
+
+<span class="cm">// Or compile an inline string</span>
+<span class="kw">const</span> html = <span class="obj">Aura</span>.<span class="prop">template</span>.<span class="fn">renderString</span>(
+  <span class="str">'&lt;h1&gt;{{title}}&lt;/h1&gt;'</span>,
+  { <span class="prop">title</span>: <span class="str">'Hello Aura'</span> }
+);</pre></div>
+      </div>
+
+      <!-- TemplateConfig type -->
+      <h2 id="types">Types</h2>
+      <h3>TemplateConfig</h3>
+      <p>Configuration object accepted by <code>configure()</code>. All fields are optional (partial).</p>
+      <table class="param-table">
+        <thead><tr><th>Property</th><th>Type</th><th>Description</th></tr></thead>
+        <tbody>
+          <tr><td>basePath</td><td>string</td><td>Root URL path for loading template HTML files. Default: <code>'/templates'</code>.</td></tr>
+          <tr><td>container</td><td>string</td><td>CSS selector for the DOM element that <code>renderTo()</code> writes into. Default: <code>'#flxy-app'</code>.</td></tr>
+          <tr><td>loadingHTML</td><td>string</td><td>HTML string shown while a template is being fetched. Default: <code>'&lt;div class="aura-loading"&gt;Loading...&lt;/div&gt;'</code>.</td></tr>
+        </tbody>
+      </table>
+
+      <!-- configure() -->
+      <h2 id="configure">configure() <span class="tag tag-blue">core</span></h2>
+      <p>Merge partial configuration into the current template settings. Any provided fields override the existing values.</p>
+      <div class="method-sig">Aura.template.configure(config: Partial&lt;TemplateConfig&gt;): void</div>
+      <table class="param-table">
+        <thead><tr><th>Param</th><th>Type</th><th>Description</th></tr></thead>
+        <tbody>
+          <tr><td>config</td><td>Partial&lt;TemplateConfig&gt;</td><td>Object with optional <code>basePath</code>, <code>container</code>, and <code>loadingHTML</code> fields.</td></tr>
+        </tbody>
+      </table>
+      <div class="code-block">
+        <div class="code-header">
+          <div class="code-dots"><span class="code-dot"></span><span class="code-dot"></span><span class="code-dot"></span></div>
+          <span class="code-lang">js</span>
+        </div>
+        <div class="code-body"><pre><span class="obj">Aura</span>.<span class="prop">template</span>.<span class="fn">configure</span>({
+  <span class="prop">basePath</span>: <span class="str">'/views'</span>,
+  <span class="prop">container</span>: <span class="str">'#main-content'</span>
+});</pre></div>
+      </div>
+
+      <!-- renderString() -->
+      <h2 id="renderString">renderString() <span class="tag tag-blue">core</span></h2>
+      <p>Compile an inline HTML string with the template engine. Processes all directives (<code>#if</code>, <code>#each</code>, <code>#unless</code>, variables, raw output) and returns the resulting HTML. Does not touch the DOM.</p>
+      <div class="method-sig">Aura.template.renderString(html: string, data?: Record&lt;string, unknown&gt;): string</div>
+      <table class="param-table">
+        <thead><tr><th>Param</th><th>Type</th><th>Description</th></tr></thead>
+        <tbody>
+          <tr><td>html</td><td>string</td><td>Template string containing Aura template syntax.</td></tr>
+          <tr><td>data</td><td>Record&lt;string, unknown&gt;</td><td>Optional data object whose keys are available as template variables. Defaults to <code>{}</code>.</td></tr>
+        </tbody>
+      </table>
+      <div class="code-block">
+        <div class="code-header">
+          <div class="code-dots"><span class="code-dot"></span><span class="code-dot"></span><span class="code-dot"></span></div>
+          <span class="code-lang">js</span>
+        </div>
+        <div class="code-body"><pre><span class="kw">const</span> result = <span class="obj">Aura</span>.<span class="prop">template</span>.<span class="fn">renderString</span>(
+  <span class="str">'&lt;p&gt;Hello, {{name}}!&lt;/p&gt;'</span>,
+  { <span class="prop">name</span>: <span class="str">'World'</span> }
+);
+<span class="cm">// =&gt; "&lt;p&gt;Hello, World!&lt;/p&gt;"</span>
+
+<span class="cm">// With conditionals</span>
+<span class="kw">const</span> card = <span class="obj">Aura</span>.<span class="prop">template</span>.<span class="fn">renderString</span>(<span class="str">`
+  &lt;div class="card"&gt;
+    {{#if premium}}&lt;span class="badge"&gt;PRO&lt;/span&gt;{{/if}}
+    &lt;h2&gt;{{name}}&lt;/h2&gt;
+  &lt;/div&gt;
+`</span>, { <span class="prop">name</span>: <span class="str">'Alice'</span>, <span class="prop">premium</span>: <span class="num">true</span> });</pre></div>
+      </div>
+
+      <!-- renderTo() -->
+      <h2 id="renderTo">renderTo() <span class="tag tag-blue">core</span></h2>
+      <p>Load a template file by name, resolve any partials, compile it with the given data, and inject the result into the configured container element. Also runs <code>i18n.translateDOM()</code> on the container afterwards.</p>
+      <div class="method-sig">Aura.template.renderTo(name: string, data?: Record&lt;string, unknown&gt;): Promise&lt;void&gt;</div>
+      <table class="param-table">
+        <thead><tr><th>Param</th><th>Type</th><th>Description</th></tr></thead>
+        <tbody>
+          <tr><td>name</td><td>string</td><td>Template file name (without <code>.html</code>). Loaded from <code>basePath/name.html</code>.</td></tr>
+          <tr><td>data</td><td>Record&lt;string, unknown&gt;</td><td>Optional data object for template variables. Defaults to <code>{}</code>.</td></tr>
+        </tbody>
+      </table>
+      <div class="code-block">
+        <div class="code-header">
+          <div class="code-dots"><span class="code-dot"></span><span class="code-dot"></span><span class="code-dot"></span></div>
+          <span class="code-lang">js</span>
+        </div>
+        <div class="code-body"><pre><span class="cm">// Loads /templates/profile.html, compiles, and injects</span>
+<span class="kw">await</span> <span class="obj">Aura</span>.<span class="prop">template</span>.<span class="fn">renderTo</span>(<span class="str">'profile'</span>, {
+  <span class="prop">user</span>: { <span class="prop">name</span>: <span class="str">'Alice'</span>, <span class="prop">role</span>: <span class="str">'Admin'</span> },
+  <span class="prop">posts</span>: [
+    { <span class="prop">title</span>: <span class="str">'First Post'</span>, <span class="prop">date</span>: <span class="str">'2026-01-15'</span> },
+    { <span class="prop">title</span>: <span class="str">'Second Post'</span>, <span class="prop">date</span>: <span class="str">'2026-02-20'</span> }
+  ]
+});</pre></div>
+      </div>
+
+      <!-- render() -->
+      <h2 id="render">render() <span class="tag tag-blue">core</span></h2>
+      <p>Load a template file, resolve partials, and compile it with data, returning the final HTML string without injecting it into the DOM. Useful when you need the HTML for further processing.</p>
+      <div class="method-sig">Aura.template.render(name: string, data?: Record&lt;string, unknown&gt;): Promise&lt;string&gt;</div>
+      <table class="param-table">
+        <thead><tr><th>Param</th><th>Type</th><th>Description</th></tr></thead>
+        <tbody>
+          <tr><td>name</td><td>string</td><td>Template file name (without <code>.html</code>).</td></tr>
+          <tr><td>data</td><td>Record&lt;string, unknown&gt;</td><td>Optional data object for template variables. Defaults to <code>{}</code>.</td></tr>
+        </tbody>
+      </table>
+      <div class="code-block">
+        <div class="code-header">
+          <div class="code-dots"><span class="code-dot"></span><span class="code-dot"></span><span class="code-dot"></span></div>
+          <span class="code-lang">js</span>
+        </div>
+        <div class="code-body"><pre><span class="kw">const</span> html = <span class="kw">await</span> <span class="obj">Aura</span>.<span class="prop">template</span>.<span class="fn">render</span>(<span class="str">'card'</span>, {
+  <span class="prop">title</span>: <span class="str">'My Card'</span>,
+  <span class="prop">description</span>: <span class="str">'A nice card component.'</span>
+});
+<span class="cm">// Use the HTML string elsewhere</span>
+<span class="obj">document</span>.<span class="fn">querySelector</span>(<span class="str">'.sidebar'</span>).<span class="prop">innerHTML</span> += html;</pre></div>
+      </div>
+
+      <!-- resolvePartials() -->
+      <h2 id="resolvePartials">resolvePartials() <span class="tag tag-green">utility</span></h2>
+      <p>Scan an HTML string for partial includes (<code>{{&gt; name}}</code>) and recursively replace them with the loaded partial content. Partials are loaded from the configured <code>basePath</code> and cached.</p>
+      <div class="method-sig">Aura.template.resolvePartials(html: string): Promise&lt;string&gt;</div>
+      <table class="param-table">
+        <thead><tr><th>Param</th><th>Type</th><th>Description</th></tr></thead>
+        <tbody>
+          <tr><td>html</td><td>string</td><td>Template string potentially containing <code>{{&gt; partialName}}</code> directives.</td></tr>
+        </tbody>
+      </table>
+      <div class="code-block">
+        <div class="code-header">
+          <div class="code-dots"><span class="code-dot"></span><span class="code-dot"></span><span class="code-dot"></span></div>
+          <span class="code-lang">js</span>
+        </div>
+        <div class="code-body"><pre><span class="kw">const</span> raw = <span class="str">'&lt;div&gt;{{&gt; header}}&lt;main&gt;Content&lt;/main&gt;{{&gt; footer}}&lt;/div&gt;'</span>;
+<span class="kw">const</span> resolved = <span class="kw">await</span> <span class="obj">Aura</span>.<span class="prop">template</span>.<span class="fn">resolvePartials</span>(raw);
+<span class="cm">// header.html and footer.html are fetched and inlined</span></pre></div>
+      </div>
+
+      <!-- setDefaultData() -->
+      <h2 id="setDefaultData">setDefaultData() <span class="tag tag-green">utility</span></h2>
+      <p>Set global default data that is automatically merged into every template compilation. Template-specific data takes precedence over defaults when keys conflict.</p>
+      <div class="method-sig">Aura.template.setDefaultData(data: Record&lt;string, unknown&gt;): void</div>
+      <table class="param-table">
+        <thead><tr><th>Param</th><th>Type</th><th>Description</th></tr></thead>
+        <tbody>
+          <tr><td>data</td><td>Record&lt;string, unknown&gt;</td><td>Key-value pairs available in all templates. Merged with <code>Object.assign</code> (shallow).</td></tr>
+        </tbody>
+      </table>
+      <div class="code-block">
+        <div class="code-header">
+          <div class="code-dots"><span class="code-dot"></span><span class="code-dot"></span><span class="code-dot"></span></div>
+          <span class="code-lang">js</span>
+        </div>
+        <div class="code-body"><pre><span class="cm">// These values are available in every template</span>
+<span class="obj">Aura</span>.<span class="prop">template</span>.<span class="fn">setDefaultData</span>({
+  <span class="prop">appName</span>: <span class="str">'My App'</span>,
+  <span class="prop">year</span>: <span class="num">2026</span>,
+  <span class="prop">version</span>: <span class="str">'1.0.0'</span>
+});
+
+<span class="cm">// In any template: &lt;footer&gt;&copy; {{year}} {{appName}}&lt;/footer&gt;</span></pre></div>
+      </div>
+
+      <!-- preload() -->
+      <h2 id="preload">preload() <span class="tag tag-green">utility</span></h2>
+      <p>Pre-fetch and cache multiple templates in parallel. Useful during app initialization to avoid loading delays on first navigation.</p>
+      <div class="method-sig">Aura.template.preload(names: string[]): Promise&lt;void&gt;</div>
+      <table class="param-table">
+        <thead><tr><th>Param</th><th>Type</th><th>Description</th></tr></thead>
+        <tbody>
+          <tr><td>names</td><td>string[]</td><td>Array of template names to fetch and cache (without <code>.html</code>).</td></tr>
+        </tbody>
+      </table>
+      <div class="code-block">
+        <div class="code-header">
+          <div class="code-dots"><span class="code-dot"></span><span class="code-dot"></span><span class="code-dot"></span></div>
+          <span class="code-lang">js</span>
+        </div>
+        <div class="code-body"><pre><span class="cm">// Preload critical templates at startup</span>
+<span class="kw">await</span> <span class="obj">Aura</span>.<span class="prop">template</span>.<span class="fn">preload</span>([<span class="str">'home'</span>, <span class="str">'header'</span>, <span class="str">'footer'</span>, <span class="str">'nav'</span>]);</pre></div>
+      </div>
+
+      <!-- addToCache() -->
+      <h2 id="addToCache">addToCache() <span class="tag tag-green">utility</span></h2>
+      <p>Manually insert an HTML string into the template cache under a given name. Useful for injecting dynamically generated templates or templates received from an API.</p>
+      <div class="method-sig">Aura.template.addToCache(name: string, html: string): void</div>
+      <table class="param-table">
+        <thead><tr><th>Param</th><th>Type</th><th>Description</th></tr></thead>
+        <tbody>
+          <tr><td>name</td><td>string</td><td>Cache key (same as the name used with <code>render()</code> and <code>renderTo()</code>).</td></tr>
+          <tr><td>html</td><td>string</td><td>Raw HTML template string to store in the cache.</td></tr>
+        </tbody>
+      </table>
+      <div class="code-block">
+        <div class="code-header">
+          <div class="code-dots"><span class="code-dot"></span><span class="code-dot"></span><span class="code-dot"></span></div>
+          <span class="code-lang">js</span>
+        </div>
+        <div class="code-body"><pre><span class="cm">// Register a partial manually</span>
+<span class="obj">Aura</span>.<span class="prop">template</span>.<span class="fn">addToCache</span>(<span class="str">'alert'</span>,
+  <span class="str">'&lt;div class="alert alert-{{type}}"&gt;{{message}}&lt;/div&gt;'</span>
+);
+
+<span class="cm">// Now it can be used as a partial: {{&gt; alert}}</span></pre></div>
+      </div>
+
+      <!-- clearCache() -->
+      <h2 id="clearCache">clearCache() <span class="tag tag-orange">cache</span></h2>
+      <p>Remove all cached templates. The next call to <code>render()</code> or <code>renderTo()</code> will re-fetch templates from the server.</p>
+      <div class="method-sig">Aura.template.clearCache(): void</div>
+      <p>This method takes no parameters.</p>
+      <div class="code-block">
+        <div class="code-header">
+          <div class="code-dots"><span class="code-dot"></span><span class="code-dot"></span><span class="code-dot"></span></div>
+          <span class="code-lang">js</span>
+        </div>
+        <div class="code-body"><pre><span class="cm">// Clear all cached templates</span>
+<span class="obj">Aura</span>.<span class="prop">template</span>.<span class="fn">clearCache</span>();
+
+<span class="cm">// Or refresh a single template</span>
+<span class="kw">await</span> <span class="obj">Aura</span>.<span class="prop">template</span>.<span class="fn">refreshCache</span>(<span class="str">'home'</span>);</pre></div>
+      </div>
+
+      <!-- removeFromCache() -->
+      <h2 id="removeFromCache">removeFromCache() <span class="tag tag-orange">cache</span></h2>
+      <p>Remove a single template from the cache by name.</p>
+      <div class="method-sig">Aura.template.removeFromCache(name: string): void</div>
+      <table class="param-table">
+        <thead><tr><th>Param</th><th>Type</th><th>Description</th></tr></thead>
+        <tbody>
+          <tr><td>name</td><td>string</td><td>The cache key of the template to remove.</td></tr>
+        </tbody>
+      </table>
+      <div class="code-block">
+        <div class="code-header">
+          <div class="code-dots"><span class="code-dot"></span><span class="code-dot"></span><span class="code-dot"></span></div>
+          <span class="code-lang">js</span>
+        </div>
+        <div class="code-body"><pre><span class="obj">Aura</span>.<span class="prop">template</span>.<span class="fn">removeFromCache</span>(<span class="str">'profile'</span>);</pre></div>
+      </div>
+
+      <!-- refreshCache() -->
+      <h2 id="refreshCache">refreshCache() <span class="tag tag-orange">cache</span></h2>
+      <p>Delete a template from the cache and immediately re-fetch it from the server. Returns the fresh HTML string.</p>
+      <div class="method-sig">Aura.template.refreshCache(name: string): Promise&lt;string&gt;</div>
+      <table class="param-table">
+        <thead><tr><th>Param</th><th>Type</th><th>Description</th></tr></thead>
+        <tbody>
+          <tr><td>name</td><td>string</td><td>Template name to invalidate and reload.</td></tr>
+        </tbody>
+      </table>
+      <div class="code-block">
+        <div class="code-header">
+          <div class="code-dots"><span class="code-dot"></span><span class="code-dot"></span><span class="code-dot"></span></div>
+          <span class="code-lang">js</span>
+        </div>
+        <div class="code-body"><pre><span class="cm">// Force-reload a template after server-side update</span>
+<span class="kw">const</span> fresh = <span class="kw">await</span> <span class="obj">Aura</span>.<span class="prop">template</span>.<span class="fn">refreshCache</span>(<span class="str">'dashboard'</span>);</pre></div>
+      </div>
+
+      <!-- Template Syntax -->
+      <h2 id="syntax">Template Syntax</h2>
+      <p>Aura templates use a Handlebars-inspired syntax. All expressions are enclosed in double or triple curly braces.</p>
+
+      <h3 id="syntax-variables">Variable Output &mdash; <code>{{var}}</code></h3>
+      <p>Output an HTML-escaped value. Supports dot notation for nested properties.</p>
+      <div class="code-block">
+        <div class="code-header">
+          <div class="code-dots"><span class="code-dot"></span><span class="code-dot"></span><span class="code-dot"></span></div>
+          <span class="code-lang">html</span>
+        </div>
+        <div class="code-body"><pre><span class="cm">&lt;!-- Simple variable --&gt;</span>
+&lt;h1&gt;{{title}}&lt;/h1&gt;
+
+<span class="cm">&lt;!-- Nested property --&gt;</span>
+&lt;p&gt;Author: {{user.name}}&lt;/p&gt;
+
+<span class="cm">&lt;!-- HTML entities are escaped automatically --&gt;</span>
+<span class="cm">&lt;!-- data: { tag: "&lt;script&gt;" } =&gt; "&amp;lt;script&amp;gt;" --&gt;</span></pre></div>
+      </div>
+
+      <h3 id="syntax-raw">Raw Output &mdash; <code>{{{raw}}}</code></h3>
+      <p>Output a value without HTML escaping. Use this for trusted HTML content.</p>
+      <div class="code-block">
+        <div class="code-header">
+          <div class="code-dots"><span class="code-dot"></span><span class="code-dot"></span><span class="code-dot"></span></div>
+          <span class="code-lang">html</span>
+        </div>
+        <div class="code-body"><pre><span class="cm">&lt;!-- Renders HTML without escaping --&gt;</span>
+&lt;div class="content"&gt;{{{bodyHTML}}}&lt;/div&gt;
+
+<span class="cm">&lt;!-- data: { bodyHTML: "&lt;strong&gt;Bold&lt;/strong&gt;" } --&gt;</span>
+<span class="cm">&lt;!-- =&gt; &lt;div class="content"&gt;&lt;strong&gt;Bold&lt;/strong&gt;&lt;/div&gt; --&gt;</span></pre></div>
+      </div>
+
+      <h3 id="syntax-if">Conditionals &mdash; <code>{{#if}}</code></h3>
+      <p>Render a block only if the value is truthy. Supports an optional <code>{{else}}</code> branch.</p>
+      <div class="code-block">
+        <div class="code-header">
+          <div class="code-dots"><span class="code-dot"></span><span class="code-dot"></span><span class="code-dot"></span></div>
+          <span class="code-lang">html</span>
+        </div>
+        <div class="code-body"><pre>{{#if isLoggedIn}}
+  &lt;p&gt;Welcome back, {{user.name}}!&lt;/p&gt;
+{{else}}
+  &lt;p&gt;Please &lt;a href="/login"&gt;sign in&lt;/a&gt;.&lt;/p&gt;
+{{/if}}
+
+<span class="cm">&lt;!-- Nested property conditions --&gt;</span>
+{{#if user.isAdmin}}
+  &lt;button&gt;Admin Panel&lt;/button&gt;
+{{/if}}</pre></div>
+      </div>
+
+      <h3 id="syntax-unless">Unless &mdash; <code>{{#unless}}</code></h3>
+      <p>Render a block only if the value is falsy. The inverse of <code>#if</code>.</p>
+      <div class="code-block">
+        <div class="code-header">
+          <div class="code-dots"><span class="code-dot"></span><span class="code-dot"></span><span class="code-dot"></span></div>
+          <span class="code-lang">html</span>
+        </div>
+        <div class="code-body"><pre>{{#unless hasItems}}
+  &lt;p class="empty"&gt;No items found.&lt;/p&gt;
+{{/unless}}</pre></div>
+      </div>
+
+      <h3 id="syntax-each">Loops &mdash; <code>{{#each}}</code></h3>
+      <p>Iterate over an array. Inside the loop, object properties are available directly. Special variables <code>@index</code>, <code>@first</code>, and <code>@last</code> are provided.</p>
+      <div class="code-block">
+        <div class="code-header">
+          <div class="code-dots"><span class="code-dot"></span><span class="code-dot"></span><span class="code-dot"></span></div>
+          <span class="code-lang">html</span>
+        </div>
+        <div class="code-body"><pre>&lt;ul&gt;
+{{#each items}}
+  &lt;li class="{{#if @first}}first{{/if}}"&gt;
+    {{@index}}. {{title}} &amp;mdash; {{author}}
+  &lt;/li&gt;
+{{/each}}
+&lt;/ul&gt;
+
+<span class="cm">&lt;!-- data: { items: [</span>
+<span class="cm">  { title: "Post A", author: "Alice" },</span>
+<span class="cm">  { title: "Post B", author: "Bob" }</span>
+<span class="cm">]} --&gt;</span></pre></div>
+      </div>
+
+      <h3 id="syntax-partials">Partials &mdash; <code>{{&gt; name}}</code></h3>
+      <p>Include another template file by name. Partials are loaded from the same <code>basePath</code> and resolved recursively (partials can include other partials).</p>
+      <div class="code-block">
+        <div class="code-header">
+          <div class="code-dots"><span class="code-dot"></span><span class="code-dot"></span><span class="code-dot"></span></div>
+          <span class="code-lang">html</span>
+        </div>
+        <div class="code-body"><pre><span class="cm">&lt;!-- main.html --&gt;</span>
+&lt;div class="page"&gt;
+  {{&gt; header}}
+  &lt;main&gt;{{content}}&lt;/main&gt;
+  {{&gt; footer}}
+&lt;/div&gt;
+
+<span class="cm">&lt;!-- header.html --&gt;</span>
+&lt;header&gt;&lt;h1&gt;{{appName}}&lt;/h1&gt;&lt;/header&gt;
+
+<span class="cm">&lt;!-- Or register partials manually --&gt;</span></pre></div>
+      </div>
+      <div class="code-block">
+        <div class="code-header">
+          <div class="code-dots"><span class="code-dot"></span><span class="code-dot"></span><span class="code-dot"></span></div>
+          <span class="code-lang">js</span>
+        </div>
+        <div class="code-body"><pre><span class="cm">// Register a partial from a string</span>
+<span class="obj">Aura</span>.<span class="prop">template</span>.<span class="fn">addToCache</span>(<span class="str">'header'</span>,
+  <span class="str">'&lt;header&gt;&lt;h1&gt;{{appName}}&lt;/h1&gt;&lt;/header&gt;'</span>
+);</pre></div>
+      </div>
+
+    </main>
+  </div>
+</body>
+</html>

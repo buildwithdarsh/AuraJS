@@ -1,0 +1,556 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+  <title>Logger — Aura.js Docs</title>
+  <meta name="description" content="Aura.js Logger API — lightweight structured logging with log levels, tagged loggers, custom transports, history, and export. Quick start and full method reference." />
+  <meta name="robots" content="index, follow" />
+  <meta property="og:title" content="Logger — Aura.js Docs" />
+  <meta property="og:description" content="Aura.js Logger API — lightweight structured logging with log levels, tagged loggers, custom transports, history, and export. Quick start and full method reference." />
+  <meta property="og:type" content="article" />
+  <meta property="og:url" content="https://aurajs-delta.vercel.app/docs/logger.html" />
+  <meta property="og:image" content="https://aurajs-delta.vercel.app/og-image.png" />
+  <meta property="og:site_name" content="Aura.js" />
+  <meta name="twitter:card" content="summary_large_image" />
+  <meta name="twitter:title" content="Logger — Aura.js Docs" />
+  <meta name="twitter:description" content="Aura.js Logger API — lightweight structured logging with log levels, tagged loggers, custom transports, history, and export. Quick start and full method reference." />
+  <meta name="twitter:image" content="https://aurajs-delta.vercel.app/og-image.png" />
+  <link rel="canonical" href="https://aurajs-delta.vercel.app/docs/logger.html" />
+  <link rel="icon" href="../favicon.svg" type="image/svg+xml" />
+  <script type="application/ld+json">
+  {
+    "@context": "https://schema.org",
+    "@graph": [
+      {
+        "@type": "TechArticle",
+        "headline": "Logger — Aura.js Docs",
+        "description": "Aura.js Logger API — lightweight structured logging with log levels, tagged loggers, custom transports, history, and export.",
+        "url": "https://aurajs-delta.vercel.app/docs/logger.html",
+        "image": "https://aurajs-delta.vercel.app/og-image.png",
+        "datePublished": "2026-03-17",
+        "dateModified": "2026-03-17",
+        "author": { "@type": "Organization", "name": "Darsh Gupta", "url": "https://github.com/darshgupta" },
+        "publisher": { "@type": "Organization", "name": "Darsh Gupta", "url": "https://github.com/darshgupta", "logo": { "@type": "ImageObject", "url": "https://aurajs-delta.vercel.app/favicon.svg" } },
+        "mainEntityOfPage": "https://aurajs-delta.vercel.app/docs/logger.html",
+        "inLanguage": "en"
+      },
+      {
+        "@type": "BreadcrumbList",
+        "itemListElement": [
+          { "@type": "ListItem", "position": 1, "name": "Home", "item": "https://aurajs-delta.vercel.app/" },
+          { "@type": "ListItem", "position": 2, "name": "Docs", "item": "https://aurajs-delta.vercel.app/docs/router.html" },
+          { "@type": "ListItem", "position": 3, "name": "Logger", "item": "https://aurajs-delta.vercel.app/docs/logger.html" }
+        ]
+      }
+    ]
+  }
+  </script>
+  <style>
+    *, *::before, *::after { margin: 0; padding: 0; box-sizing: border-box; }
+    :root {
+      --bg: #000000; --bg-card: #111111; --bg-code: #0d0d0d;
+      --text: #f5f5f7; --text-secondary: #86868b; --text-tertiary: #6e6e73;
+      --accent: #2997ff; --accent-hover: #0077ed; --green: #30d158;
+      --orange: #ff9f0a; --pink: #ff375f; --purple: #bf5af2; --teal: #64d2ff;
+      --border: #1d1d1f; --radius: 20px; --radius-sm: 12px; --radius-xs: 8px;
+      --font: -apple-system, BlinkMacSystemFont, 'SF Pro Display', 'Helvetica Neue', sans-serif;
+      --mono: 'SF Mono', SFMono-Regular, ui-monospace, 'Cascadia Code', Menlo, monospace;
+      --transition: 0.3s cubic-bezier(0.25, 0.1, 0.25, 1);
+    }
+    html { scroll-behavior: smooth; -webkit-font-smoothing: antialiased; }
+    body { font-family: var(--font); background: var(--bg); color: var(--text); line-height: 1.6; }
+    .doc-nav { position: fixed; top: 0; left: 0; right: 0; z-index: 100; backdrop-filter: saturate(180%) blur(20px); background: rgba(0,0,0,0.72); border-bottom: 0.5px solid rgba(255,255,255,0.08); }
+    .doc-nav-inner { max-width: 1200px; margin: 0 auto; padding: 0 24px; height: 52px; display: flex; align-items: center; gap: 24px; }
+    .doc-nav-logo { font-size: 20px; font-weight: 700; background: linear-gradient(135deg, var(--accent), var(--purple)); -webkit-background-clip: text; -webkit-text-fill-color: transparent; text-decoration: none; }
+    .doc-nav-links { display: flex; gap: 20px; list-style: none; margin-left: auto; flex-wrap: wrap; }
+    .doc-nav-links a { color: var(--text-secondary); text-decoration: none; font-size: 14px; transition: color var(--transition); }
+    .doc-nav-links a:hover { color: var(--text); }
+    .doc-layout { display: grid; grid-template-columns: 240px 1fr; max-width: 1200px; margin: 0 auto; padding-top: 52px; min-height: 100vh; }
+    .doc-sidebar { position: sticky; top: 52px; height: calc(100vh - 52px); overflow-y: auto; padding: 32px 24px; border-right: 1px solid var(--border); }
+    .doc-sidebar h4 { font-size: 11px; font-weight: 600; text-transform: uppercase; letter-spacing: 0.08em; color: var(--text-tertiary); margin: 24px 0 8px; }
+    .doc-sidebar h4:first-child { margin-top: 0; }
+    .doc-sidebar a { display: block; padding: 6px 12px; border-radius: 6px; font-size: 13px; color: var(--text-secondary); text-decoration: none; transition: all 0.15s ease; }
+    .doc-sidebar a:hover { background: rgba(255,255,255,0.04); color: var(--text); }
+    .doc-sidebar a.active { background: rgba(41,151,255,0.1); color: var(--accent); }
+    .doc-content { padding: 48px 48px 120px; max-width: 800px; }
+    .doc-content h1 { font-size: 40px; font-weight: 700; letter-spacing: -0.03em; margin-bottom: 8px; }
+    .doc-content .doc-lead { font-size: 18px; color: var(--text-secondary); margin-bottom: 48px; line-height: 1.5; }
+    .doc-content h2 { font-size: 24px; font-weight: 600; letter-spacing: -0.02em; margin: 48px 0 16px; padding-bottom: 8px; border-bottom: 1px solid var(--border); }
+    .doc-content h3 { font-size: 18px; font-weight: 600; margin: 32px 0 12px; color: var(--text); }
+    .doc-content p { color: var(--text-secondary); margin-bottom: 16px; }
+    .doc-content ul, .doc-content ol { color: var(--text-secondary); margin-bottom: 16px; padding-left: 24px; }
+    .doc-content li { margin-bottom: 6px; }
+    .doc-content code { font-family: var(--mono); font-size: 13px; background: rgba(255,255,255,0.06); padding: 2px 7px; border-radius: 4px; color: var(--pink); }
+    .doc-content a { color: var(--accent); text-decoration: none; }
+    .code-block { background: var(--bg-code); border-radius: var(--radius-sm); border: 1px solid var(--border); margin-bottom: 24px; overflow: hidden; }
+    .code-header { display: flex; align-items: center; justify-content: space-between; padding: 10px 16px; border-bottom: 1px solid var(--border); background: rgba(255,255,255,0.02); }
+    .code-dots { display: flex; gap: 6px; }
+    .code-dot { width: 10px; height: 10px; border-radius: 50%; }
+    .code-dot:nth-child(1) { background: #ff5f57; }
+    .code-dot:nth-child(2) { background: #febc2e; }
+    .code-dot:nth-child(3) { background: #28c840; }
+    .code-lang { font-size: 12px; color: var(--text-tertiary); font-family: var(--mono); }
+    .code-body { padding: 16px; overflow-x: auto; }
+    .code-body pre { font-family: var(--mono); font-size: 13px; line-height: 1.7; color: var(--text-secondary); margin: 0; }
+    .code-body .kw { color: var(--pink); }
+    .code-body .fn { color: var(--accent); }
+    .code-body .str { color: var(--green); }
+    .code-body .cm { color: var(--text-tertiary); }
+    .code-body .num { color: var(--orange); }
+    .code-body .prop { color: var(--teal); }
+    .code-body .obj { color: var(--purple); }
+    .method-sig { background: rgba(41,151,255,0.06); border: 1px solid rgba(41,151,255,0.15); border-radius: var(--radius-xs); padding: 12px 16px; margin-bottom: 12px; font-family: var(--mono); font-size: 13px; color: var(--accent); overflow-x: auto; }
+    .param-table { width: 100%; border-collapse: collapse; margin-bottom: 24px; }
+    .param-table th { text-align: left; font-size: 12px; font-weight: 600; color: var(--text-tertiary); text-transform: uppercase; letter-spacing: 0.06em; padding: 8px 12px; border-bottom: 1px solid var(--border); }
+    .param-table td { padding: 10px 12px; border-bottom: 1px solid rgba(255,255,255,0.04); font-size: 14px; color: var(--text-secondary); }
+    .param-table td:first-child { font-family: var(--mono); font-size: 13px; color: var(--pink); }
+    .param-table td:nth-child(2) { font-family: var(--mono); font-size: 13px; color: var(--orange); }
+    @media (max-width: 768px) { .doc-layout { grid-template-columns: 1fr; } .doc-sidebar { display: none; } .doc-content { padding: 24px; } }
+    ::-webkit-scrollbar { width: 8px; } ::-webkit-scrollbar-track { background: transparent; } ::-webkit-scrollbar-thumb { background: var(--border); border-radius: 4px; }
+  </style>
+</head>
+<body>
+  <nav class="doc-nav">
+    <div class="doc-nav-inner">
+      <a href="../index.html" class="doc-nav-logo">Aura.js</a>
+      <ul class="doc-nav-links">
+        <li><a href="../index.html">Home</a></li>
+        <li><a href="router.html">Router</a></li>
+        <li><a href="state.html">State</a></li>
+        <li><a href="events.html">Events</a></li>
+        <li><a href="api.html">API</a></li>
+        <li><a href="hooks.html">Hooks</a></li>
+        <li><a href="idb.html">IDB</a></li>
+        <li><a href="logger.html">Logger</a></li>
+        <li><a href="try.html">tryThis</a></li>
+        <li><a href="pwa.html">PWA</a></li>
+        <li><a href="mock.html">Mock</a></li>
+      </ul>
+    </div>
+  </nav>
+
+  <div class="doc-layout">
+    <aside class="doc-sidebar">
+      <h4>All Modules</h4>
+      <a href="router.html">Router</a>
+      <a href="state.html">State</a>
+      <a href="events.html">Events</a>
+      <a href="api.html">API</a>
+      <a href="hooks.html">Hooks</a>
+      <a href="idb.html">IDB</a>
+      <a class="active" href="logger.html">Logger</a>
+      <a href="try.html">tryThis</a>
+      <a href="pwa.html">PWA</a>
+      <a href="mock.html">Mock</a>
+
+      <h4>On This Page</h4>
+      <a href="#quick-start">Quick Start</a>
+      <a href="#log-levels">Log Levels</a>
+      <a href="#setLevel">setLevel()</a>
+      <a href="#getLevel">getLevel()</a>
+      <a href="#setMaxHistory">setMaxHistory()</a>
+      <a href="#debug">debug()</a>
+      <a href="#info">info()</a>
+      <a href="#warn">warn()</a>
+      <a href="#error">error()</a>
+      <a href="#tag">tag()</a>
+      <a href="#tagged-loggers">Tagged Loggers</a>
+      <a href="#addTransport">addTransport()</a>
+      <a href="#custom-transports">Custom Transports</a>
+      <a href="#getHistory">getHistory()</a>
+      <a href="#clearHistory">clearHistory()</a>
+      <a href="#export">export()</a>
+      <a href="#events-integration">Events Integration</a>
+    </aside>
+
+    <main class="doc-content">
+      <h1>Logger</h1>
+      <p class="doc-lead">
+        A structured, level-aware logging system with history tracking, custom transports, tagged sub-loggers, and deep integration with the Aura event bus. Access it through <code>Aura.log</code>.
+      </p>
+
+      <!-- Quick Start -->
+      <h2 id="quick-start">Quick Start</h2>
+      <p>Start logging immediately. Messages are printed to the console, stored in history, and optionally emitted as events.</p>
+      <div class="code-block">
+        <div class="code-header">
+          <div class="code-dots"><div class="code-dot"></div><div class="code-dot"></div><div class="code-dot"></div></div>
+          <span class="code-lang">js</span>
+        </div>
+        <div class="code-body"><pre><span class="obj">Aura</span>.<span class="prop">log</span>.<span class="fn">info</span>(<span class="str">'App started'</span>);
+<span class="obj">Aura</span>.<span class="prop">log</span>.<span class="fn">debug</span>(<span class="str">'Loading config'</span>, { <span class="prop">env</span>: <span class="str">'production'</span> });
+<span class="obj">Aura</span>.<span class="prop">log</span>.<span class="fn">warn</span>(<span class="str">'Cache miss'</span>, <span class="str">'/api/users'</span>);
+<span class="obj">Aura</span>.<span class="prop">log</span>.<span class="fn">error</span>(<span class="str">'Failed to connect'</span>, err);
+
+<span class="cm">// Set minimum level to suppress debug messages</span>
+<span class="obj">Aura</span>.<span class="prop">log</span>.<span class="fn">setLevel</span>(<span class="str">'warn'</span>);
+
+<span class="cm">// Create a tagged sub-logger</span>
+<span class="kw">const</span> db = <span class="obj">Aura</span>.<span class="prop">log</span>.<span class="fn">tag</span>(<span class="str">'DB'</span>);
+db.<span class="fn">info</span>(<span class="str">'Connected'</span>); <span class="cm">// [INFO][DB] Connected</span></pre></div>
+      </div>
+
+      <!-- Log Levels -->
+      <h2 id="log-levels">Log Levels</h2>
+      <p>The logger uses five ordered levels. When you set a minimum level, all messages below that threshold are silently discarded.</p>
+      <table class="param-table">
+        <thead><tr><th>Level</th><th>Priority</th><th>Description</th></tr></thead>
+        <tbody>
+          <tr><td>debug</td><td>0</td><td>Verbose diagnostics. Disabled in production.</td></tr>
+          <tr><td>info</td><td>1</td><td>General operational messages.</td></tr>
+          <tr><td>warn</td><td>2</td><td>Potential issues that deserve attention.</td></tr>
+          <tr><td>error</td><td>3</td><td>Failures that need immediate action.</td></tr>
+          <tr><td>silent</td><td>4</td><td>Suppresses all output. Nothing is logged.</td></tr>
+        </tbody>
+      </table>
+
+      <!-- setLevel() -->
+      <h2 id="setLevel">setLevel()</h2>
+      <p>Sets the minimum log level. Any message with a level below this threshold is ignored.</p>
+      <div class="method-sig">Aura.log.setLevel(level: LogLevel): void</div>
+      <table class="param-table">
+        <thead><tr><th>Param</th><th>Type</th><th>Description</th></tr></thead>
+        <tbody>
+          <tr><td>level</td><td>'debug' | 'info' | 'warn' | 'error' | 'silent'</td><td>The minimum level to allow.</td></tr>
+        </tbody>
+      </table>
+      <div class="code-block">
+        <div class="code-header">
+          <div class="code-dots"><div class="code-dot"></div><div class="code-dot"></div><div class="code-dot"></div></div>
+          <span class="code-lang">js</span>
+        </div>
+        <div class="code-body"><pre><span class="cm">// Only show warnings and errors</span>
+<span class="obj">Aura</span>.<span class="prop">log</span>.<span class="fn">setLevel</span>(<span class="str">'warn'</span>);
+
+<span class="obj">Aura</span>.<span class="prop">log</span>.<span class="fn">debug</span>(<span class="str">'This is hidden'</span>);  <span class="cm">// suppressed</span>
+<span class="obj">Aura</span>.<span class="prop">log</span>.<span class="fn">info</span>(<span class="str">'This is hidden'</span>);   <span class="cm">// suppressed</span>
+<span class="obj">Aura</span>.<span class="prop">log</span>.<span class="fn">warn</span>(<span class="str">'This is visible'</span>);  <span class="cm">// printed</span>
+<span class="obj">Aura</span>.<span class="prop">log</span>.<span class="fn">error</span>(<span class="str">'This is visible'</span>); <span class="cm">// printed</span>
+
+<span class="cm">// Silence everything</span>
+<span class="obj">Aura</span>.<span class="prop">log</span>.<span class="fn">setLevel</span>(<span class="str">'silent'</span>);</pre></div>
+      </div>
+
+      <!-- getLevel() -->
+      <h2 id="getLevel">getLevel()</h2>
+      <p>Returns the current minimum log level.</p>
+      <div class="method-sig">Aura.log.getLevel(): LogLevel</div>
+      <div class="code-block">
+        <div class="code-header">
+          <div class="code-dots"><div class="code-dot"></div><div class="code-dot"></div><div class="code-dot"></div></div>
+          <span class="code-lang">js</span>
+        </div>
+        <div class="code-body"><pre><span class="obj">console</span>.<span class="fn">log</span>(<span class="obj">Aura</span>.<span class="prop">log</span>.<span class="fn">getLevel</span>()); <span class="cm">// 'debug' (default)</span></pre></div>
+      </div>
+
+      <!-- setMaxHistory() -->
+      <h2 id="setMaxHistory">setMaxHistory()</h2>
+      <p>Sets the maximum number of log entries kept in memory. When the limit is exceeded, the oldest entry is dropped. The default is <code>500</code>.</p>
+      <div class="method-sig">Aura.log.setMaxHistory(max: number): void</div>
+      <table class="param-table">
+        <thead><tr><th>Param</th><th>Type</th><th>Description</th></tr></thead>
+        <tbody>
+          <tr><td>max</td><td>number</td><td>Maximum number of history entries to retain.</td></tr>
+        </tbody>
+      </table>
+      <div class="code-block">
+        <div class="code-header">
+          <div class="code-dots"><div class="code-dot"></div><div class="code-dot"></div><div class="code-dot"></div></div>
+          <span class="code-lang">js</span>
+        </div>
+        <div class="code-body"><pre><span class="cm">// Keep only the last 100 entries</span>
+<span class="obj">Aura</span>.<span class="prop">log</span>.<span class="fn">setMaxHistory</span>(<span class="num">100</span>);</pre></div>
+      </div>
+
+      <!-- debug() -->
+      <h2 id="debug">debug()</h2>
+      <p>Logs a message at the <code>debug</code> level. Accepts optional extra data arguments that are passed through to the console and stored in history.</p>
+      <div class="method-sig">Aura.log.debug(message: string, ...data: unknown[]): void</div>
+      <table class="param-table">
+        <thead><tr><th>Param</th><th>Type</th><th>Description</th></tr></thead>
+        <tbody>
+          <tr><td>message</td><td>string</td><td>The log message.</td></tr>
+          <tr><td>...data</td><td>unknown[]</td><td>Optional additional data to attach.</td></tr>
+        </tbody>
+      </table>
+      <div class="code-block">
+        <div class="code-header">
+          <div class="code-dots"><div class="code-dot"></div><div class="code-dot"></div><div class="code-dot"></div></div>
+          <span class="code-lang">js</span>
+        </div>
+        <div class="code-body"><pre><span class="obj">Aura</span>.<span class="prop">log</span>.<span class="fn">debug</span>(<span class="str">'Render cycle'</span>, { <span class="prop">component</span>: <span class="str">'Header'</span>, <span class="prop">ms</span>: <span class="num">12</span> });</pre></div>
+      </div>
+
+      <!-- info() -->
+      <h2 id="info">info()</h2>
+      <p>Logs a message at the <code>info</code> level.</p>
+      <div class="method-sig">Aura.log.info(message: string, ...data: unknown[]): void</div>
+      <table class="param-table">
+        <thead><tr><th>Param</th><th>Type</th><th>Description</th></tr></thead>
+        <tbody>
+          <tr><td>message</td><td>string</td><td>The log message.</td></tr>
+          <tr><td>...data</td><td>unknown[]</td><td>Optional additional data to attach.</td></tr>
+        </tbody>
+      </table>
+      <div class="code-block">
+        <div class="code-header">
+          <div class="code-dots"><div class="code-dot"></div><div class="code-dot"></div><div class="code-dot"></div></div>
+          <span class="code-lang">js</span>
+        </div>
+        <div class="code-body"><pre><span class="obj">Aura</span>.<span class="prop">log</span>.<span class="fn">info</span>(<span class="str">'User signed in'</span>, { <span class="prop">userId</span>: <span class="num">42</span> });</pre></div>
+      </div>
+
+      <!-- warn() -->
+      <h2 id="warn">warn()</h2>
+      <p>Logs a message at the <code>warn</code> level.</p>
+      <div class="method-sig">Aura.log.warn(message: string, ...data: unknown[]): void</div>
+      <table class="param-table">
+        <thead><tr><th>Param</th><th>Type</th><th>Description</th></tr></thead>
+        <tbody>
+          <tr><td>message</td><td>string</td><td>The log message.</td></tr>
+          <tr><td>...data</td><td>unknown[]</td><td>Optional additional data to attach.</td></tr>
+        </tbody>
+      </table>
+      <div class="code-block">
+        <div class="code-header">
+          <div class="code-dots"><div class="code-dot"></div><div class="code-dot"></div><div class="code-dot"></div></div>
+          <span class="code-lang">js</span>
+        </div>
+        <div class="code-body"><pre><span class="obj">Aura</span>.<span class="prop">log</span>.<span class="fn">warn</span>(<span class="str">'Deprecated method called'</span>, <span class="str">'use fetchV2() instead'</span>);</pre></div>
+      </div>
+
+      <!-- error() -->
+      <h2 id="error">error()</h2>
+      <p>Logs a message at the <code>error</code> level.</p>
+      <div class="method-sig">Aura.log.error(message: string, ...data: unknown[]): void</div>
+      <table class="param-table">
+        <thead><tr><th>Param</th><th>Type</th><th>Description</th></tr></thead>
+        <tbody>
+          <tr><td>message</td><td>string</td><td>The log message.</td></tr>
+          <tr><td>...data</td><td>unknown[]</td><td>Optional additional data to attach.</td></tr>
+        </tbody>
+      </table>
+      <div class="code-block">
+        <div class="code-header">
+          <div class="code-dots"><div class="code-dot"></div><div class="code-dot"></div><div class="code-dot"></div></div>
+          <span class="code-lang">js</span>
+        </div>
+        <div class="code-body"><pre><span class="kw">try</span> {
+  <span class="kw">await</span> <span class="fn">riskyOperation</span>();
+} <span class="kw">catch</span> (err) {
+  <span class="obj">Aura</span>.<span class="prop">log</span>.<span class="fn">error</span>(<span class="str">'Operation failed'</span>, err);
+}</pre></div>
+      </div>
+
+      <!-- tag() -->
+      <h2 id="tag">tag()</h2>
+      <p>Creates a tagged sub-logger. Every message from the returned logger is automatically prefixed with the given tag in the console output and stored with the tag in history.</p>
+      <div class="method-sig">Aura.log.tag(name: string): TaggedLogger</div>
+      <table class="param-table">
+        <thead><tr><th>Param</th><th>Type</th><th>Description</th></tr></thead>
+        <tbody>
+          <tr><td>name</td><td>string</td><td>The tag label to prefix on all messages.</td></tr>
+        </tbody>
+      </table>
+      <p>Returns a <code>TaggedLogger</code> with <code>debug()</code>, <code>info()</code>, <code>warn()</code>, and <code>error()</code> methods.</p>
+      <div class="code-block">
+        <div class="code-header">
+          <div class="code-dots"><div class="code-dot"></div><div class="code-dot"></div><div class="code-dot"></div></div>
+          <span class="code-lang">js</span>
+        </div>
+        <div class="code-body"><pre><span class="kw">const</span> api = <span class="obj">Aura</span>.<span class="prop">log</span>.<span class="fn">tag</span>(<span class="str">'API'</span>);
+api.<span class="fn">info</span>(<span class="str">'GET /users'</span>);       <span class="cm">// [INFO][API] GET /users</span>
+api.<span class="fn">error</span>(<span class="str">'500 response'</span>);    <span class="cm">// [ERROR][API] 500 response</span>
+
+<span class="kw">const</span> ws = <span class="obj">Aura</span>.<span class="prop">log</span>.<span class="fn">tag</span>(<span class="str">'WebSocket'</span>);
+ws.<span class="fn">debug</span>(<span class="str">'Frame received'</span>);   <span class="cm">// [DEBUG][WebSocket] Frame received</span></pre></div>
+      </div>
+
+      <!-- Tagged Loggers -->
+      <h2 id="tagged-loggers">Tagged Loggers</h2>
+      <p>Tagged loggers share the same level filter, history buffer, transports, and event emitter as the parent logger. They simply add a <code>tag</code> field to each <code>LogEntry</code> they produce. This makes it easy to filter history or transport output by subsystem.</p>
+      <div class="code-block">
+        <div class="code-header">
+          <div class="code-dots"><div class="code-dot"></div><div class="code-dot"></div><div class="code-dot"></div></div>
+          <span class="code-lang">js</span>
+        </div>
+        <div class="code-body"><pre><span class="kw">const</span> router = <span class="obj">Aura</span>.<span class="prop">log</span>.<span class="fn">tag</span>(<span class="str">'Router'</span>);
+<span class="kw">const</span> auth   = <span class="obj">Aura</span>.<span class="prop">log</span>.<span class="fn">tag</span>(<span class="str">'Auth'</span>);
+
+router.<span class="fn">info</span>(<span class="str">'Navigate to /dashboard'</span>);
+auth.<span class="fn">warn</span>(<span class="str">'Token expiring soon'</span>);
+
+<span class="cm">// Filter history by tag</span>
+<span class="kw">const</span> authLogs = <span class="obj">Aura</span>.<span class="prop">log</span>.<span class="fn">getHistory</span>().<span class="fn">filter</span>(e => e.<span class="prop">tag</span> === <span class="str">'Auth'</span>);</pre></div>
+      </div>
+
+      <!-- addTransport() -->
+      <h2 id="addTransport">addTransport()</h2>
+      <p>Registers a custom transport function that is called for every log entry that passes the level filter. Returns an unsubscribe function to remove the transport later.</p>
+      <div class="method-sig">Aura.log.addTransport(transport: (entry: LogEntry) =&gt; void): () =&gt; void</div>
+      <table class="param-table">
+        <thead><tr><th>Param</th><th>Type</th><th>Description</th></tr></thead>
+        <tbody>
+          <tr><td>transport</td><td>(entry: LogEntry) =&gt; void</td><td>A function that receives each <code>LogEntry</code>.</td></tr>
+        </tbody>
+      </table>
+      <p>The <code>LogEntry</code> object contains:</p>
+      <table class="param-table">
+        <thead><tr><th>Property</th><th>Type</th><th>Description</th></tr></thead>
+        <tbody>
+          <tr><td>level</td><td>LogLevel</td><td>One of <code>'debug'</code>, <code>'info'</code>, <code>'warn'</code>, <code>'error'</code>.</td></tr>
+          <tr><td>message</td><td>string</td><td>The log message.</td></tr>
+          <tr><td>data</td><td>unknown[]</td><td>Extra data arguments.</td></tr>
+          <tr><td>timestamp</td><td>number</td><td>Unix timestamp in milliseconds (<code>Date.now()</code>).</td></tr>
+          <tr><td>tag</td><td>string?</td><td>Optional tag from a tagged logger.</td></tr>
+        </tbody>
+      </table>
+      <div class="code-block">
+        <div class="code-header">
+          <div class="code-dots"><div class="code-dot"></div><div class="code-dot"></div><div class="code-dot"></div></div>
+          <span class="code-lang">js</span>
+        </div>
+        <div class="code-body"><pre><span class="cm">// Send errors to an external service</span>
+<span class="kw">const</span> remove = <span class="obj">Aura</span>.<span class="prop">log</span>.<span class="fn">addTransport</span>((entry) => {
+  <span class="kw">if</span> (entry.<span class="prop">level</span> === <span class="str">'error'</span>) {
+    <span class="fn">fetch</span>(<span class="str">'/api/logs'</span>, {
+      <span class="prop">method</span>: <span class="str">'POST'</span>,
+      <span class="prop">body</span>: <span class="obj">JSON</span>.<span class="fn">stringify</span>(entry),
+    });
+  }
+});
+
+<span class="cm">// Later, remove the transport</span>
+<span class="fn">remove</span>();</pre></div>
+      </div>
+
+      <!-- Custom Transports -->
+      <h2 id="custom-transports">Custom Transports</h2>
+      <p>Transports are plain functions, so you can build any pipeline you need. Errors thrown inside a transport are silently caught to avoid breaking the logging flow.</p>
+      <div class="code-block">
+        <div class="code-header">
+          <div class="code-dots"><div class="code-dot"></div><div class="code-dot"></div><div class="code-dot"></div></div>
+          <span class="code-lang">js</span>
+        </div>
+        <div class="code-body"><pre><span class="cm">// Store logs in IndexedDB</span>
+<span class="obj">Aura</span>.<span class="prop">log</span>.<span class="fn">addTransport</span>(<span class="kw">async</span> (entry) => {
+  <span class="kw">await</span> <span class="obj">Aura</span>.<span class="prop">idb</span>.<span class="fn">set</span>(<span class="str">'logs'</span>, {
+    ...entry,
+    <span class="prop">date</span>: <span class="kw">new</span> <span class="obj">Date</span>(entry.<span class="prop">timestamp</span>).<span class="fn">toISOString</span>(),
+  });
+});
+
+<span class="cm">// Format and write to a DOM element</span>
+<span class="obj">Aura</span>.<span class="prop">log</span>.<span class="fn">addTransport</span>((entry) => {
+  <span class="kw">const</span> el = <span class="obj">document</span>.<span class="fn">getElementById</span>(<span class="str">'log-output'</span>);
+  <span class="kw">if</span> (!el) <span class="kw">return</span>;
+  <span class="kw">const</span> line = <span class="str">`[${entry.level.toUpperCase()}] ${entry.message}\n`</span>;
+  el.<span class="prop">textContent</span> += line;
+});</pre></div>
+      </div>
+
+      <!-- getHistory() -->
+      <h2 id="getHistory">getHistory()</h2>
+      <p>Returns a copy of the log history array. Optionally pass a level to filter entries &mdash; only entries at or above that level are returned.</p>
+      <div class="method-sig">Aura.log.getHistory(level?: LogLevel): LogEntry[]</div>
+      <table class="param-table">
+        <thead><tr><th>Param</th><th>Type</th><th>Description</th></tr></thead>
+        <tbody>
+          <tr><td>level</td><td>LogLevel?</td><td>Optional. If provided, only entries at or above this level are included.</td></tr>
+        </tbody>
+      </table>
+      <div class="code-block">
+        <div class="code-header">
+          <div class="code-dots"><div class="code-dot"></div><div class="code-dot"></div><div class="code-dot"></div></div>
+          <span class="code-lang">js</span>
+        </div>
+        <div class="code-body"><pre><span class="cm">// All history</span>
+<span class="kw">const</span> all = <span class="obj">Aura</span>.<span class="prop">log</span>.<span class="fn">getHistory</span>();
+
+<span class="cm">// Only warnings and errors</span>
+<span class="kw">const</span> issues = <span class="obj">Aura</span>.<span class="prop">log</span>.<span class="fn">getHistory</span>(<span class="str">'warn'</span>);
+
+<span class="obj">console</span>.<span class="fn">log</span>(<span class="str">`${issues.length} issues found`</span>);</pre></div>
+      </div>
+
+      <!-- clearHistory() -->
+      <h2 id="clearHistory">clearHistory()</h2>
+      <p>Clears all stored log history.</p>
+      <div class="method-sig">Aura.log.clearHistory(): void</div>
+      <div class="code-block">
+        <div class="code-header">
+          <div class="code-dots"><div class="code-dot"></div><div class="code-dot"></div><div class="code-dot"></div></div>
+          <span class="code-lang">js</span>
+        </div>
+        <div class="code-body"><pre><span class="obj">Aura</span>.<span class="prop">log</span>.<span class="fn">clearHistory</span>();
+<span class="obj">console</span>.<span class="fn">log</span>(<span class="obj">Aura</span>.<span class="prop">log</span>.<span class="fn">getHistory</span>().<span class="prop">length</span>); <span class="cm">// 0</span></pre></div>
+      </div>
+
+      <!-- export() -->
+      <h2 id="export">export()</h2>
+      <p>Serializes the log history to a formatted JSON string. Optionally filter by level, the same way <code>getHistory()</code> does.</p>
+      <div class="method-sig">Aura.log.export(level?: LogLevel): string</div>
+      <table class="param-table">
+        <thead><tr><th>Param</th><th>Type</th><th>Description</th></tr></thead>
+        <tbody>
+          <tr><td>level</td><td>LogLevel?</td><td>Optional minimum level filter.</td></tr>
+        </tbody>
+      </table>
+      <div class="code-block">
+        <div class="code-header">
+          <div class="code-dots"><div class="code-dot"></div><div class="code-dot"></div><div class="code-dot"></div></div>
+          <span class="code-lang">js</span>
+        </div>
+        <div class="code-body"><pre><span class="cm">// Export all logs as JSON</span>
+<span class="kw">const</span> json = <span class="obj">Aura</span>.<span class="prop">log</span>.<span class="fn">export</span>();
+
+<span class="cm">// Export only errors</span>
+<span class="kw">const</span> errors = <span class="obj">Aura</span>.<span class="prop">log</span>.<span class="fn">export</span>(<span class="str">'error'</span>);
+
+<span class="cm">// Download as a file</span>
+<span class="kw">const</span> blob = <span class="kw">new</span> <span class="obj">Blob</span>([json], { <span class="prop">type</span>: <span class="str">'application/json'</span> });
+<span class="kw">const</span> url = <span class="obj">URL</span>.<span class="fn">createObjectURL</span>(blob);
+<span class="kw">const</span> a = <span class="obj">document</span>.<span class="fn">createElement</span>(<span class="str">'a'</span>);
+a.<span class="prop">href</span> = url;
+a.<span class="prop">download</span> = <span class="str">'logs.json'</span>;
+a.<span class="fn">click</span>();</pre></div>
+      </div>
+
+      <!-- Events Integration -->
+      <h2 id="events-integration">Events Integration</h2>
+      <p>When Aura's event system is connected, every log entry automatically emits events on the Aura event bus. This lets other parts of your app react to log messages without importing the logger directly.</p>
+      <h3>Emitted Events</h3>
+      <table class="param-table">
+        <thead><tr><th>Event</th><th>Payload</th><th>Description</th></tr></thead>
+        <tbody>
+          <tr><td>log:debug</td><td>LogEntry</td><td>Fired for every debug-level message.</td></tr>
+          <tr><td>log:info</td><td>LogEntry</td><td>Fired for every info-level message.</td></tr>
+          <tr><td>log:warn</td><td>LogEntry</td><td>Fired for every warn-level message.</td></tr>
+          <tr><td>log:error</td><td>LogEntry</td><td>Fired for every error-level message.</td></tr>
+          <tr><td>log:*</td><td>LogEntry</td><td>Fired for every message, regardless of level.</td></tr>
+        </tbody>
+      </table>
+      <div class="code-block">
+        <div class="code-header">
+          <div class="code-dots"><div class="code-dot"></div><div class="code-dot"></div><div class="code-dot"></div></div>
+          <span class="code-lang">js</span>
+        </div>
+        <div class="code-body"><pre><span class="cm">// Listen for all error-level logs via the event bus</span>
+<span class="obj">Aura</span>.<span class="fn">on</span>(<span class="str">'log:error'</span>, (entry) => {
+  <span class="fn">showToast</span>(<span class="str">`Error: ${entry.message}`</span>);
+});
+
+<span class="cm">// Listen for any log message</span>
+<span class="obj">Aura</span>.<span class="fn">on</span>(<span class="str">'log:*'</span>, (entry) => {
+  <span class="fn">appendToDevPanel</span>(entry);
+});
+
+<span class="cm">// These fire the events automatically</span>
+<span class="obj">Aura</span>.<span class="prop">log</span>.<span class="fn">error</span>(<span class="str">'Connection lost'</span>);  <span class="cm">// triggers log:error + log:*</span>
+<span class="obj">Aura</span>.<span class="prop">log</span>.<span class="fn">info</span>(<span class="str">'Reconnecting...'</span>);  <span class="cm">// triggers log:info  + log:*</span></pre></div>
+      </div>
+    </main>
+  </div>
+</body>
+</html>

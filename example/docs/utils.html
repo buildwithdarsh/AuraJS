@@ -1,0 +1,580 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+  <title>Utilities — Aura.js Docs</title>
+  <meta name="description" content="Aura.js Utilities API — handy string, object, and function helpers including debounce, throttle, deep clone, slugify, and more. Quick start and full reference." />
+  <meta name="robots" content="index, follow" />
+  <meta property="og:title" content="Utilities — Aura.js Docs" />
+  <meta property="og:description" content="Aura.js Utilities API — handy string, object, and function helpers including debounce, throttle, deep clone, slugify, and more. Quick start and full reference." />
+  <meta property="og:type" content="article" />
+  <meta property="og:url" content="https://aurajs-delta.vercel.app/docs/utils.html" />
+  <meta property="og:image" content="https://aurajs-delta.vercel.app/og-image.png" />
+  <meta property="og:site_name" content="Aura.js" />
+  <meta name="twitter:card" content="summary_large_image" />
+  <meta name="twitter:title" content="Utilities — Aura.js Docs" />
+  <meta name="twitter:description" content="Aura.js Utilities API — handy string, object, and function helpers including debounce, throttle, deep clone, slugify, and more. Quick start and full reference." />
+  <meta name="twitter:image" content="https://aurajs-delta.vercel.app/og-image.png" />
+  <link rel="canonical" href="https://aurajs-delta.vercel.app/docs/utils.html" />
+  <link rel="icon" href="../favicon.svg" type="image/svg+xml" />
+  <script type="application/ld+json">
+  {
+    "@context": "https://schema.org",
+    "@graph": [
+      {
+        "@type": "TechArticle",
+        "headline": "Utilities — Aura.js Docs",
+        "description": "Aura.js Utilities API — handy string, object, and function helpers including debounce, throttle, deep clone, slugify, and more.",
+        "url": "https://aurajs-delta.vercel.app/docs/utils.html",
+        "image": "https://aurajs-delta.vercel.app/og-image.png",
+        "datePublished": "2026-03-17",
+        "dateModified": "2026-03-17",
+        "author": { "@type": "Organization", "name": "Darsh Gupta", "url": "https://github.com/darshgupta" },
+        "publisher": { "@type": "Organization", "name": "Darsh Gupta", "url": "https://github.com/darshgupta", "logo": { "@type": "ImageObject", "url": "https://aurajs-delta.vercel.app/favicon.svg" } },
+        "mainEntityOfPage": "https://aurajs-delta.vercel.app/docs/utils.html",
+        "inLanguage": "en"
+      },
+      {
+        "@type": "BreadcrumbList",
+        "itemListElement": [
+          { "@type": "ListItem", "position": 1, "name": "Home", "item": "https://aurajs-delta.vercel.app/" },
+          { "@type": "ListItem", "position": 2, "name": "Docs", "item": "https://aurajs-delta.vercel.app/docs/router.html" },
+          { "@type": "ListItem", "position": 3, "name": "Utilities", "item": "https://aurajs-delta.vercel.app/docs/utils.html" }
+        ]
+      }
+    ]
+  }
+  </script>
+  <style>
+    *, *::before, *::after { margin: 0; padding: 0; box-sizing: border-box; }
+    :root {
+      --bg: #000000; --bg-card: #111111; --bg-code: #0d0d0d;
+      --text: #f5f5f7; --text-secondary: #86868b; --text-tertiary: #6e6e73;
+      --accent: #2997ff; --accent-hover: #0077ed; --green: #30d158;
+      --orange: #ff9f0a; --pink: #ff375f; --purple: #bf5af2; --teal: #64d2ff;
+      --border: #1d1d1f; --radius: 20px; --radius-sm: 12px; --radius-xs: 8px;
+      --font: -apple-system, BlinkMacSystemFont, 'SF Pro Display', 'Helvetica Neue', sans-serif;
+      --mono: 'SF Mono', SFMono-Regular, ui-monospace, 'Cascadia Code', Menlo, monospace;
+      --transition: 0.3s cubic-bezier(0.25, 0.1, 0.25, 1);
+    }
+    html { scroll-behavior: smooth; -webkit-font-smoothing: antialiased; }
+    body { font-family: var(--font); background: var(--bg); color: var(--text); line-height: 1.6; }
+    .doc-nav { position: fixed; top: 0; left: 0; right: 0; z-index: 100; backdrop-filter: saturate(180%) blur(20px); background: rgba(0,0,0,0.72); border-bottom: 0.5px solid rgba(255,255,255,0.08); }
+    .doc-nav-inner { max-width: 1200px; margin: 0 auto; padding: 0 24px; height: 52px; display: flex; align-items: center; gap: 24px; }
+    .doc-nav-logo { font-size: 20px; font-weight: 700; background: linear-gradient(135deg, var(--accent), var(--purple)); -webkit-background-clip: text; -webkit-text-fill-color: transparent; text-decoration: none; }
+    .doc-nav-links { display: flex; gap: 20px; list-style: none; margin-left: auto; }
+    .doc-nav-links a { color: var(--text-secondary); text-decoration: none; font-size: 14px; transition: color var(--transition); }
+    .doc-nav-links a:hover { color: var(--text); }
+    .doc-layout { display: grid; grid-template-columns: 240px 1fr; max-width: 1200px; margin: 0 auto; padding-top: 52px; min-height: 100vh; }
+    .doc-sidebar { position: sticky; top: 52px; height: calc(100vh - 52px); overflow-y: auto; padding: 32px 24px; border-right: 1px solid var(--border); }
+    .doc-sidebar h4 { font-size: 11px; font-weight: 600; text-transform: uppercase; letter-spacing: 0.08em; color: var(--text-tertiary); margin: 24px 0 8px; }
+    .doc-sidebar h4:first-child { margin-top: 0; }
+    .doc-sidebar a { display: block; padding: 6px 12px; border-radius: 6px; font-size: 13px; color: var(--text-secondary); text-decoration: none; transition: all 0.15s ease; }
+    .doc-sidebar a:hover { background: rgba(255,255,255,0.04); color: var(--text); }
+    .doc-sidebar a.active { background: rgba(41,151,255,0.1); color: var(--accent); }
+    .doc-content { padding: 48px 48px 120px; max-width: 800px; }
+    .doc-content h1 { font-size: 40px; font-weight: 700; letter-spacing: -0.03em; margin-bottom: 8px; }
+    .doc-content .doc-lead { font-size: 18px; color: var(--text-secondary); margin-bottom: 48px; line-height: 1.5; }
+    .doc-content h2 { font-size: 24px; font-weight: 600; letter-spacing: -0.02em; margin: 48px 0 16px; padding-bottom: 8px; border-bottom: 1px solid var(--border); }
+    .doc-content h3 { font-size: 18px; font-weight: 600; margin: 32px 0 12px; color: var(--text); }
+    .doc-content p { color: var(--text-secondary); margin-bottom: 16px; }
+    .doc-content ul, .doc-content ol { color: var(--text-secondary); margin-bottom: 16px; padding-left: 24px; }
+    .doc-content li { margin-bottom: 6px; }
+    .doc-content code { font-family: var(--mono); font-size: 13px; background: rgba(255,255,255,0.06); padding: 2px 7px; border-radius: 4px; color: var(--pink); }
+    .doc-content a { color: var(--accent); text-decoration: none; }
+    .code-block { background: var(--bg-code); border-radius: var(--radius-sm); border: 1px solid var(--border); margin-bottom: 24px; overflow: hidden; }
+    .code-header { display: flex; align-items: center; justify-content: space-between; padding: 10px 16px; border-bottom: 1px solid var(--border); background: rgba(255,255,255,0.02); }
+    .code-dots { display: flex; gap: 6px; }
+    .code-dot { width: 10px; height: 10px; border-radius: 50%; }
+    .code-dot:nth-child(1) { background: #ff5f57; }
+    .code-dot:nth-child(2) { background: #febc2e; }
+    .code-dot:nth-child(3) { background: #28c840; }
+    .code-lang { font-size: 12px; color: var(--text-tertiary); font-family: var(--mono); }
+    .code-body { padding: 16px; overflow-x: auto; }
+    .code-body pre { font-family: var(--mono); font-size: 13px; line-height: 1.7; color: var(--text-secondary); margin: 0; }
+    .code-body .kw { color: var(--pink); }
+    .code-body .fn { color: var(--accent); }
+    .code-body .str { color: var(--green); }
+    .code-body .cm { color: var(--text-tertiary); }
+    .code-body .num { color: var(--orange); }
+    .code-body .prop { color: var(--teal); }
+    .code-body .obj { color: var(--purple); }
+    .method-sig { background: rgba(41,151,255,0.06); border: 1px solid rgba(41,151,255,0.15); border-radius: var(--radius-xs); padding: 12px 16px; margin-bottom: 12px; font-family: var(--mono); font-size: 13px; color: var(--accent); overflow-x: auto; }
+    .param-table { width: 100%; border-collapse: collapse; margin-bottom: 24px; }
+    .param-table th { text-align: left; font-size: 12px; font-weight: 600; color: var(--text-tertiary); text-transform: uppercase; letter-spacing: 0.06em; padding: 8px 12px; border-bottom: 1px solid var(--border); }
+    .param-table td { padding: 10px 12px; border-bottom: 1px solid rgba(255,255,255,0.04); font-size: 14px; color: var(--text-secondary); }
+    .param-table td:first-child { font-family: var(--mono); font-size: 13px; color: var(--pink); }
+    .param-table td:nth-child(2) { font-family: var(--mono); font-size: 13px; color: var(--orange); }
+    @media (max-width: 768px) { .doc-layout { grid-template-columns: 1fr; } .doc-sidebar { display: none; } .doc-content { padding: 24px; } }
+    ::-webkit-scrollbar { width: 8px; } ::-webkit-scrollbar-track { background: transparent; } ::-webkit-scrollbar-thumb { background: var(--border); border-radius: 4px; }
+  </style>
+</head>
+<body>
+  <nav class="doc-nav">
+    <div class="doc-nav-inner">
+      <a href="../index.html" class="doc-nav-logo">Aura.js</a>
+      <ul class="doc-nav-links">
+        <li><a href="../index.html">Home</a></li>
+        <li><a href="router.html">Router</a></li>
+        <li><a href="state.html">State</a></li>
+        <li><a href="events.html">Events</a></li>
+        <li><a href="template.html">Template</a></li>
+        <li><a href="api.html">API</a></li>
+        <li><a href="i18n.html">i18n</a></li>
+        <li><a href="mock.html">Mock</a></li>
+      </ul>
+    </div>
+  </nav>
+
+  <div class="doc-layout">
+    <aside class="doc-sidebar">
+      <h4>Modules</h4>
+      <a href="storage.html">Storage</a>
+      <a class="active" href="utils.html">Utilities</a>
+      <a href="mock.html">Mock API</a>
+      <a href="router.html">Router</a>
+      <a href="state.html">State</a>
+      <a href="events.html">Events</a>
+      <a href="template.html">Template</a>
+      <a href="api.html">API</a>
+      <a href="i18n.html">i18n</a>
+
+      <h4>String</h4>
+      <a href="#titleCase">titleCase()</a>
+      <a href="#uppercase">uppercase()</a>
+      <a href="#lowercase">lowercase()</a>
+      <a href="#mask">mask()</a>
+      <a href="#slugify">slugify()</a>
+      <a href="#escapeHTML">escapeHTML()</a>
+
+      <h4>Object</h4>
+      <a href="#isPlainObject">isPlainObject()</a>
+      <a href="#deepClone">deepClone()</a>
+      <a href="#deepMerge">deepMerge()</a>
+      <a href="#pick">pick()</a>
+      <a href="#omit">omit()</a>
+      <a href="#isEmpty">isEmpty()</a>
+
+      <h4>Function</h4>
+      <a href="#debounce">debounce()</a>
+      <a href="#throttle">throttle()</a>
+      <a href="#pipe">pipe()</a>
+
+      <h4>Misc</h4>
+      <a href="#uid">uid()</a>
+      <a href="#sleep">sleep()</a>
+      <a href="#clamp">clamp()</a>
+    </aside>
+
+    <main class="doc-content">
+      <h1 id="overview">Utilities</h1>
+      <p class="doc-lead">
+        A zero-dependency toolkit of pure helper functions for strings, objects,
+        numbers, and async flow. Every method is available through <code>Aura.utils</code>
+        and is designed to eliminate the need for lodash in most projects.
+      </p>
+
+      <!-- Quick Start -->
+      <h2 id="quick-start">Quick Start</h2>
+      <div class="code-block">
+        <div class="code-header">
+          <div class="code-dots"><span class="code-dot"></span><span class="code-dot"></span><span class="code-dot"></span></div>
+          <span class="code-lang">js</span>
+        </div>
+        <div class="code-body"><pre><span class="kw">import</span> aura <span class="kw">from</span> <span class="str">'@buildwithdarsh/aura.js'</span>;
+
+aura.<span class="obj">utils</span>.<span class="fn">titleCase</span>(<span class="str">'hello world'</span>);     <span class="cm">// "Hello World"</span>
+aura.<span class="obj">utils</span>.<span class="fn">slugify</span>(<span class="str">'My Blog Post!'</span>);     <span class="cm">// "my-blog-post"</span>
+aura.<span class="obj">utils</span>.<span class="fn">mask</span>(<span class="str">'4242424242424242'</span>);   <span class="cm">// "************4242"</span>
+aura.<span class="obj">utils</span>.<span class="fn">uid</span>();                       <span class="cm">// "aB3kZ9mQ4xLp"</span>
+aura.<span class="obj">utils</span>.<span class="fn">clamp</span>(<span class="num">150</span>, <span class="num">0</span>, <span class="num">100</span>);        <span class="cm">// 100</span>
+aura.<span class="obj">utils</span>.<span class="fn">isEmpty</span>({});                  <span class="cm">// true</span>
+<span class="kw">await</span> aura.<span class="obj">utils</span>.<span class="fn">sleep</span>(<span class="num">1000</span>);           <span class="cm">// pauses for 1 second</span></pre></div>
+      </div>
+
+      <!-- ===== STRING METHODS ===== -->
+      <h2 id="string-methods">String Methods</h2>
+
+      <!-- titleCase -->
+      <h3 id="titleCase">titleCase()</h3>
+      <p>Capitalize the first letter of every word and lowercase the rest.</p>
+      <div class="method-sig">titleCase(s: string): string</div>
+      <table class="param-table">
+        <thead><tr><th>Param</th><th>Type</th><th>Description</th></tr></thead>
+        <tbody>
+          <tr><td>s</td><td>string</td><td>The input string.</td></tr>
+        </tbody>
+      </table>
+      <div class="code-block">
+        <div class="code-header">
+          <div class="code-dots"><span class="code-dot"></span><span class="code-dot"></span><span class="code-dot"></span></div>
+          <span class="code-lang">js</span>
+        </div>
+        <div class="code-body"><pre>aura.<span class="obj">utils</span>.<span class="fn">titleCase</span>(<span class="str">'hello world'</span>);   <span class="cm">// "Hello World"</span>
+aura.<span class="obj">utils</span>.<span class="fn">titleCase</span>(<span class="str">'jOHN DOE'</span>);     <span class="cm">// "John Doe"</span></pre></div>
+      </div>
+
+      <!-- uppercase -->
+      <h3 id="uppercase">uppercase()</h3>
+      <p>Convert the entire string to uppercase.</p>
+      <div class="method-sig">uppercase(s: string): string</div>
+      <table class="param-table">
+        <thead><tr><th>Param</th><th>Type</th><th>Description</th></tr></thead>
+        <tbody><tr><td>s</td><td>string</td><td>The input string.</td></tr></tbody>
+      </table>
+      <div class="code-block">
+        <div class="code-header">
+          <div class="code-dots"><span class="code-dot"></span><span class="code-dot"></span><span class="code-dot"></span></div>
+          <span class="code-lang">js</span>
+        </div>
+        <div class="code-body"><pre>aura.<span class="obj">utils</span>.<span class="fn">uppercase</span>(<span class="str">'hello'</span>); <span class="cm">// "HELLO"</span></pre></div>
+      </div>
+
+      <!-- lowercase -->
+      <h3 id="lowercase">lowercase()</h3>
+      <p>Convert the entire string to lowercase.</p>
+      <div class="method-sig">lowercase(s: string): string</div>
+      <table class="param-table">
+        <thead><tr><th>Param</th><th>Type</th><th>Description</th></tr></thead>
+        <tbody><tr><td>s</td><td>string</td><td>The input string.</td></tr></tbody>
+      </table>
+      <div class="code-block">
+        <div class="code-header">
+          <div class="code-dots"><span class="code-dot"></span><span class="code-dot"></span><span class="code-dot"></span></div>
+          <span class="code-lang">js</span>
+        </div>
+        <div class="code-body"><pre>aura.<span class="obj">utils</span>.<span class="fn">lowercase</span>(<span class="str">'HELLO'</span>); <span class="cm">// "hello"</span></pre></div>
+      </div>
+
+      <!-- mask -->
+      <h3 id="mask">mask()</h3>
+      <p>Mask a string, revealing only the last N characters. Useful for displaying credit card numbers, tokens, or sensitive data.</p>
+      <div class="method-sig">mask(s: string, visible?: number, ch?: string): string</div>
+      <table class="param-table">
+        <thead><tr><th>Param</th><th>Type</th><th>Description</th></tr></thead>
+        <tbody>
+          <tr><td>s</td><td>string</td><td>The string to mask.</td></tr>
+          <tr><td>visible</td><td>number</td><td>Number of characters to keep visible at the end. Default: <code>4</code>.</td></tr>
+          <tr><td>ch</td><td>string</td><td>The masking character. Default: <code>'*'</code>.</td></tr>
+        </tbody>
+      </table>
+      <div class="code-block">
+        <div class="code-header">
+          <div class="code-dots"><span class="code-dot"></span><span class="code-dot"></span><span class="code-dot"></span></div>
+          <span class="code-lang">js</span>
+        </div>
+        <div class="code-body"><pre>aura.<span class="obj">utils</span>.<span class="fn">mask</span>(<span class="str">'4242424242424242'</span>);          <span class="cm">// "************4242"</span>
+aura.<span class="obj">utils</span>.<span class="fn">mask</span>(<span class="str">'secret-token'</span>, <span class="num">6</span>);            <span class="cm">// "******-token"</span>
+aura.<span class="obj">utils</span>.<span class="fn">mask</span>(<span class="str">'mypassword'</span>, <span class="num">3</span>, <span class="str">'#'</span>);        <span class="cm">// "#######ord"</span></pre></div>
+      </div>
+
+      <!-- slugify -->
+      <h3 id="slugify">slugify()</h3>
+      <p>Convert a string into a URL-friendly slug. Lowercases, trims, removes special characters, and replaces spaces with hyphens.</p>
+      <div class="method-sig">slugify(s: string): string</div>
+      <table class="param-table">
+        <thead><tr><th>Param</th><th>Type</th><th>Description</th></tr></thead>
+        <tbody><tr><td>s</td><td>string</td><td>The input string.</td></tr></tbody>
+      </table>
+      <div class="code-block">
+        <div class="code-header">
+          <div class="code-dots"><span class="code-dot"></span><span class="code-dot"></span><span class="code-dot"></span></div>
+          <span class="code-lang">js</span>
+        </div>
+        <div class="code-body"><pre>aura.<span class="obj">utils</span>.<span class="fn">slugify</span>(<span class="str">'Hello World!'</span>);          <span class="cm">// "hello-world"</span>
+aura.<span class="obj">utils</span>.<span class="fn">slugify</span>(<span class="str">'My Blog Post #42'</span>);      <span class="cm">// "my-blog-post-42"</span>
+aura.<span class="obj">utils</span>.<span class="fn">slugify</span>(<span class="str">'  extra   spaces  '</span>);    <span class="cm">// "extra-spaces"</span></pre></div>
+      </div>
+
+      <!-- escapeHTML -->
+      <h3 id="escapeHTML">escapeHTML()</h3>
+      <p>Escape HTML special characters to prevent XSS when inserting untrusted content into the DOM. Handles <code>&amp;</code>, <code>&lt;</code>, <code>&gt;</code>, <code>"</code>, and <code>'</code>.</p>
+      <div class="method-sig">escapeHTML(s: string): string</div>
+      <table class="param-table">
+        <thead><tr><th>Param</th><th>Type</th><th>Description</th></tr></thead>
+        <tbody><tr><td>s</td><td>string</td><td>The raw string to escape.</td></tr></tbody>
+      </table>
+      <div class="code-block">
+        <div class="code-header">
+          <div class="code-dots"><span class="code-dot"></span><span class="code-dot"></span><span class="code-dot"></span></div>
+          <span class="code-lang">js</span>
+        </div>
+        <div class="code-body"><pre>aura.<span class="obj">utils</span>.<span class="fn">escapeHTML</span>(<span class="str">'&lt;script&gt;alert("xss")&lt;/script&gt;'</span>);
+<span class="cm">// "&amp;lt;script&amp;gt;alert(&amp;quot;xss&amp;quot;)&amp;lt;/script&amp;gt;"</span></pre></div>
+      </div>
+
+      <!-- ===== OBJECT METHODS ===== -->
+      <h2 id="object-methods">Object Methods</h2>
+
+      <!-- isPlainObject -->
+      <h3 id="isPlainObject">isPlainObject()</h3>
+      <p>Check if a value is a plain object (created by <code>{}</code> or <code>Object.create(null)</code>). Returns <code>false</code> for arrays, class instances, <code>null</code>, etc.</p>
+      <div class="method-sig">isPlainObject(v: unknown): v is Record&lt;string, unknown&gt;</div>
+      <table class="param-table">
+        <thead><tr><th>Param</th><th>Type</th><th>Description</th></tr></thead>
+        <tbody><tr><td>v</td><td>unknown</td><td>The value to check.</td></tr></tbody>
+      </table>
+      <div class="code-block">
+        <div class="code-header">
+          <div class="code-dots"><span class="code-dot"></span><span class="code-dot"></span><span class="code-dot"></span></div>
+          <span class="code-lang">js</span>
+        </div>
+        <div class="code-body"><pre>aura.<span class="obj">utils</span>.<span class="fn">isPlainObject</span>({ <span class="prop">a</span>: <span class="num">1</span> });      <span class="cm">// true</span>
+aura.<span class="obj">utils</span>.<span class="fn">isPlainObject</span>([<span class="num">1</span>, <span class="num">2</span>]);         <span class="cm">// false</span>
+aura.<span class="obj">utils</span>.<span class="fn">isPlainObject</span>(<span class="kw">null</span>);            <span class="cm">// false</span>
+aura.<span class="obj">utils</span>.<span class="fn">isPlainObject</span>(<span class="kw">new</span> <span class="obj">Date</span>());     <span class="cm">// false</span></pre></div>
+      </div>
+
+      <!-- deepClone -->
+      <h3 id="deepClone">deepClone()</h3>
+      <p>Create a deep copy of a value. Uses <code>structuredClone</code> when available; falls back to JSON round-trip.</p>
+      <div class="method-sig">deepClone&lt;T&gt;(obj: T): T</div>
+      <table class="param-table">
+        <thead><tr><th>Param</th><th>Type</th><th>Description</th></tr></thead>
+        <tbody><tr><td>obj</td><td>T</td><td>The value to clone.</td></tr></tbody>
+      </table>
+      <div class="code-block">
+        <div class="code-header">
+          <div class="code-dots"><span class="code-dot"></span><span class="code-dot"></span><span class="code-dot"></span></div>
+          <span class="code-lang">js</span>
+        </div>
+        <div class="code-body"><pre><span class="kw">const</span> original = { <span class="prop">nested</span>: { <span class="prop">value</span>: <span class="num">42</span> } };
+<span class="kw">const</span> copy = aura.<span class="obj">utils</span>.<span class="fn">deepClone</span>(original);
+copy.<span class="prop">nested</span>.<span class="prop">value</span> = <span class="num">99</span>;
+console.<span class="fn">log</span>(original.<span class="prop">nested</span>.<span class="prop">value</span>); <span class="cm">// 42 (unchanged)</span></pre></div>
+      </div>
+
+      <!-- deepMerge -->
+      <h3 id="deepMerge">deepMerge()</h3>
+      <p>Recursively merge multiple objects together. Plain objects are merged deeply; all other values are overwritten by the rightmost argument.</p>
+      <div class="method-sig">deepMerge&lt;T extends Record&lt;string, unknown&gt;&gt;(...objects: Partial&lt;T&gt;[]): T</div>
+      <table class="param-table">
+        <thead><tr><th>Param</th><th>Type</th><th>Description</th></tr></thead>
+        <tbody><tr><td>...objects</td><td>Partial&lt;T&gt;[]</td><td>Two or more objects to merge.</td></tr></tbody>
+      </table>
+      <div class="code-block">
+        <div class="code-header">
+          <div class="code-dots"><span class="code-dot"></span><span class="code-dot"></span><span class="code-dot"></span></div>
+          <span class="code-lang">js</span>
+        </div>
+        <div class="code-body"><pre><span class="kw">const</span> defaults = { <span class="prop">theme</span>: <span class="str">'light'</span>, <span class="prop">api</span>: { <span class="prop">timeout</span>: <span class="num">5000</span>, <span class="prop">retries</span>: <span class="num">3</span> } };
+<span class="kw">const</span> user     = { <span class="prop">theme</span>: <span class="str">'dark'</span>,  <span class="prop">api</span>: { <span class="prop">timeout</span>: <span class="num">10000</span> } };
+
+<span class="kw">const</span> config = aura.<span class="obj">utils</span>.<span class="fn">deepMerge</span>(defaults, user);
+<span class="cm">// { theme: "dark", api: { timeout: 10000, retries: 3 } }</span></pre></div>
+      </div>
+
+      <!-- pick -->
+      <h3 id="pick">pick()</h3>
+      <p>Create a new object containing only the specified keys from the source.</p>
+      <div class="method-sig">pick&lt;T, K extends keyof T&gt;(obj: T, keys: K[]): Pick&lt;T, K&gt;</div>
+      <table class="param-table">
+        <thead><tr><th>Param</th><th>Type</th><th>Description</th></tr></thead>
+        <tbody>
+          <tr><td>obj</td><td>T</td><td>The source object.</td></tr>
+          <tr><td>keys</td><td>K[]</td><td>Array of keys to include.</td></tr>
+        </tbody>
+      </table>
+      <div class="code-block">
+        <div class="code-header">
+          <div class="code-dots"><span class="code-dot"></span><span class="code-dot"></span><span class="code-dot"></span></div>
+          <span class="code-lang">js</span>
+        </div>
+        <div class="code-body"><pre><span class="kw">const</span> user = { <span class="prop">id</span>: <span class="num">1</span>, <span class="prop">name</span>: <span class="str">'Alex'</span>, <span class="prop">email</span>: <span class="str">'a@b.com'</span>, <span class="prop">password</span>: <span class="str">'...'</span> };
+aura.<span class="obj">utils</span>.<span class="fn">pick</span>(user, [<span class="str">'id'</span>, <span class="str">'name'</span>]);
+<span class="cm">// { id: 1, name: "Alex" }</span></pre></div>
+      </div>
+
+      <!-- omit -->
+      <h3 id="omit">omit()</h3>
+      <p>Create a new object with the specified keys removed.</p>
+      <div class="method-sig">omit&lt;T, K extends keyof T&gt;(obj: T, keys: K[]): Omit&lt;T, K&gt;</div>
+      <table class="param-table">
+        <thead><tr><th>Param</th><th>Type</th><th>Description</th></tr></thead>
+        <tbody>
+          <tr><td>obj</td><td>T</td><td>The source object.</td></tr>
+          <tr><td>keys</td><td>K[]</td><td>Array of keys to exclude.</td></tr>
+        </tbody>
+      </table>
+      <div class="code-block">
+        <div class="code-header">
+          <div class="code-dots"><span class="code-dot"></span><span class="code-dot"></span><span class="code-dot"></span></div>
+          <span class="code-lang">js</span>
+        </div>
+        <div class="code-body"><pre><span class="kw">const</span> user = { <span class="prop">id</span>: <span class="num">1</span>, <span class="prop">name</span>: <span class="str">'Alex'</span>, <span class="prop">password</span>: <span class="str">'secret'</span> };
+aura.<span class="obj">utils</span>.<span class="fn">omit</span>(user, [<span class="str">'password'</span>]);
+<span class="cm">// { id: 1, name: "Alex" }</span></pre></div>
+      </div>
+
+      <!-- isEmpty -->
+      <h3 id="isEmpty">isEmpty()</h3>
+      <p>Check if a value is "empty". Handles <code>null</code>, <code>undefined</code>, empty strings, arrays, Maps, Sets, and plain objects.</p>
+      <div class="method-sig">isEmpty(v: unknown): boolean</div>
+      <table class="param-table">
+        <thead><tr><th>Param</th><th>Type</th><th>Description</th></tr></thead>
+        <tbody><tr><td>v</td><td>unknown</td><td>The value to check.</td></tr></tbody>
+      </table>
+      <div class="code-block">
+        <div class="code-header">
+          <div class="code-dots"><span class="code-dot"></span><span class="code-dot"></span><span class="code-dot"></span></div>
+          <span class="code-lang">js</span>
+        </div>
+        <div class="code-body"><pre>aura.<span class="obj">utils</span>.<span class="fn">isEmpty</span>(<span class="kw">null</span>);          <span class="cm">// true</span>
+aura.<span class="obj">utils</span>.<span class="fn">isEmpty</span>(<span class="str">''</span>);            <span class="cm">// true</span>
+aura.<span class="obj">utils</span>.<span class="fn">isEmpty</span>([]);            <span class="cm">// true</span>
+aura.<span class="obj">utils</span>.<span class="fn">isEmpty</span>({});            <span class="cm">// true</span>
+aura.<span class="obj">utils</span>.<span class="fn">isEmpty</span>(<span class="kw">new</span> <span class="obj">Map</span>());    <span class="cm">// true</span>
+aura.<span class="obj">utils</span>.<span class="fn">isEmpty</span>([<span class="num">1</span>]);           <span class="cm">// false</span>
+aura.<span class="obj">utils</span>.<span class="fn">isEmpty</span>(<span class="num">0</span>);             <span class="cm">// false</span></pre></div>
+      </div>
+
+      <!-- ===== FUNCTION METHODS ===== -->
+      <h2 id="function-methods">Function Methods</h2>
+
+      <!-- debounce -->
+      <h3 id="debounce">debounce()</h3>
+      <p>Create a debounced version of a function that delays invocation until after <code>ms</code> milliseconds have passed since the last call. The returned function also has a <code>.cancel()</code> method.</p>
+      <div class="method-sig">debounce&lt;T extends (...args: unknown[]) =&gt; void&gt;(fn: T, ms: number): T & { cancel(): void }</div>
+      <table class="param-table">
+        <thead><tr><th>Param</th><th>Type</th><th>Description</th></tr></thead>
+        <tbody>
+          <tr><td>fn</td><td>T</td><td>The function to debounce.</td></tr>
+          <tr><td>ms</td><td>number</td><td>Delay in milliseconds.</td></tr>
+        </tbody>
+      </table>
+      <p><strong>Returns:</strong> The debounced function with an additional <code>cancel()</code> method.</p>
+      <div class="code-block">
+        <div class="code-header">
+          <div class="code-dots"><span class="code-dot"></span><span class="code-dot"></span><span class="code-dot"></span></div>
+          <span class="code-lang">js</span>
+        </div>
+        <div class="code-body"><pre><span class="kw">const</span> search = aura.<span class="obj">utils</span>.<span class="fn">debounce</span>((query) => {
+  aura.<span class="obj">api</span>.<span class="fn">get</span>(<span class="str">`/search?q=${query}`</span>);
+}, <span class="num">300</span>);
+
+input.<span class="fn">addEventListener</span>(<span class="str">'input'</span>, (e) => <span class="fn">search</span>(e.<span class="prop">target</span>.<span class="prop">value</span>));
+
+<span class="cm">// Cancel any pending invocation</span>
+search.<span class="fn">cancel</span>();</pre></div>
+      </div>
+
+      <!-- throttle -->
+      <h3 id="throttle">throttle()</h3>
+      <p>Create a throttled version of a function that invokes at most once every <code>ms</code> milliseconds.</p>
+      <div class="method-sig">throttle&lt;T extends (...args: unknown[]) =&gt; void&gt;(fn: T, ms: number): T</div>
+      <table class="param-table">
+        <thead><tr><th>Param</th><th>Type</th><th>Description</th></tr></thead>
+        <tbody>
+          <tr><td>fn</td><td>T</td><td>The function to throttle.</td></tr>
+          <tr><td>ms</td><td>number</td><td>Minimum interval in milliseconds.</td></tr>
+        </tbody>
+      </table>
+      <div class="code-block">
+        <div class="code-header">
+          <div class="code-dots"><span class="code-dot"></span><span class="code-dot"></span><span class="code-dot"></span></div>
+          <span class="code-lang">js</span>
+        </div>
+        <div class="code-body"><pre><span class="kw">const</span> onScroll = aura.<span class="obj">utils</span>.<span class="fn">throttle</span>(() => {
+  console.<span class="fn">log</span>(<span class="str">'scroll position:'</span>, window.<span class="prop">scrollY</span>);
+}, <span class="num">100</span>);
+
+window.<span class="fn">addEventListener</span>(<span class="str">'scroll'</span>, onScroll);</pre></div>
+      </div>
+
+      <!-- pipe -->
+      <h3 id="pipe">pipe()</h3>
+      <p>Pass a value through a series of transform functions, left to right. Each function receives the result of the previous one.</p>
+      <div class="method-sig">pipe&lt;T&gt;(value: T, ...fns: ((v: T) =&gt; T)[]): T</div>
+      <table class="param-table">
+        <thead><tr><th>Param</th><th>Type</th><th>Description</th></tr></thead>
+        <tbody>
+          <tr><td>value</td><td>T</td><td>The initial value.</td></tr>
+          <tr><td>...fns</td><td>((v: T) =&gt; T)[]</td><td>Transform functions to apply in order.</td></tr>
+        </tbody>
+      </table>
+      <div class="code-block">
+        <div class="code-header">
+          <div class="code-dots"><span class="code-dot"></span><span class="code-dot"></span><span class="code-dot"></span></div>
+          <span class="code-lang">js</span>
+        </div>
+        <div class="code-body"><pre><span class="kw">const</span> result = aura.<span class="obj">utils</span>.<span class="fn">pipe</span>(
+  <span class="str">'  Hello World  '</span>,
+  s => s.<span class="fn">trim</span>(),
+  s => s.<span class="fn">toLowerCase</span>(),
+  s => s.<span class="fn">replace</span>(<span class="str">/\s+/g</span>, <span class="str">'-'</span>)
+);
+<span class="cm">// "hello-world"</span></pre></div>
+      </div>
+
+      <!-- ===== MISC METHODS ===== -->
+      <h2 id="misc-methods">Miscellaneous</h2>
+
+      <!-- uid -->
+      <h3 id="uid">uid()</h3>
+      <p>Generate a cryptographically random alphanumeric string. Uses <code>crypto.getRandomValues</code> for secure randomness.</p>
+      <div class="method-sig">uid(len?: number): string</div>
+      <table class="param-table">
+        <thead><tr><th>Param</th><th>Type</th><th>Description</th></tr></thead>
+        <tbody>
+          <tr><td>len</td><td>number</td><td>Length of the generated ID. Default: <code>12</code>.</td></tr>
+        </tbody>
+      </table>
+      <div class="code-block">
+        <div class="code-header">
+          <div class="code-dots"><span class="code-dot"></span><span class="code-dot"></span><span class="code-dot"></span></div>
+          <span class="code-lang">js</span>
+        </div>
+        <div class="code-body"><pre>aura.<span class="obj">utils</span>.<span class="fn">uid</span>();      <span class="cm">// "aB3kZ9mQ4xLp"  (12 chars)</span>
+aura.<span class="obj">utils</span>.<span class="fn">uid</span>(<span class="num">6</span>);    <span class="cm">// "k9Qm4x"        (6 chars)</span>
+aura.<span class="obj">utils</span>.<span class="fn">uid</span>(<span class="num">24</span>);   <span class="cm">// "aB3kZ9mQ4xLpR7wN2jY5tU8v" (24 chars)</span></pre></div>
+      </div>
+
+      <!-- sleep -->
+      <h3 id="sleep">sleep()</h3>
+      <p>Return a Promise that resolves after the given number of milliseconds. Useful for adding delays in async workflows.</p>
+      <div class="method-sig">sleep(ms: number): Promise&lt;void&gt;</div>
+      <table class="param-table">
+        <thead><tr><th>Param</th><th>Type</th><th>Description</th></tr></thead>
+        <tbody>
+          <tr><td>ms</td><td>number</td><td>Duration in milliseconds.</td></tr>
+        </tbody>
+      </table>
+      <div class="code-block">
+        <div class="code-header">
+          <div class="code-dots"><span class="code-dot"></span><span class="code-dot"></span><span class="code-dot"></span></div>
+          <span class="code-lang">js</span>
+        </div>
+        <div class="code-body"><pre><span class="kw">async function</span> <span class="fn">showNotification</span>() {
+  showToast(<span class="str">'Saved!'</span>);
+  <span class="kw">await</span> aura.<span class="obj">utils</span>.<span class="fn">sleep</span>(<span class="num">3000</span>);
+  hideToast();
+}</pre></div>
+      </div>
+
+      <!-- clamp -->
+      <h3 id="clamp">clamp()</h3>
+      <p>Restrict a number to a given range.</p>
+      <div class="method-sig">clamp(n: number, min: number, max: number): number</div>
+      <table class="param-table">
+        <thead><tr><th>Param</th><th>Type</th><th>Description</th></tr></thead>
+        <tbody>
+          <tr><td>n</td><td>number</td><td>The value to clamp.</td></tr>
+          <tr><td>min</td><td>number</td><td>Minimum bound.</td></tr>
+          <tr><td>max</td><td>number</td><td>Maximum bound.</td></tr>
+        </tbody>
+      </table>
+      <div class="code-block">
+        <div class="code-header">
+          <div class="code-dots"><span class="code-dot"></span><span class="code-dot"></span><span class="code-dot"></span></div>
+          <span class="code-lang">js</span>
+        </div>
+        <div class="code-body"><pre>aura.<span class="obj">utils</span>.<span class="fn">clamp</span>(<span class="num">150</span>, <span class="num">0</span>, <span class="num">100</span>);   <span class="cm">// 100</span>
+aura.<span class="obj">utils</span>.<span class="fn">clamp</span>(<span class="num">-5</span>, <span class="num">0</span>, <span class="num">100</span>);    <span class="cm">// 0</span>
+aura.<span class="obj">utils</span>.<span class="fn">clamp</span>(<span class="num">50</span>, <span class="num">0</span>, <span class="num">100</span>);    <span class="cm">// 50</span></pre></div>
+      </div>
+
+    </main>
+  </div>
+</body>
+</html>

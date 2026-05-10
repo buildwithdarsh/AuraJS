@@ -1,0 +1,569 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+  <title>API Client — Aura.js Docs</title>
+  <meta name="description" content="Aura.js API Client — lightweight HTTP client with GET, POST, PUT, PATCH, DELETE, file uploads, interceptors, and abort controllers. Quick start and full reference." />
+  <meta name="robots" content="index, follow" />
+  <meta property="og:title" content="API Client — Aura.js Docs" />
+  <meta property="og:description" content="Aura.js API Client — lightweight HTTP client with GET, POST, PUT, PATCH, DELETE, file uploads, interceptors, and abort controllers. Quick start and full reference." />
+  <meta property="og:type" content="article" />
+  <meta property="og:url" content="https://aurajs-delta.vercel.app/docs/api.html" />
+  <meta property="og:image" content="https://aurajs-delta.vercel.app/og-image.png" />
+  <meta property="og:site_name" content="Aura.js" />
+  <meta name="twitter:card" content="summary_large_image" />
+  <meta name="twitter:title" content="API Client — Aura.js Docs" />
+  <meta name="twitter:description" content="Aura.js API Client — lightweight HTTP client with GET, POST, PUT, PATCH, DELETE, file uploads, interceptors, and abort controllers. Quick start and full reference." />
+  <meta name="twitter:image" content="https://aurajs-delta.vercel.app/og-image.png" />
+  <link rel="canonical" href="https://aurajs-delta.vercel.app/docs/api.html" />
+  <link rel="icon" href="../favicon.svg" type="image/svg+xml" />
+  <script type="application/ld+json">
+  {
+    "@context": "https://schema.org",
+    "@graph": [
+      {
+        "@type": "TechArticle",
+        "headline": "API Client — Aura.js Docs",
+        "description": "Aura.js API Client — lightweight HTTP client with GET, POST, PUT, PATCH, DELETE, file uploads, interceptors, and abort controllers.",
+        "url": "https://aurajs-delta.vercel.app/docs/api.html",
+        "image": "https://aurajs-delta.vercel.app/og-image.png",
+        "datePublished": "2026-03-17",
+        "dateModified": "2026-03-17",
+        "author": { "@type": "Organization", "name": "Darsh Gupta", "url": "https://github.com/darshgupta" },
+        "publisher": { "@type": "Organization", "name": "Darsh Gupta", "url": "https://github.com/darshgupta", "logo": { "@type": "ImageObject", "url": "https://aurajs-delta.vercel.app/favicon.svg" } },
+        "mainEntityOfPage": "https://aurajs-delta.vercel.app/docs/api.html",
+        "inLanguage": "en"
+      },
+      {
+        "@type": "BreadcrumbList",
+        "itemListElement": [
+          { "@type": "ListItem", "position": 1, "name": "Home", "item": "https://aurajs-delta.vercel.app/" },
+          { "@type": "ListItem", "position": 2, "name": "Docs", "item": "https://aurajs-delta.vercel.app/docs/router.html" },
+          { "@type": "ListItem", "position": 3, "name": "API Client", "item": "https://aurajs-delta.vercel.app/docs/api.html" }
+        ]
+      }
+    ]
+  }
+  </script>
+  <style>
+    *, *::before, *::after { margin: 0; padding: 0; box-sizing: border-box; }
+    :root {
+      --bg: #000000; --bg-card: #111111; --bg-code: #0d0d0d;
+      --text: #f5f5f7; --text-secondary: #86868b; --text-tertiary: #6e6e73;
+      --accent: #2997ff; --accent-hover: #0077ed; --green: #30d158;
+      --orange: #ff9f0a; --pink: #ff375f; --purple: #bf5af2; --teal: #64d2ff;
+      --border: #1d1d1f; --radius: 20px; --radius-sm: 12px; --radius-xs: 8px;
+      --font: -apple-system, BlinkMacSystemFont, 'SF Pro Display', 'Helvetica Neue', sans-serif;
+      --mono: 'SF Mono', SFMono-Regular, ui-monospace, 'Cascadia Code', Menlo, monospace;
+      --transition: 0.3s cubic-bezier(0.25, 0.1, 0.25, 1);
+    }
+    html { scroll-behavior: smooth; -webkit-font-smoothing: antialiased; }
+    body { font-family: var(--font); background: var(--bg); color: var(--text); line-height: 1.6; }
+
+    /* Nav */
+    .doc-nav { position: fixed; top: 0; left: 0; right: 0; z-index: 100; backdrop-filter: saturate(180%) blur(20px); background: rgba(0,0,0,0.72); border-bottom: 0.5px solid rgba(255,255,255,0.08); }
+    .doc-nav-inner { max-width: 1200px; margin: 0 auto; padding: 0 24px; height: 52px; display: flex; align-items: center; gap: 24px; }
+    .doc-nav-logo { font-size: 20px; font-weight: 700; background: linear-gradient(135deg, var(--accent), var(--purple)); -webkit-background-clip: text; -webkit-text-fill-color: transparent; text-decoration: none; }
+    .doc-nav-links { display: flex; gap: 20px; list-style: none; margin-left: auto; }
+    .doc-nav-links a { color: var(--text-secondary); text-decoration: none; font-size: 14px; transition: color var(--transition); }
+    .doc-nav-links a:hover { color: var(--text); }
+
+    /* Layout */
+    .doc-layout { display: grid; grid-template-columns: 240px 1fr; max-width: 1200px; margin: 0 auto; padding-top: 52px; min-height: 100vh; }
+
+    /* Sidebar */
+    .doc-sidebar { position: sticky; top: 52px; height: calc(100vh - 52px); overflow-y: auto; padding: 32px 24px; border-right: 1px solid var(--border); }
+    .doc-sidebar h4 { font-size: 11px; font-weight: 600; text-transform: uppercase; letter-spacing: 0.08em; color: var(--text-tertiary); margin: 24px 0 8px; }
+    .doc-sidebar h4:first-child { margin-top: 0; }
+    .doc-sidebar a { display: block; padding: 6px 12px; border-radius: 6px; font-size: 13px; color: var(--text-secondary); text-decoration: none; transition: all 0.15s ease; }
+    .doc-sidebar a:hover { background: rgba(255,255,255,0.04); color: var(--text); }
+    .doc-sidebar a.active { background: rgba(41,151,255,0.1); color: var(--accent); }
+
+    /* Content */
+    .doc-content { padding: 48px 48px 120px; max-width: 800px; }
+    .doc-content h1 { font-size: 40px; font-weight: 700; letter-spacing: -0.03em; margin-bottom: 8px; }
+    .doc-content .doc-lead { font-size: 18px; color: var(--text-secondary); margin-bottom: 48px; line-height: 1.5; }
+    .doc-content h2 { font-size: 24px; font-weight: 600; letter-spacing: -0.02em; margin: 48px 0 16px; padding-bottom: 8px; border-bottom: 1px solid var(--border); }
+    .doc-content h3 { font-size: 18px; font-weight: 600; margin: 32px 0 12px; color: var(--text); }
+    .doc-content p { color: var(--text-secondary); margin-bottom: 16px; }
+    .doc-content ul, .doc-content ol { color: var(--text-secondary); margin-bottom: 16px; padding-left: 24px; }
+    .doc-content li { margin-bottom: 6px; }
+    .doc-content code { font-family: var(--mono); font-size: 13px; background: rgba(255,255,255,0.06); padding: 2px 7px; border-radius: 4px; color: var(--pink); }
+    .doc-content a { color: var(--accent); text-decoration: none; }
+    .doc-content a:hover { text-decoration: underline; }
+
+    /* Code blocks */
+    .code-block { background: var(--bg-code); border-radius: var(--radius-sm); border: 1px solid var(--border); margin-bottom: 24px; overflow: hidden; }
+    .code-header { display: flex; align-items: center; justify-content: space-between; padding: 10px 16px; border-bottom: 1px solid var(--border); background: rgba(255,255,255,0.02); }
+    .code-dots { display: flex; gap: 6px; }
+    .code-dot { width: 10px; height: 10px; border-radius: 50%; }
+    .code-dot:nth-child(1) { background: #ff5f57; }
+    .code-dot:nth-child(2) { background: #febc2e; }
+    .code-dot:nth-child(3) { background: #28c840; }
+    .code-lang { font-size: 12px; color: var(--text-tertiary); font-family: var(--mono); }
+    .code-body { padding: 16px; overflow-x: auto; }
+    .code-body pre { font-family: var(--mono); font-size: 13px; line-height: 1.7; color: var(--text-secondary); margin: 0; }
+    .code-body .kw { color: var(--pink); }
+    .code-body .fn { color: var(--accent); }
+    .code-body .str { color: var(--green); }
+    .code-body .cm { color: var(--text-tertiary); }
+    .code-body .num { color: var(--orange); }
+    .code-body .prop { color: var(--teal); }
+    .code-body .obj { color: var(--purple); }
+
+    /* Method signature */
+    .method-sig { background: rgba(41,151,255,0.06); border: 1px solid rgba(41,151,255,0.15); border-radius: var(--radius-xs); padding: 12px 16px; margin-bottom: 12px; font-family: var(--mono); font-size: 13px; color: var(--accent); overflow-x: auto; }
+
+    /* Param table */
+    .param-table { width: 100%; border-collapse: collapse; margin-bottom: 24px; }
+    .param-table th { text-align: left; font-size: 12px; font-weight: 600; color: var(--text-tertiary); text-transform: uppercase; letter-spacing: 0.06em; padding: 8px 12px; border-bottom: 1px solid var(--border); }
+    .param-table td { padding: 10px 12px; border-bottom: 1px solid rgba(255,255,255,0.04); font-size: 14px; color: var(--text-secondary); }
+    .param-table td:first-child { font-family: var(--mono); font-size: 13px; color: var(--pink); }
+    .param-table td:nth-child(2) { font-family: var(--mono); font-size: 13px; color: var(--orange); }
+
+    /* Tags */
+    .tag { display: inline-block; padding: 3px 8px; border-radius: 4px; font-size: 11px; font-weight: 500; }
+    .tag-blue { background: rgba(41,151,255,0.12); color: var(--accent); }
+    .tag-green { background: rgba(48,209,88,0.12); color: var(--green); }
+    .tag-orange { background: rgba(255,159,10,0.12); color: var(--orange); }
+    .tag-pink { background: rgba(255,55,95,0.12); color: var(--pink); }
+
+    /* Responsive */
+    @media (max-width: 768px) {
+      .doc-layout { grid-template-columns: 1fr; }
+      .doc-sidebar { display: none; }
+      .doc-content { padding: 24px; }
+    }
+
+    ::-webkit-scrollbar { width: 8px; }
+    ::-webkit-scrollbar-track { background: transparent; }
+    ::-webkit-scrollbar-thumb { background: var(--border); border-radius: 4px; }
+  </style>
+</head>
+<body>
+  <nav class="doc-nav">
+    <div class="doc-nav-inner">
+      <a href="../index.html" class="doc-nav-logo">Aura.js</a>
+      <ul class="doc-nav-links">
+        <li><a href="../index.html">Home</a></li>
+        <li><a href="router.html">Router</a></li>
+        <li><a href="state.html">State</a></li>
+        <li><a href="events.html">Events</a></li>
+        <li><a href="template.html">Template</a></li>
+        <li><a href="api.html">API</a></li>
+        <li><a href="i18n.html">i18n</a></li>
+        <li><a href="mock.html">Mock</a></li>
+      </ul>
+    </div>
+  </nav>
+
+  <div class="doc-layout">
+    <aside class="doc-sidebar">
+      <h4>All Modules</h4>
+      <a href="router.html">Router</a>
+      <a href="state.html">State</a>
+      <a href="events.html">Events</a>
+      <a href="template.html">Template</a>
+      <a href="api.html" class="active">API</a>
+      <a href="i18n.html">i18n</a>
+      <a href="mock.html">Mock</a>
+
+      <h4>On This Page</h4>
+      <a href="#quick-start">Quick Start</a>
+      <a href="#configure">configure()</a>
+      <a href="#get">get()</a>
+      <a href="#post">post()</a>
+      <a href="#put">put()</a>
+      <a href="#patch">patch()</a>
+      <a href="#delete">delete()</a>
+      <a href="#upload">upload()</a>
+      <a href="#createAbortController">createAbortController()</a>
+      <a href="#addInterceptor">addInterceptor()</a>
+      <a href="#removeInterceptor">removeInterceptor()</a>
+      <a href="#addResponseInterceptor">addResponseInterceptor()</a>
+      <a href="#removeResponseInterceptor">removeResponseInterceptor()</a>
+    </aside>
+
+    <main class="doc-content">
+      <h1>API Client</h1>
+      <p class="doc-lead">
+        A fetch-based HTTP client with automatic JSON handling, configurable timeouts, retry logic with exponential backoff,
+        request/response interceptors, file uploads with progress tracking, and abort controller support.
+      </p>
+
+      <!-- Quick Start -->
+      <h2 id="quick-start">Quick Start</h2>
+      <p>Configure a base URL, set default headers, then make requests using the standard HTTP method helpers.</p>
+
+      <div class="code-block">
+        <div class="code-header">
+          <div class="code-dots"><span class="code-dot"></span><span class="code-dot"></span><span class="code-dot"></span></div>
+          <span class="code-lang">js</span>
+        </div>
+        <div class="code-body"><pre><span class="kw">import</span> <span class="obj">Aura</span> <span class="kw">from</span> <span class="str">'@buildwithdarsh/aura.js'</span>;
+
+<span class="cm">// Configure the API client</span>
+<span class="obj">Aura</span>.<span class="prop">api</span>.<span class="fn">configure</span>({
+  <span class="prop">baseURL</span>: <span class="str">'https://api.example.com'</span>,
+  <span class="prop">headers</span>: { <span class="str">'Authorization'</span>: <span class="str">'Bearer my-token'</span> },
+  <span class="prop">timeout</span>: <span class="num">10000</span>,
+  <span class="prop">retry</span>: <span class="num">2</span>
+});
+
+<span class="cm">// GET request</span>
+<span class="kw">const</span> users = <span class="kw">await</span> <span class="obj">Aura</span>.<span class="prop">api</span>.<span class="fn">get</span>(<span class="str">'/users'</span>);
+
+<span class="cm">// POST request</span>
+<span class="kw">const</span> newUser = <span class="kw">await</span> <span class="obj">Aura</span>.<span class="prop">api</span>.<span class="fn">post</span>(<span class="str">'/users'</span>, {
+  <span class="prop">name</span>: <span class="str">'Alice'</span>,
+  <span class="prop">email</span>: <span class="str">'alice@example.com'</span>
+});</pre></div>
+      </div>
+
+      <!-- Types -->
+      <h2 id="types">Types</h2>
+      <h3>ApiConfig</h3>
+      <p>Configuration object accepted by <code>configure()</code>. All fields are optional (partial).</p>
+      <table class="param-table">
+        <thead><tr><th>Property</th><th>Type</th><th>Description</th></tr></thead>
+        <tbody>
+          <tr><td>baseURL</td><td>string</td><td>Base URL prepended to all request paths. Default: <code>''</code>.</td></tr>
+          <tr><td>headers</td><td>Record&lt;string, string&gt;</td><td>Default headers sent with every request. Default: <code>{ 'Content-Type': 'application/json' }</code>.</td></tr>
+          <tr><td>timeout</td><td>number</td><td>Request timeout in milliseconds. Default: <code>30000</code>.</td></tr>
+          <tr><td>retry</td><td>number</td><td>Number of retry attempts on failure. Default: <code>0</code>.</td></tr>
+          <tr><td>retryDelay</td><td>number</td><td>Base delay between retries in ms (multiplied by attempt number). Default: <code>1000</code>.</td></tr>
+        </tbody>
+      </table>
+
+      <h3>RequestOptions</h3>
+      <p>Per-request options passed as the last argument to HTTP method helpers.</p>
+      <table class="param-table">
+        <thead><tr><th>Property</th><th>Type</th><th>Description</th></tr></thead>
+        <tbody>
+          <tr><td>params</td><td>Record&lt;string, string | number&gt;</td><td>Query string parameters appended to the URL.</td></tr>
+          <tr><td>headers</td><td>Record&lt;string, string&gt;</td><td>Extra headers merged with the defaults for this request.</td></tr>
+          <tr><td>interceptors</td><td>string[]</td><td>Names of specific request interceptors to run (default: all).</td></tr>
+          <tr><td>timeout</td><td>number</td><td>Override the global timeout for this request.</td></tr>
+          <tr><td>retry</td><td>number</td><td>Override the global retry count for this request.</td></tr>
+          <tr><td>signal</td><td>AbortSignal</td><td>An AbortSignal to cancel the request.</td></tr>
+        </tbody>
+      </table>
+
+      <!-- configure() -->
+      <h2 id="configure">configure() <span class="tag tag-blue">core</span></h2>
+      <p>Merge partial configuration into the current API client settings. Any provided fields override the existing values.</p>
+      <div class="method-sig">Aura.api.configure(config: Partial&lt;ApiConfig&gt;): void</div>
+      <table class="param-table">
+        <thead><tr><th>Param</th><th>Type</th><th>Description</th></tr></thead>
+        <tbody>
+          <tr><td>config</td><td>Partial&lt;ApiConfig&gt;</td><td>Object with optional <code>baseURL</code>, <code>headers</code>, <code>timeout</code>, <code>retry</code>, and <code>retryDelay</code> fields.</td></tr>
+        </tbody>
+      </table>
+      <div class="code-block">
+        <div class="code-header">
+          <div class="code-dots"><span class="code-dot"></span><span class="code-dot"></span><span class="code-dot"></span></div>
+          <span class="code-lang">js</span>
+        </div>
+        <div class="code-body"><pre><span class="obj">Aura</span>.<span class="prop">api</span>.<span class="fn">configure</span>({
+  <span class="prop">baseURL</span>: <span class="str">'https://api.example.com/v2'</span>,
+  <span class="prop">timeout</span>: <span class="num">15000</span>,
+  <span class="prop">retry</span>: <span class="num">3</span>,
+  <span class="prop">retryDelay</span>: <span class="num">500</span>
+});</pre></div>
+      </div>
+
+      <!-- get() -->
+      <h2 id="get">get() <span class="tag tag-blue">core</span></h2>
+      <p>Send a GET request. Automatically parses JSON responses when the <code>Content-Type</code> header is <code>application/json</code>.</p>
+      <div class="method-sig">Aura.api.get&lt;T&gt;(url: string, opts?: RequestOptions): Promise&lt;T&gt;</div>
+      <table class="param-table">
+        <thead><tr><th>Param</th><th>Type</th><th>Description</th></tr></thead>
+        <tbody>
+          <tr><td>url</td><td>string</td><td>Request path appended to <code>baseURL</code>.</td></tr>
+          <tr><td>opts</td><td>RequestOptions</td><td>Optional per-request settings (query params, headers, timeout, etc.).</td></tr>
+        </tbody>
+      </table>
+      <div class="code-block">
+        <div class="code-header">
+          <div class="code-dots"><span class="code-dot"></span><span class="code-dot"></span><span class="code-dot"></span></div>
+          <span class="code-lang">js</span>
+        </div>
+        <div class="code-body"><pre><span class="cm">// Simple GET</span>
+<span class="kw">const</span> users = <span class="kw">await</span> <span class="obj">Aura</span>.<span class="prop">api</span>.<span class="fn">get</span>(<span class="str">'/users'</span>);
+
+<span class="cm">// With query parameters</span>
+<span class="kw">const</span> results = <span class="kw">await</span> <span class="obj">Aura</span>.<span class="prop">api</span>.<span class="fn">get</span>(<span class="str">'/search'</span>, {
+  <span class="prop">params</span>: { <span class="prop">q</span>: <span class="str">'aura'</span>, <span class="prop">page</span>: <span class="num">1</span>, <span class="prop">limit</span>: <span class="num">20</span> }
+});
+
+<span class="cm">// With custom timeout</span>
+<span class="kw">const</span> data = <span class="kw">await</span> <span class="obj">Aura</span>.<span class="prop">api</span>.<span class="fn">get</span>(<span class="str">'/slow-endpoint'</span>, {
+  <span class="prop">timeout</span>: <span class="num">60000</span>
+});</pre></div>
+      </div>
+
+      <!-- post() -->
+      <h2 id="post">post() <span class="tag tag-blue">core</span></h2>
+      <p>Send a POST request with a JSON body. The body is automatically serialized with <code>JSON.stringify()</code>.</p>
+      <div class="method-sig">Aura.api.post&lt;T&gt;(url: string, body?: unknown, opts?: RequestOptions): Promise&lt;T&gt;</div>
+      <table class="param-table">
+        <thead><tr><th>Param</th><th>Type</th><th>Description</th></tr></thead>
+        <tbody>
+          <tr><td>url</td><td>string</td><td>Request path appended to <code>baseURL</code>.</td></tr>
+          <tr><td>body</td><td>unknown</td><td>Optional request body, serialized as JSON.</td></tr>
+          <tr><td>opts</td><td>RequestOptions</td><td>Optional per-request settings.</td></tr>
+        </tbody>
+      </table>
+      <div class="code-block">
+        <div class="code-header">
+          <div class="code-dots"><span class="code-dot"></span><span class="code-dot"></span><span class="code-dot"></span></div>
+          <span class="code-lang">js</span>
+        </div>
+        <div class="code-body"><pre><span class="kw">const</span> user = <span class="kw">await</span> <span class="obj">Aura</span>.<span class="prop">api</span>.<span class="fn">post</span>(<span class="str">'/users'</span>, {
+  <span class="prop">name</span>: <span class="str">'Alice'</span>,
+  <span class="prop">email</span>: <span class="str">'alice@example.com'</span>,
+  <span class="prop">role</span>: <span class="str">'admin'</span>
+});
+
+<span class="obj">console</span>.<span class="fn">log</span>(<span class="str">'Created user:'</span>, user.<span class="prop">id</span>);</pre></div>
+      </div>
+
+      <!-- put() -->
+      <h2 id="put">put() <span class="tag tag-blue">core</span></h2>
+      <p>Send a PUT request with a JSON body. Typically used for full resource replacement.</p>
+      <div class="method-sig">Aura.api.put&lt;T&gt;(url: string, body?: unknown, opts?: RequestOptions): Promise&lt;T&gt;</div>
+      <table class="param-table">
+        <thead><tr><th>Param</th><th>Type</th><th>Description</th></tr></thead>
+        <tbody>
+          <tr><td>url</td><td>string</td><td>Request path appended to <code>baseURL</code>.</td></tr>
+          <tr><td>body</td><td>unknown</td><td>Optional request body, serialized as JSON.</td></tr>
+          <tr><td>opts</td><td>RequestOptions</td><td>Optional per-request settings.</td></tr>
+        </tbody>
+      </table>
+      <div class="code-block">
+        <div class="code-header">
+          <div class="code-dots"><span class="code-dot"></span><span class="code-dot"></span><span class="code-dot"></span></div>
+          <span class="code-lang">js</span>
+        </div>
+        <div class="code-body"><pre><span class="kw">await</span> <span class="obj">Aura</span>.<span class="prop">api</span>.<span class="fn">put</span>(<span class="str">'/users/42'</span>, {
+  <span class="prop">name</span>: <span class="str">'Alice Updated'</span>,
+  <span class="prop">email</span>: <span class="str">'alice.new@example.com'</span>,
+  <span class="prop">role</span>: <span class="str">'superadmin'</span>
+});</pre></div>
+      </div>
+
+      <!-- patch() -->
+      <h2 id="patch">patch() <span class="tag tag-blue">core</span></h2>
+      <p>Send a PATCH request with a JSON body. Typically used for partial resource updates.</p>
+      <div class="method-sig">Aura.api.patch&lt;T&gt;(url: string, body?: unknown, opts?: RequestOptions): Promise&lt;T&gt;</div>
+      <table class="param-table">
+        <thead><tr><th>Param</th><th>Type</th><th>Description</th></tr></thead>
+        <tbody>
+          <tr><td>url</td><td>string</td><td>Request path appended to <code>baseURL</code>.</td></tr>
+          <tr><td>body</td><td>unknown</td><td>Optional request body, serialized as JSON.</td></tr>
+          <tr><td>opts</td><td>RequestOptions</td><td>Optional per-request settings.</td></tr>
+        </tbody>
+      </table>
+      <div class="code-block">
+        <div class="code-header">
+          <div class="code-dots"><span class="code-dot"></span><span class="code-dot"></span><span class="code-dot"></span></div>
+          <span class="code-lang">js</span>
+        </div>
+        <div class="code-body"><pre><span class="cm">// Update only specific fields</span>
+<span class="kw">await</span> <span class="obj">Aura</span>.<span class="prop">api</span>.<span class="fn">patch</span>(<span class="str">'/users/42'</span>, {
+  <span class="prop">role</span>: <span class="str">'moderator'</span>
+});</pre></div>
+      </div>
+
+      <!-- delete() -->
+      <h2 id="delete">delete() <span class="tag tag-pink">destructive</span></h2>
+      <p>Send a DELETE request. No body is sent by default.</p>
+      <div class="method-sig">Aura.api.delete&lt;T&gt;(url: string, opts?: RequestOptions): Promise&lt;T&gt;</div>
+      <table class="param-table">
+        <thead><tr><th>Param</th><th>Type</th><th>Description</th></tr></thead>
+        <tbody>
+          <tr><td>url</td><td>string</td><td>Request path appended to <code>baseURL</code>.</td></tr>
+          <tr><td>opts</td><td>RequestOptions</td><td>Optional per-request settings.</td></tr>
+        </tbody>
+      </table>
+      <div class="code-block">
+        <div class="code-header">
+          <div class="code-dots"><span class="code-dot"></span><span class="code-dot"></span><span class="code-dot"></span></div>
+          <span class="code-lang">js</span>
+        </div>
+        <div class="code-body"><pre><span class="kw">await</span> <span class="obj">Aura</span>.<span class="prop">api</span>.<span class="fn">delete</span>(<span class="str">'/users/42'</span>);
+
+<span class="cm">// With custom headers</span>
+<span class="kw">await</span> <span class="obj">Aura</span>.<span class="prop">api</span>.<span class="fn">delete</span>(<span class="str">'/posts/99'</span>, {
+  <span class="prop">headers</span>: { <span class="str">'X-Confirm'</span>: <span class="str">'true'</span> }
+});</pre></div>
+      </div>
+
+      <!-- upload() -->
+      <h2 id="upload">upload() <span class="tag tag-green">file</span></h2>
+      <p>Upload a file using <code>FormData</code>. The <code>Content-Type</code> header is automatically removed so the browser can set the correct multipart boundary. Supports optional progress tracking via <code>XMLHttpRequest</code>.</p>
+      <div class="method-sig">Aura.api.upload&lt;T&gt;(url: string, formData: FormData, opts?: RequestOptions &amp; { onProgress?: (pct: number) =&gt; void }): Promise&lt;T&gt;</div>
+      <table class="param-table">
+        <thead><tr><th>Param</th><th>Type</th><th>Description</th></tr></thead>
+        <tbody>
+          <tr><td>url</td><td>string</td><td>Upload endpoint path appended to <code>baseURL</code>.</td></tr>
+          <tr><td>formData</td><td>FormData</td><td>A <code>FormData</code> object containing the file(s) and any additional fields.</td></tr>
+          <tr><td>opts</td><td>RequestOptions &amp; { onProgress? }</td><td>Optional settings. <code>onProgress</code> receives a percentage (0&ndash;100) during upload.</td></tr>
+        </tbody>
+      </table>
+      <div class="code-block">
+        <div class="code-header">
+          <div class="code-dots"><span class="code-dot"></span><span class="code-dot"></span><span class="code-dot"></span></div>
+          <span class="code-lang">js</span>
+        </div>
+        <div class="code-body"><pre><span class="kw">const</span> form = <span class="kw">new</span> <span class="obj">FormData</span>();
+form.<span class="fn">append</span>(<span class="str">'avatar'</span>, fileInput.<span class="prop">files</span>[<span class="num">0</span>]);
+form.<span class="fn">append</span>(<span class="str">'userId'</span>, <span class="str">'42'</span>);
+
+<span class="kw">const</span> result = <span class="kw">await</span> <span class="obj">Aura</span>.<span class="prop">api</span>.<span class="fn">upload</span>(<span class="str">'/upload/avatar'</span>, form, {
+  <span class="fn">onProgress</span>(pct) {
+    progressBar.<span class="prop">style</span>.<span class="prop">width</span> = pct + <span class="str">'%'</span>;
+    <span class="obj">console</span>.<span class="fn">log</span>(<span class="str">`Uploading: ${pct}%`</span>);
+  }
+});
+
+<span class="obj">console</span>.<span class="fn">log</span>(<span class="str">'Uploaded:'</span>, result.<span class="prop">url</span>);</pre></div>
+      </div>
+
+      <!-- createAbortController() -->
+      <h2 id="createAbortController">createAbortController() <span class="tag tag-green">utility</span></h2>
+      <p>Create a new <code>AbortController</code> instance. Pass its <code>signal</code> to any request's <code>opts.signal</code> to enable cancellation.</p>
+      <div class="method-sig">Aura.api.createAbortController(): AbortController</div>
+      <p>This method takes no parameters.</p>
+      <div class="code-block">
+        <div class="code-header">
+          <div class="code-dots"><span class="code-dot"></span><span class="code-dot"></span><span class="code-dot"></span></div>
+          <span class="code-lang">js</span>
+        </div>
+        <div class="code-body"><pre><span class="kw">const</span> ctrl = <span class="obj">Aura</span>.<span class="prop">api</span>.<span class="fn">createAbortController</span>();
+
+<span class="cm">// Start a request with the signal</span>
+<span class="kw">const</span> promise = <span class="obj">Aura</span>.<span class="prop">api</span>.<span class="fn">get</span>(<span class="str">'/long-running'</span>, {
+  <span class="prop">signal</span>: ctrl.<span class="prop">signal</span>
+});
+
+<span class="cm">// Cancel the request after 5 seconds</span>
+<span class="fn">setTimeout</span>(() =&gt; ctrl.<span class="fn">abort</span>(), <span class="num">5000</span>);
+
+<span class="kw">try</span> {
+  <span class="kw">const</span> data = <span class="kw">await</span> promise;
+} <span class="kw">catch</span> (e) {
+  <span class="obj">console</span>.<span class="fn">log</span>(<span class="str">'Request cancelled'</span>);
+}</pre></div>
+      </div>
+
+      <!-- addInterceptor() -->
+      <h2 id="addInterceptor">addInterceptor() <span class="tag tag-orange">interceptor</span></h2>
+      <p>Register a named request interceptor. Interceptors run before every request (unless overridden by <code>opts.interceptors</code>). They receive the request config and can modify it, or return <code>false</code> to block the request entirely.</p>
+      <div class="method-sig">Aura.api.addInterceptor(name: string, interceptor: (config: ReqConfig) =&gt; ReqConfig | false | Promise&lt;ReqConfig | false&gt;): void</div>
+      <table class="param-table">
+        <thead><tr><th>Param</th><th>Type</th><th>Description</th></tr></thead>
+        <tbody>
+          <tr><td>name</td><td>string</td><td>Unique name for the interceptor (used with <code>removeInterceptor()</code> and <code>opts.interceptors</code>).</td></tr>
+          <tr><td>interceptor</td><td>Function</td><td>Receives <code>ReqConfig</code> ({ url, method, headers, body, params }). Return modified config or <code>false</code> to block.</td></tr>
+        </tbody>
+      </table>
+      <div class="code-block">
+        <div class="code-header">
+          <div class="code-dots"><span class="code-dot"></span><span class="code-dot"></span><span class="code-dot"></span></div>
+          <span class="code-lang">js</span>
+        </div>
+        <div class="code-body"><pre><span class="cm">// Auth interceptor: attach token to every request</span>
+<span class="obj">Aura</span>.<span class="prop">api</span>.<span class="fn">addInterceptor</span>(<span class="str">'auth'</span>, (config) =&gt; {
+  <span class="kw">const</span> token = <span class="obj">localStorage</span>.<span class="fn">getItem</span>(<span class="str">'token'</span>);
+  <span class="kw">if</span> (token) {
+    config.<span class="prop">headers</span>[<span class="str">'Authorization'</span>] = <span class="str">`Bearer ${token}`</span>;
+  }
+  <span class="kw">return</span> config;
+});
+
+<span class="cm">// Rate-limit interceptor: block if too many requests</span>
+<span class="obj">Aura</span>.<span class="prop">api</span>.<span class="fn">addInterceptor</span>(<span class="str">'rateLimit'</span>, (config) =&gt; {
+  <span class="kw">if</span> (requestCount &gt; <span class="num">100</span>) <span class="kw">return</span> <span class="num">false</span>; <span class="cm">// blocks the request</span>
+  <span class="kw">return</span> config;
+});
+
+<span class="cm">// Run only specific interceptors for one request</span>
+<span class="kw">await</span> <span class="obj">Aura</span>.<span class="prop">api</span>.<span class="fn">get</span>(<span class="str">'/public'</span>, {
+  <span class="prop">interceptors</span>: [<span class="str">'rateLimit'</span>] <span class="cm">// skip 'auth'</span>
+});</pre></div>
+      </div>
+
+      <!-- removeInterceptor() -->
+      <h2 id="removeInterceptor">removeInterceptor() <span class="tag tag-orange">interceptor</span></h2>
+      <p>Remove a previously registered request interceptor by name.</p>
+      <div class="method-sig">Aura.api.removeInterceptor(name: string): void</div>
+      <table class="param-table">
+        <thead><tr><th>Param</th><th>Type</th><th>Description</th></tr></thead>
+        <tbody>
+          <tr><td>name</td><td>string</td><td>The name of the interceptor to remove.</td></tr>
+        </tbody>
+      </table>
+      <div class="code-block">
+        <div class="code-header">
+          <div class="code-dots"><span class="code-dot"></span><span class="code-dot"></span><span class="code-dot"></span></div>
+          <span class="code-lang">js</span>
+        </div>
+        <div class="code-body"><pre><span class="obj">Aura</span>.<span class="prop">api</span>.<span class="fn">removeInterceptor</span>(<span class="str">'auth'</span>);</pre></div>
+      </div>
+
+      <!-- addResponseInterceptor() -->
+      <h2 id="addResponseInterceptor">addResponseInterceptor() <span class="tag tag-orange">interceptor</span></h2>
+      <p>Register a named response interceptor. Response interceptors run after every successful fetch, before the response is parsed. They receive the raw <code>Response</code> object and the original request config, and must return a <code>Response</code>.</p>
+      <div class="method-sig">Aura.api.addResponseInterceptor(name: string, interceptor: (response: Response, config: ReqConfig) =&gt; Response | Promise&lt;Response&gt;): void</div>
+      <table class="param-table">
+        <thead><tr><th>Param</th><th>Type</th><th>Description</th></tr></thead>
+        <tbody>
+          <tr><td>name</td><td>string</td><td>Unique name for the response interceptor.</td></tr>
+          <tr><td>interceptor</td><td>Function</td><td>Receives the raw <code>Response</code> and <code>ReqConfig</code>. Must return a <code>Response</code> (can be the same or a new one).</td></tr>
+        </tbody>
+      </table>
+      <div class="code-block">
+        <div class="code-header">
+          <div class="code-dots"><span class="code-dot"></span><span class="code-dot"></span><span class="code-dot"></span></div>
+          <span class="code-lang">js</span>
+        </div>
+        <div class="code-body"><pre><span class="cm">// Log all response statuses</span>
+<span class="obj">Aura</span>.<span class="prop">api</span>.<span class="fn">addResponseInterceptor</span>(<span class="str">'logger'</span>, (response, config) =&gt; {
+  <span class="obj">console</span>.<span class="fn">log</span>(<span class="str">`[${config.method}]`</span>, config.<span class="prop">url</span>, response.<span class="prop">status</span>);
+  <span class="kw">return</span> response;
+});
+
+<span class="cm">// Handle token refresh on 401</span>
+<span class="obj">Aura</span>.<span class="prop">api</span>.<span class="fn">addResponseInterceptor</span>(<span class="str">'tokenRefresh'</span>, <span class="kw">async</span> (response, config) =&gt; {
+  <span class="kw">if</span> (response.<span class="prop">status</span> === <span class="num">401</span>) {
+    <span class="kw">await</span> <span class="fn">refreshToken</span>();
+    <span class="cm">// The retry logic will handle re-sending</span>
+  }
+  <span class="kw">return</span> response;
+});</pre></div>
+      </div>
+
+      <!-- removeResponseInterceptor() -->
+      <h2 id="removeResponseInterceptor">removeResponseInterceptor() <span class="tag tag-orange">interceptor</span></h2>
+      <p>Remove a previously registered response interceptor by name.</p>
+      <div class="method-sig">Aura.api.removeResponseInterceptor(name: string): void</div>
+      <table class="param-table">
+        <thead><tr><th>Param</th><th>Type</th><th>Description</th></tr></thead>
+        <tbody>
+          <tr><td>name</td><td>string</td><td>The name of the response interceptor to remove.</td></tr>
+        </tbody>
+      </table>
+      <div class="code-block">
+        <div class="code-header">
+          <div class="code-dots"><span class="code-dot"></span><span class="code-dot"></span><span class="code-dot"></span></div>
+          <span class="code-lang">js</span>
+        </div>
+        <div class="code-body"><pre><span class="obj">Aura</span>.<span class="prop">api</span>.<span class="fn">removeResponseInterceptor</span>(<span class="str">'logger'</span>);</pre></div>
+      </div>
+
+    </main>
+  </div>
+</body>
+</html>

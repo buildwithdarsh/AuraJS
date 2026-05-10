@@ -1,0 +1,515 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+  <title>State — Aura.js Docs</title>
+  <meta name="description" content="Aura.js State API — lightweight reactive state management with subscriptions, computed values, actions, and persistence. Quick start guide and full reference." />
+  <meta name="robots" content="index, follow" />
+  <meta property="og:title" content="State — Aura.js Docs" />
+  <meta property="og:description" content="Aura.js State API — lightweight reactive state management with subscriptions, computed values, actions, and persistence. Quick start guide and full reference." />
+  <meta property="og:type" content="article" />
+  <meta property="og:url" content="https://aurajs-delta.vercel.app/docs/state.html" />
+  <meta property="og:image" content="https://aurajs-delta.vercel.app/og-image.png" />
+  <meta property="og:site_name" content="Aura.js" />
+  <meta name="twitter:card" content="summary_large_image" />
+  <meta name="twitter:title" content="State — Aura.js Docs" />
+  <meta name="twitter:description" content="Aura.js State API — lightweight reactive state management with subscriptions, computed values, actions, and persistence. Quick start guide and full reference." />
+  <meta name="twitter:image" content="https://aurajs-delta.vercel.app/og-image.png" />
+  <link rel="canonical" href="https://aurajs-delta.vercel.app/docs/state.html" />
+  <link rel="icon" href="../favicon.svg" type="image/svg+xml" />
+  <script type="application/ld+json">
+  {
+    "@context": "https://schema.org",
+    "@graph": [
+      {
+        "@type": "TechArticle",
+        "headline": "State — Aura.js Docs",
+        "description": "Aura.js State API — lightweight reactive state management with subscriptions, computed values, actions, and persistence.",
+        "url": "https://aurajs-delta.vercel.app/docs/state.html",
+        "image": "https://aurajs-delta.vercel.app/og-image.png",
+        "datePublished": "2026-03-17",
+        "dateModified": "2026-03-17",
+        "author": { "@type": "Organization", "name": "Darsh Gupta", "url": "https://github.com/darshgupta" },
+        "publisher": { "@type": "Organization", "name": "Darsh Gupta", "url": "https://github.com/darshgupta", "logo": { "@type": "ImageObject", "url": "https://aurajs-delta.vercel.app/favicon.svg" } },
+        "mainEntityOfPage": "https://aurajs-delta.vercel.app/docs/state.html",
+        "inLanguage": "en"
+      },
+      {
+        "@type": "BreadcrumbList",
+        "itemListElement": [
+          { "@type": "ListItem", "position": 1, "name": "Home", "item": "https://aurajs-delta.vercel.app/" },
+          { "@type": "ListItem", "position": 2, "name": "Docs", "item": "https://aurajs-delta.vercel.app/docs/router.html" },
+          { "@type": "ListItem", "position": 3, "name": "State", "item": "https://aurajs-delta.vercel.app/docs/state.html" }
+        ]
+      }
+    ]
+  }
+  </script>
+  <style>
+    *, *::before, *::after { margin: 0; padding: 0; box-sizing: border-box; }
+    :root {
+      --bg: #000000; --bg-card: #111111; --bg-code: #0d0d0d;
+      --text: #f5f5f7; --text-secondary: #86868b; --text-tertiary: #6e6e73;
+      --accent: #2997ff; --accent-hover: #0077ed; --green: #30d158;
+      --orange: #ff9f0a; --pink: #ff375f; --purple: #bf5af2; --teal: #64d2ff;
+      --border: #1d1d1f; --radius: 20px; --radius-sm: 12px; --radius-xs: 8px;
+      --font: -apple-system, BlinkMacSystemFont, 'SF Pro Display', 'Helvetica Neue', sans-serif;
+      --mono: 'SF Mono', SFMono-Regular, ui-monospace, 'Cascadia Code', Menlo, monospace;
+      --transition: 0.3s cubic-bezier(0.25, 0.1, 0.25, 1);
+    }
+    html { scroll-behavior: smooth; -webkit-font-smoothing: antialiased; }
+    body { font-family: var(--font); background: var(--bg); color: var(--text); line-height: 1.6; }
+
+    /* Nav */
+    .doc-nav { position: fixed; top: 0; left: 0; right: 0; z-index: 100; backdrop-filter: saturate(180%) blur(20px); background: rgba(0,0,0,0.72); border-bottom: 0.5px solid rgba(255,255,255,0.08); }
+    .doc-nav-inner { max-width: 1200px; margin: 0 auto; padding: 0 24px; height: 52px; display: flex; align-items: center; gap: 24px; }
+    .doc-nav-logo { font-size: 20px; font-weight: 700; background: linear-gradient(135deg, var(--accent), var(--purple)); -webkit-background-clip: text; -webkit-text-fill-color: transparent; text-decoration: none; }
+    .doc-nav-links { display: flex; gap: 20px; list-style: none; margin-left: auto; }
+    .doc-nav-links a { color: var(--text-secondary); text-decoration: none; font-size: 14px; transition: color var(--transition); }
+    .doc-nav-links a:hover { color: var(--text); }
+
+    /* Layout */
+    .doc-layout { display: grid; grid-template-columns: 240px 1fr; max-width: 1200px; margin: 0 auto; padding-top: 52px; min-height: 100vh; }
+
+    /* Sidebar */
+    .doc-sidebar { position: sticky; top: 52px; height: calc(100vh - 52px); overflow-y: auto; padding: 32px 24px; border-right: 1px solid var(--border); }
+    .doc-sidebar h4 { font-size: 11px; font-weight: 600; text-transform: uppercase; letter-spacing: 0.08em; color: var(--text-tertiary); margin: 24px 0 8px; }
+    .doc-sidebar h4:first-child { margin-top: 0; }
+    .doc-sidebar a { display: block; padding: 6px 12px; border-radius: 6px; font-size: 13px; color: var(--text-secondary); text-decoration: none; transition: all 0.15s ease; }
+    .doc-sidebar a:hover { background: rgba(255,255,255,0.04); color: var(--text); }
+    .doc-sidebar a.active { background: rgba(41,151,255,0.1); color: var(--accent); }
+
+    /* Content */
+    .doc-content { padding: 48px 48px 120px; max-width: 800px; }
+    .doc-content h1 { font-size: 40px; font-weight: 700; letter-spacing: -0.03em; margin-bottom: 8px; }
+    .doc-content .doc-lead { font-size: 18px; color: var(--text-secondary); margin-bottom: 48px; line-height: 1.5; }
+    .doc-content h2 { font-size: 24px; font-weight: 600; letter-spacing: -0.02em; margin: 48px 0 16px; padding-bottom: 8px; border-bottom: 1px solid var(--border); }
+    .doc-content h3 { font-size: 18px; font-weight: 600; margin: 32px 0 12px; color: var(--text); }
+    .doc-content p { color: var(--text-secondary); margin-bottom: 16px; }
+    .doc-content ul, .doc-content ol { color: var(--text-secondary); margin-bottom: 16px; padding-left: 24px; }
+    .doc-content li { margin-bottom: 6px; }
+    .doc-content code { font-family: var(--mono); font-size: 13px; background: rgba(255,255,255,0.06); padding: 2px 7px; border-radius: 4px; color: var(--pink); }
+    .doc-content a { color: var(--accent); text-decoration: none; }
+    .doc-content a:hover { text-decoration: underline; }
+
+    /* Code blocks */
+    .code-block { background: var(--bg-code); border-radius: var(--radius-sm); border: 1px solid var(--border); margin-bottom: 24px; overflow: hidden; }
+    .code-header { display: flex; align-items: center; justify-content: space-between; padding: 10px 16px; border-bottom: 1px solid var(--border); background: rgba(255,255,255,0.02); }
+    .code-dots { display: flex; gap: 6px; }
+    .code-dot { width: 10px; height: 10px; border-radius: 50%; }
+    .code-dot:nth-child(1) { background: #ff5f57; }
+    .code-dot:nth-child(2) { background: #febc2e; }
+    .code-dot:nth-child(3) { background: #28c840; }
+    .code-lang { font-size: 12px; color: var(--text-tertiary); font-family: var(--mono); }
+    .code-body { padding: 16px; overflow-x: auto; }
+    .code-body pre { font-family: var(--mono); font-size: 13px; line-height: 1.7; color: var(--text-secondary); margin: 0; }
+    .code-body .kw { color: var(--pink); }
+    .code-body .fn { color: var(--accent); }
+    .code-body .str { color: var(--green); }
+    .code-body .cm { color: var(--text-tertiary); }
+    .code-body .num { color: var(--orange); }
+    .code-body .prop { color: var(--teal); }
+    .code-body .obj { color: var(--purple); }
+
+    /* Method signature */
+    .method-sig { background: rgba(41,151,255,0.06); border: 1px solid rgba(41,151,255,0.15); border-radius: var(--radius-xs); padding: 12px 16px; margin-bottom: 12px; font-family: var(--mono); font-size: 13px; color: var(--accent); overflow-x: auto; }
+
+    /* Param table */
+    .param-table { width: 100%; border-collapse: collapse; margin-bottom: 24px; }
+    .param-table th { text-align: left; font-size: 12px; font-weight: 600; color: var(--text-tertiary); text-transform: uppercase; letter-spacing: 0.06em; padding: 8px 12px; border-bottom: 1px solid var(--border); }
+    .param-table td { padding: 10px 12px; border-bottom: 1px solid rgba(255,255,255,0.04); font-size: 14px; color: var(--text-secondary); }
+    .param-table td:first-child { font-family: var(--mono); font-size: 13px; color: var(--pink); }
+    .param-table td:nth-child(2) { font-family: var(--mono); font-size: 13px; color: var(--orange); }
+
+    /* Tags */
+    .tag { display: inline-block; padding: 3px 8px; border-radius: 4px; font-size: 11px; font-weight: 500; }
+    .tag-blue { background: rgba(41,151,255,0.12); color: var(--accent); }
+    .tag-green { background: rgba(48,209,88,0.12); color: var(--green); }
+    .tag-orange { background: rgba(255,159,10,0.12); color: var(--orange); }
+    .tag-pink { background: rgba(255,55,95,0.12); color: var(--pink); }
+
+    /* Responsive */
+    @media (max-width: 768px) {
+      .doc-layout { grid-template-columns: 1fr; }
+      .doc-sidebar { display: none; }
+      .doc-content { padding: 24px; }
+    }
+
+    ::-webkit-scrollbar { width: 8px; }
+    ::-webkit-scrollbar-track { background: transparent; }
+    ::-webkit-scrollbar-thumb { background: var(--border); border-radius: 4px; }
+  </style>
+</head>
+<body>
+  <nav class="doc-nav">
+    <div class="doc-nav-inner">
+      <a href="../index.html" class="doc-nav-logo">Aura.js</a>
+      <ul class="doc-nav-links">
+        <li><a href="../index.html">Home</a></li>
+        <li><a href="router.html">Router</a></li>
+        <li><a href="state.html">State</a></li>
+        <li><a href="events.html">Events</a></li>
+        <li><a href="template.html">Template</a></li>
+        <li><a href="api.html">API</a></li>
+        <li><a href="i18n.html">i18n</a></li>
+        <li><a href="mock.html">Mock</a></li>
+      </ul>
+    </div>
+  </nav>
+
+  <div class="doc-layout">
+    <aside class="doc-sidebar">
+      <h4>All Modules</h4>
+      <a href="router.html">Router</a>
+      <a href="state.html" class="active">State</a>
+      <a href="events.html">Events</a>
+      <a href="template.html">Template</a>
+      <a href="api.html">API</a>
+      <a href="i18n.html">i18n</a>
+      <a href="mock.html">Mock</a>
+
+      <h4>On This Page</h4>
+      <a href="#quick-start">Quick Start</a>
+      <a href="#init">init()</a>
+      <a href="#get">get()</a>
+      <a href="#set">set()</a>
+      <a href="#getAll">getAll()</a>
+      <a href="#subscribe">subscribe()</a>
+      <a href="#computed">computed()</a>
+      <a href="#batch">batch()</a>
+      <a href="#action">action()</a>
+      <a href="#dispatch">dispatch()</a>
+      <a href="#select">select()</a>
+      <a href="#persist">persist()</a>
+      <a href="#reset">reset()</a>
+    </aside>
+
+    <main class="doc-content">
+      <h1>State</h1>
+      <p class="doc-lead">
+        A reactive state management system with subscriptions, computed values, batched updates,
+        Redux-style actions, local-storage persistence, and selector functions.
+        Access it via <code>Aura.state</code>.
+      </p>
+
+      <!-- Quick Start -->
+      <h2 id="quick-start">Quick Start</h2>
+      <p>Initialize default state, subscribe to changes, and update values reactively.</p>
+
+      <div class="code-block">
+        <div class="code-header">
+          <div class="code-dots"><span class="code-dot"></span><span class="code-dot"></span><span class="code-dot"></span></div>
+          <span class="code-lang">js</span>
+        </div>
+        <div class="code-body"><pre><span class="kw">import</span> <span class="obj">Aura</span> <span class="kw">from</span> <span class="str">'@buildwithdarsh/aura.js'</span>;
+
+<span class="cm">// Set defaults (merged with any persisted data)</span>
+<span class="obj">Aura</span>.<span class="prop">state</span>.<span class="fn">init</span>({
+  <span class="prop">count</span>: <span class="num">0</span>,
+  <span class="prop">user</span>: <span class="num">null</span>,
+  <span class="prop">theme</span>: <span class="str">'dark'</span>
+});
+
+<span class="cm">// Subscribe to a key</span>
+<span class="obj">Aura</span>.<span class="prop">state</span>.<span class="fn">subscribe</span>(<span class="str">'count'</span>, (newVal, oldVal) =&gt; {
+  <span class="obj">console</span>.<span class="fn">log</span>(<span class="str">`count: ${oldVal} -&gt; ${newVal}`</span>);
+});
+
+<span class="cm">// Update the value</span>
+<span class="obj">Aura</span>.<span class="prop">state</span>.<span class="fn">set</span>(<span class="str">'count'</span>, <span class="num">1</span>);
+<span class="cm">// Logs: "count: 0 -&gt; 1"</span></pre></div>
+      </div>
+
+      <!-- init() -->
+      <h2 id="init">init() <span class="tag tag-blue">core</span></h2>
+      <p>Initialize the state store with default values. If previously persisted data exists in <code>localStorage</code>, it is merged on top of the defaults (persisted values take priority).</p>
+      <div class="method-sig">Aura.state.init(defaults: Record&lt;string, unknown&gt;): void</div>
+      <table class="param-table">
+        <thead><tr><th>Param</th><th>Type</th><th>Description</th></tr></thead>
+        <tbody>
+          <tr><td>defaults</td><td>Record&lt;string, unknown&gt;</td><td>An object of key-value pairs to use as the initial state.</td></tr>
+        </tbody>
+      </table>
+      <div class="code-block">
+        <div class="code-header">
+          <div class="code-dots"><span class="code-dot"></span><span class="code-dot"></span><span class="code-dot"></span></div>
+          <span class="code-lang">js</span>
+        </div>
+        <div class="code-body"><pre><span class="obj">Aura</span>.<span class="prop">state</span>.<span class="fn">init</span>({
+  <span class="prop">todos</span>: [],
+  <span class="prop">filter</span>: <span class="str">'all'</span>,
+  <span class="prop">darkMode</span>: <span class="num">true</span>
+});</pre></div>
+      </div>
+
+      <!-- get() -->
+      <h2 id="get">get() <span class="tag tag-blue">core</span></h2>
+      <p>Retrieve the current value for a given key. If a <code>computed()</code> value is registered under the same name, the computed selector runs instead. Returns <code>undefined</code> if the key does not exist.</p>
+      <div class="method-sig">Aura.state.get&lt;T = unknown&gt;(key: string): T | undefined</div>
+      <table class="param-table">
+        <thead><tr><th>Param</th><th>Type</th><th>Description</th></tr></thead>
+        <tbody>
+          <tr><td>key</td><td>string</td><td>The state key to look up.</td></tr>
+        </tbody>
+      </table>
+      <div class="code-block">
+        <div class="code-header">
+          <div class="code-dots"><span class="code-dot"></span><span class="code-dot"></span><span class="code-dot"></span></div>
+          <span class="code-lang">js</span>
+        </div>
+        <div class="code-body"><pre><span class="kw">const</span> count = <span class="obj">Aura</span>.<span class="prop">state</span>.<span class="fn">get</span>(<span class="str">'count'</span>);       <span class="cm">// number | undefined</span>
+<span class="kw">const</span> user  = <span class="obj">Aura</span>.<span class="prop">state</span>.<span class="fn">get</span>&lt;<span class="obj">User</span>&gt;(<span class="str">'user'</span>);  <span class="cm">// User | undefined (TS)</span></pre></div>
+      </div>
+
+      <!-- set() -->
+      <h2 id="set">set() <span class="tag tag-blue">core</span></h2>
+      <p>Set a value in the store. If the new value is strictly equal (<code>===</code>) to the current value, the update is skipped. Otherwise, emits <code>state:&lt;key&gt;</code> and <code>state:change</code> events (unless inside a <code>batch()</code>).</p>
+      <div class="method-sig">Aura.state.set(key: string, value: unknown): void</div>
+      <table class="param-table">
+        <thead><tr><th>Param</th><th>Type</th><th>Description</th></tr></thead>
+        <tbody>
+          <tr><td>key</td><td>string</td><td>The state key to update.</td></tr>
+          <tr><td>value</td><td>unknown</td><td>The new value to store.</td></tr>
+        </tbody>
+      </table>
+      <div class="code-block">
+        <div class="code-header">
+          <div class="code-dots"><span class="code-dot"></span><span class="code-dot"></span><span class="code-dot"></span></div>
+          <span class="code-lang">js</span>
+        </div>
+        <div class="code-body"><pre><span class="obj">Aura</span>.<span class="prop">state</span>.<span class="fn">set</span>(<span class="str">'count'</span>, <span class="num">42</span>);
+<span class="obj">Aura</span>.<span class="prop">state</span>.<span class="fn">set</span>(<span class="str">'user'</span>, { <span class="prop">name</span>: <span class="str">'Alice'</span>, <span class="prop">role</span>: <span class="str">'admin'</span> });</pre></div>
+      </div>
+
+      <!-- getAll() -->
+      <h2 id="getAll">getAll() <span class="tag tag-green">utility</span></h2>
+      <p>Return a shallow copy of the entire state object. Useful for debugging or serialization.</p>
+      <div class="method-sig">Aura.state.getAll(): Record&lt;string, unknown&gt;</div>
+      <p>This method takes no parameters.</p>
+      <div class="code-block">
+        <div class="code-header">
+          <div class="code-dots"><span class="code-dot"></span><span class="code-dot"></span><span class="code-dot"></span></div>
+          <span class="code-lang">js</span>
+        </div>
+        <div class="code-body"><pre><span class="kw">const</span> snapshot = <span class="obj">Aura</span>.<span class="prop">state</span>.<span class="fn">getAll</span>();
+<span class="obj">console</span>.<span class="fn">log</span>(snapshot); <span class="cm">// { count: 42, user: {...}, theme: 'dark' }</span></pre></div>
+      </div>
+
+      <!-- subscribe() -->
+      <h2 id="subscribe">subscribe() <span class="tag tag-orange">reactive</span></h2>
+      <p>Listen for changes to a specific state key. The callback receives the new and old values. Returns an unsubscribe function for easy cleanup.</p>
+      <div class="method-sig">Aura.state.subscribe(key: string, fn: (newVal: unknown, oldVal: unknown) =&gt; void): () =&gt; void</div>
+      <table class="param-table">
+        <thead><tr><th>Param</th><th>Type</th><th>Description</th></tr></thead>
+        <tbody>
+          <tr><td>key</td><td>string</td><td>The state key to watch.</td></tr>
+          <tr><td>fn</td><td>Function</td><td>Callback invoked with <code>(newVal, oldVal)</code> whenever the key changes.</td></tr>
+        </tbody>
+      </table>
+      <p>Returns a <code>() =&gt; void</code> unsubscribe function.</p>
+      <div class="code-block">
+        <div class="code-header">
+          <div class="code-dots"><span class="code-dot"></span><span class="code-dot"></span><span class="code-dot"></span></div>
+          <span class="code-lang">js</span>
+        </div>
+        <div class="code-body"><pre><span class="kw">const</span> unsub = <span class="obj">Aura</span>.<span class="prop">state</span>.<span class="fn">subscribe</span>(<span class="str">'theme'</span>, (newVal, oldVal) =&gt; {
+  <span class="obj">document</span>.<span class="prop">body</span>.<span class="prop">className</span> = newVal;
+});
+
+<span class="cm">// Later, stop listening</span>
+<span class="fn">unsub</span>();</pre></div>
+      </div>
+
+      <!-- computed() -->
+      <h2 id="computed">computed() <span class="tag tag-orange">reactive</span></h2>
+      <p>Register a derived value that is computed from the full state. When you call <code>get(name)</code>, the selector runs against the current state instead of performing a direct lookup.</p>
+      <div class="method-sig">Aura.state.computed(name: string, selector: (state: Record&lt;string, unknown&gt;) =&gt; unknown): void</div>
+      <table class="param-table">
+        <thead><tr><th>Param</th><th>Type</th><th>Description</th></tr></thead>
+        <tbody>
+          <tr><td>name</td><td>string</td><td>The virtual key name for this computed value.</td></tr>
+          <tr><td>selector</td><td>Selector</td><td>A function <code>(state) =&gt; derivedValue</code> that computes the value from the full state.</td></tr>
+        </tbody>
+      </table>
+      <div class="code-block">
+        <div class="code-header">
+          <div class="code-dots"><span class="code-dot"></span><span class="code-dot"></span><span class="code-dot"></span></div>
+          <span class="code-lang">js</span>
+        </div>
+        <div class="code-body"><pre><span class="obj">Aura</span>.<span class="prop">state</span>.<span class="fn">computed</span>(<span class="str">'activeTodos'</span>, (state) =&gt; {
+  <span class="kw">return</span> state.<span class="prop">todos</span>.<span class="fn">filter</span>(t =&gt; !t.<span class="prop">done</span>);
+});
+
+<span class="cm">// Now use it like any other key</span>
+<span class="kw">const</span> active = <span class="obj">Aura</span>.<span class="prop">state</span>.<span class="fn">get</span>(<span class="str">'activeTodos'</span>);
+<span class="obj">console</span>.<span class="fn">log</span>(active.<span class="prop">length</span>);</pre></div>
+      </div>
+
+      <!-- batch() -->
+      <h2 id="batch">batch() <span class="tag tag-green">performance</span></h2>
+      <p>Group multiple <code>set()</code> calls into a single batch. Individual <code>state:&lt;key&gt;</code> events are deferred until the batch function completes, then fired all at once. A single <code>state:batch</code> event is also emitted with all changes.</p>
+      <div class="method-sig">Aura.state.batch(fn: () =&gt; void): void</div>
+      <table class="param-table">
+        <thead><tr><th>Param</th><th>Type</th><th>Description</th></tr></thead>
+        <tbody>
+          <tr><td>fn</td><td>Function</td><td>A synchronous function that calls <code>set()</code> one or more times.</td></tr>
+        </tbody>
+      </table>
+      <div class="code-block">
+        <div class="code-header">
+          <div class="code-dots"><span class="code-dot"></span><span class="code-dot"></span><span class="code-dot"></span></div>
+          <span class="code-lang">js</span>
+        </div>
+        <div class="code-body"><pre><span class="obj">Aura</span>.<span class="prop">state</span>.<span class="fn">batch</span>(() =&gt; {
+  <span class="obj">Aura</span>.<span class="prop">state</span>.<span class="fn">set</span>(<span class="str">'loading'</span>, <span class="num">false</span>);
+  <span class="obj">Aura</span>.<span class="prop">state</span>.<span class="fn">set</span>(<span class="str">'user'</span>, userData);
+  <span class="obj">Aura</span>.<span class="prop">state</span>.<span class="fn">set</span>(<span class="str">'token'</span>, jwt);
+});
+<span class="cm">// All three state:&lt;key&gt; events fire here, after the batch</span>
+<span class="cm">// Plus one state:batch event with all changes</span></pre></div>
+      </div>
+
+      <!-- action() (registerAction) -->
+      <h2 id="action">action() <span class="tag tag-pink">advanced</span></h2>
+      <p>Register a named action (reducer-style). Actions receive the full current state and an optional payload, and return a new state object. Changed keys are automatically updated via <code>set()</code>.</p>
+      <div class="method-sig">Aura.state.action(name: string, handler: (state: Record&lt;string, unknown&gt;, payload?: unknown) =&gt; Record&lt;string, unknown&gt;): void</div>
+      <table class="param-table">
+        <thead><tr><th>Param</th><th>Type</th><th>Description</th></tr></thead>
+        <tbody>
+          <tr><td>name</td><td>string</td><td>Unique action name used with <code>dispatch()</code>.</td></tr>
+          <tr><td>handler</td><td>Action</td><td>Function <code>(state, payload?) =&gt; newState</code>. Return the full new state object.</td></tr>
+        </tbody>
+      </table>
+      <div class="code-block">
+        <div class="code-header">
+          <div class="code-dots"><span class="code-dot"></span><span class="code-dot"></span><span class="code-dot"></span></div>
+          <span class="code-lang">js</span>
+        </div>
+        <div class="code-body"><pre><span class="obj">Aura</span>.<span class="prop">state</span>.<span class="fn">action</span>(<span class="str">'increment'</span>, (state, amount) =&gt; ({
+  ...state,
+  <span class="prop">count</span>: state.<span class="prop">count</span> + (amount ?? <span class="num">1</span>)
+}));
+
+<span class="obj">Aura</span>.<span class="prop">state</span>.<span class="fn">action</span>(<span class="str">'addTodo'</span>, (state, text) =&gt; ({
+  ...state,
+  <span class="prop">todos</span>: [...state.<span class="prop">todos</span>, { <span class="prop">text</span>, <span class="prop">done</span>: <span class="num">false</span> }]
+}));</pre></div>
+      </div>
+
+      <!-- dispatch() -->
+      <h2 id="dispatch">dispatch() <span class="tag tag-pink">advanced</span></h2>
+      <p>Execute a registered action by name. Also supports a built-in <code>'fetch'</code> action that fetches JSON from a URL and stores it under a key. Throws if the action name is not found.</p>
+      <div class="method-sig">Aura.state.dispatch(actionName: string, payload?: unknown): Promise&lt;void&gt;</div>
+      <table class="param-table">
+        <thead><tr><th>Param</th><th>Type</th><th>Description</th></tr></thead>
+        <tbody>
+          <tr><td>actionName</td><td>string</td><td>Name of a registered action, or the built-in <code>'fetch'</code>.</td></tr>
+          <tr><td>payload</td><td>unknown</td><td>Data passed to the action handler. For <code>'fetch'</code>, pass <code>{ url, key }</code>.</td></tr>
+        </tbody>
+      </table>
+      <div class="code-block">
+        <div class="code-header">
+          <div class="code-dots"><span class="code-dot"></span><span class="code-dot"></span><span class="code-dot"></span></div>
+          <span class="code-lang">js</span>
+        </div>
+        <div class="code-body"><pre><span class="cm">// Dispatch a custom action</span>
+<span class="kw">await</span> <span class="obj">Aura</span>.<span class="prop">state</span>.<span class="fn">dispatch</span>(<span class="str">'increment'</span>, <span class="num">5</span>);
+<span class="obj">console</span>.<span class="fn">log</span>(<span class="obj">Aura</span>.<span class="prop">state</span>.<span class="fn">get</span>(<span class="str">'count'</span>)); <span class="cm">// previous + 5</span>
+
+<span class="cm">// Built-in fetch action</span>
+<span class="kw">await</span> <span class="obj">Aura</span>.<span class="prop">state</span>.<span class="fn">dispatch</span>(<span class="str">'fetch'</span>, {
+  <span class="prop">url</span>: <span class="str">'/api/users'</span>,
+  <span class="prop">key</span>: <span class="str">'users'</span>
+});
+<span class="cm">// Aura.state.get('users') now has the fetched JSON</span></pre></div>
+      </div>
+
+      <!-- select() -->
+      <h2 id="select">select() <span class="tag tag-green">utility</span></h2>
+      <p>Run an ad-hoc selector function against the current state and return the result. Unlike <code>computed()</code>, this does not register anything -- it is a one-shot query.</p>
+      <div class="method-sig">Aura.state.select&lt;T&gt;(selector: (state: Record&lt;string, unknown&gt;) =&gt; T): T</div>
+      <table class="param-table">
+        <thead><tr><th>Param</th><th>Type</th><th>Description</th></tr></thead>
+        <tbody>
+          <tr><td>selector</td><td>Selector&lt;T&gt;</td><td>A function that receives the full state and returns a derived value.</td></tr>
+        </tbody>
+      </table>
+      <div class="code-block">
+        <div class="code-header">
+          <div class="code-dots"><span class="code-dot"></span><span class="code-dot"></span><span class="code-dot"></span></div>
+          <span class="code-lang">js</span>
+        </div>
+        <div class="code-body"><pre><span class="kw">const</span> total = <span class="obj">Aura</span>.<span class="prop">state</span>.<span class="fn">select</span>(s =&gt; s.<span class="prop">todos</span>.<span class="prop">length</span>);
+<span class="kw">const</span> admin = <span class="obj">Aura</span>.<span class="prop">state</span>.<span class="fn">select</span>(s =&gt; s.<span class="prop">user</span>?.<span class="prop">role</span> === <span class="str">'admin'</span>);</pre></div>
+      </div>
+
+      <!-- persist() -->
+      <h2 id="persist">persist() <span class="tag tag-green">utility</span></h2>
+      <p>Save the entire current state to <code>localStorage</code> under the key <code>app_state</code>. On the next <code>init()</code> call, persisted data is automatically restored and merged with defaults.</p>
+      <div class="method-sig">Aura.state.persist(): void</div>
+      <p>This method takes no parameters.</p>
+      <div class="code-block">
+        <div class="code-header">
+          <div class="code-dots"><span class="code-dot"></span><span class="code-dot"></span><span class="code-dot"></span></div>
+          <span class="code-lang">js</span>
+        </div>
+        <div class="code-body"><pre><span class="cm">// Save state before the user leaves</span>
+<span class="obj">window</span>.<span class="fn">addEventListener</span>(<span class="str">'beforeunload'</span>, () =&gt; {
+  <span class="obj">Aura</span>.<span class="prop">state</span>.<span class="fn">persist</span>();
+});</pre></div>
+      </div>
+
+      <!-- reset() -->
+      <h2 id="reset">reset() <span class="tag tag-pink">destructive</span></h2>
+      <p>Clear all state and optionally replace it with new defaults. Emits <code>state:&lt;key&gt;</code> for every key whose value changed, plus a <code>state:reset</code> event with the new state.</p>
+      <div class="method-sig">Aura.state.reset(defaults?: Record&lt;string, unknown&gt;): void</div>
+      <table class="param-table">
+        <thead><tr><th>Param</th><th>Type</th><th>Description</th></tr></thead>
+        <tbody>
+          <tr><td>defaults</td><td>Record&lt;string, unknown&gt;</td><td>Optional new state. If omitted, state is set to an empty object <code>{}</code>.</td></tr>
+        </tbody>
+      </table>
+      <div class="code-block">
+        <div class="code-header">
+          <div class="code-dots"><span class="code-dot"></span><span class="code-dot"></span><span class="code-dot"></span></div>
+          <span class="code-lang">js</span>
+        </div>
+        <div class="code-body"><pre><span class="cm">// Reset to empty</span>
+<span class="obj">Aura</span>.<span class="prop">state</span>.<span class="fn">reset</span>();
+
+<span class="cm">// Reset with new defaults</span>
+<span class="obj">Aura</span>.<span class="prop">state</span>.<span class="fn">reset</span>({ <span class="prop">count</span>: <span class="num">0</span>, <span class="prop">theme</span>: <span class="str">'light'</span> });</pre></div>
+      </div>
+
+      <!-- Emitted events -->
+      <h2 id="events">Emitted Events</h2>
+      <p>The state module emits events via the Aura event bus. Subscribe with <code>Aura.on()</code> or <code>Aura.state.subscribe()</code>.</p>
+      <table class="param-table">
+        <thead><tr><th>Event</th><th>Payload</th><th>Description</th></tr></thead>
+        <tbody>
+          <tr><td>state:&lt;key&gt;</td><td>newVal, oldVal</td><td>Fired when a specific key changes via <code>set()</code>.</td></tr>
+          <tr><td>state:change</td><td>key, newVal, oldVal</td><td>Fired on every individual key change (outside of batch).</td></tr>
+          <tr><td>state:batch</td><td>[key, val, old][]</td><td>Fired after a <code>batch()</code> completes with all changes.</td></tr>
+          <tr><td>state:reset</td><td>newState</td><td>Fired when <code>reset()</code> is called.</td></tr>
+        </tbody>
+      </table>
+      <div class="code-block">
+        <div class="code-header">
+          <div class="code-dots"><span class="code-dot"></span><span class="code-dot"></span><span class="code-dot"></span></div>
+          <span class="code-lang">js</span>
+        </div>
+        <div class="code-body"><pre><span class="cm">// Listen to all state changes</span>
+<span class="obj">Aura</span>.<span class="fn">on</span>(<span class="str">'state:change'</span>, (key, newVal, oldVal) =&gt; {
+  <span class="obj">console</span>.<span class="fn">log</span>(<span class="str">`${key} changed`</span>, oldVal, <span class="str">'-&gt;'</span>, newVal);
+});
+
+<span class="cm">// Listen to batch completions</span>
+<span class="obj">Aura</span>.<span class="fn">on</span>(<span class="str">'state:batch'</span>, (changes) =&gt; {
+  <span class="obj">console</span>.<span class="fn">log</span>(<span class="str">`${changes.length} keys updated in batch`</span>);
+});</pre></div>
+      </div>
+    </main>
+  </div>
+</body>
+</html>

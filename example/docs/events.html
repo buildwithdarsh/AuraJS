@@ -1,0 +1,470 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+  <title>Events — Aura.js Docs</title>
+  <meta name="description" content="Aura.js Events API — fast pub/sub event system with wildcards, priority ordering, and built-in router and state events. Quick start and full method reference." />
+  <meta name="robots" content="index, follow" />
+  <meta property="og:title" content="Events — Aura.js Docs" />
+  <meta property="og:description" content="Aura.js Events API — fast pub/sub event system with wildcards, priority ordering, and built-in router and state events. Quick start and full method reference." />
+  <meta property="og:type" content="article" />
+  <meta property="og:url" content="https://aurajs-delta.vercel.app/docs/events.html" />
+  <meta property="og:image" content="https://aurajs-delta.vercel.app/og-image.png" />
+  <meta property="og:site_name" content="Aura.js" />
+  <meta name="twitter:card" content="summary_large_image" />
+  <meta name="twitter:title" content="Events — Aura.js Docs" />
+  <meta name="twitter:description" content="Aura.js Events API — fast pub/sub event system with wildcards, priority ordering, and built-in router and state events. Quick start and full method reference." />
+  <meta name="twitter:image" content="https://aurajs-delta.vercel.app/og-image.png" />
+  <link rel="canonical" href="https://aurajs-delta.vercel.app/docs/events.html" />
+  <link rel="icon" href="../favicon.svg" type="image/svg+xml" />
+  <script type="application/ld+json">
+  {
+    "@context": "https://schema.org",
+    "@graph": [
+      {
+        "@type": "TechArticle",
+        "headline": "Events — Aura.js Docs",
+        "description": "Aura.js Events API — fast pub/sub event system with wildcards, priority ordering, and built-in router and state events.",
+        "url": "https://aurajs-delta.vercel.app/docs/events.html",
+        "image": "https://aurajs-delta.vercel.app/og-image.png",
+        "datePublished": "2026-03-17",
+        "dateModified": "2026-03-17",
+        "author": { "@type": "Organization", "name": "Darsh Gupta", "url": "https://github.com/darshgupta" },
+        "publisher": { "@type": "Organization", "name": "Darsh Gupta", "url": "https://github.com/darshgupta", "logo": { "@type": "ImageObject", "url": "https://aurajs-delta.vercel.app/favicon.svg" } },
+        "mainEntityOfPage": "https://aurajs-delta.vercel.app/docs/events.html",
+        "inLanguage": "en"
+      },
+      {
+        "@type": "BreadcrumbList",
+        "itemListElement": [
+          { "@type": "ListItem", "position": 1, "name": "Home", "item": "https://aurajs-delta.vercel.app/" },
+          { "@type": "ListItem", "position": 2, "name": "Docs", "item": "https://aurajs-delta.vercel.app/docs/router.html" },
+          { "@type": "ListItem", "position": 3, "name": "Events", "item": "https://aurajs-delta.vercel.app/docs/events.html" }
+        ]
+      }
+    ]
+  }
+  </script>
+  <style>
+    *, *::before, *::after { margin: 0; padding: 0; box-sizing: border-box; }
+    :root {
+      --bg: #000000; --bg-card: #111111; --bg-code: #0d0d0d;
+      --text: #f5f5f7; --text-secondary: #86868b; --text-tertiary: #6e6e73;
+      --accent: #2997ff; --accent-hover: #0077ed; --green: #30d158;
+      --orange: #ff9f0a; --pink: #ff375f; --purple: #bf5af2; --teal: #64d2ff;
+      --border: #1d1d1f; --radius: 20px; --radius-sm: 12px; --radius-xs: 8px;
+      --font: -apple-system, BlinkMacSystemFont, 'SF Pro Display', 'Helvetica Neue', sans-serif;
+      --mono: 'SF Mono', SFMono-Regular, ui-monospace, 'Cascadia Code', Menlo, monospace;
+      --transition: 0.3s cubic-bezier(0.25, 0.1, 0.25, 1);
+    }
+    html { scroll-behavior: smooth; -webkit-font-smoothing: antialiased; }
+    body { font-family: var(--font); background: var(--bg); color: var(--text); line-height: 1.6; }
+
+    /* Nav */
+    .doc-nav { position: fixed; top: 0; left: 0; right: 0; z-index: 100; backdrop-filter: saturate(180%) blur(20px); background: rgba(0,0,0,0.72); border-bottom: 0.5px solid rgba(255,255,255,0.08); }
+    .doc-nav-inner { max-width: 1200px; margin: 0 auto; padding: 0 24px; height: 52px; display: flex; align-items: center; gap: 24px; }
+    .doc-nav-logo { font-size: 20px; font-weight: 700; background: linear-gradient(135deg, var(--accent), var(--purple)); -webkit-background-clip: text; -webkit-text-fill-color: transparent; text-decoration: none; }
+    .doc-nav-links { display: flex; gap: 20px; list-style: none; margin-left: auto; }
+    .doc-nav-links a { color: var(--text-secondary); text-decoration: none; font-size: 14px; transition: color var(--transition); }
+    .doc-nav-links a:hover { color: var(--text); }
+
+    /* Layout */
+    .doc-layout { display: grid; grid-template-columns: 240px 1fr; max-width: 1200px; margin: 0 auto; padding-top: 52px; min-height: 100vh; }
+
+    /* Sidebar */
+    .doc-sidebar { position: sticky; top: 52px; height: calc(100vh - 52px); overflow-y: auto; padding: 32px 24px; border-right: 1px solid var(--border); }
+    .doc-sidebar h4 { font-size: 11px; font-weight: 600; text-transform: uppercase; letter-spacing: 0.08em; color: var(--text-tertiary); margin: 24px 0 8px; }
+    .doc-sidebar h4:first-child { margin-top: 0; }
+    .doc-sidebar a { display: block; padding: 6px 12px; border-radius: 6px; font-size: 13px; color: var(--text-secondary); text-decoration: none; transition: all 0.15s ease; }
+    .doc-sidebar a:hover { background: rgba(255,255,255,0.04); color: var(--text); }
+    .doc-sidebar a.active { background: rgba(41,151,255,0.1); color: var(--accent); }
+
+    /* Content */
+    .doc-content { padding: 48px 48px 120px; max-width: 800px; }
+    .doc-content h1 { font-size: 40px; font-weight: 700; letter-spacing: -0.03em; margin-bottom: 8px; }
+    .doc-content .doc-lead { font-size: 18px; color: var(--text-secondary); margin-bottom: 48px; line-height: 1.5; }
+    .doc-content h2 { font-size: 24px; font-weight: 600; letter-spacing: -0.02em; margin: 48px 0 16px; padding-bottom: 8px; border-bottom: 1px solid var(--border); }
+    .doc-content h3 { font-size: 18px; font-weight: 600; margin: 32px 0 12px; color: var(--text); }
+    .doc-content p { color: var(--text-secondary); margin-bottom: 16px; }
+    .doc-content ul, .doc-content ol { color: var(--text-secondary); margin-bottom: 16px; padding-left: 24px; }
+    .doc-content li { margin-bottom: 6px; }
+    .doc-content code { font-family: var(--mono); font-size: 13px; background: rgba(255,255,255,0.06); padding: 2px 7px; border-radius: 4px; color: var(--pink); }
+    .doc-content a { color: var(--accent); text-decoration: none; }
+    .doc-content a:hover { text-decoration: underline; }
+
+    /* Code blocks */
+    .code-block { background: var(--bg-code); border-radius: var(--radius-sm); border: 1px solid var(--border); margin-bottom: 24px; overflow: hidden; }
+    .code-header { display: flex; align-items: center; justify-content: space-between; padding: 10px 16px; border-bottom: 1px solid var(--border); background: rgba(255,255,255,0.02); }
+    .code-dots { display: flex; gap: 6px; }
+    .code-dot { width: 10px; height: 10px; border-radius: 50%; }
+    .code-dot:nth-child(1) { background: #ff5f57; }
+    .code-dot:nth-child(2) { background: #febc2e; }
+    .code-dot:nth-child(3) { background: #28c840; }
+    .code-lang { font-size: 12px; color: var(--text-tertiary); font-family: var(--mono); }
+    .code-body { padding: 16px; overflow-x: auto; }
+    .code-body pre { font-family: var(--mono); font-size: 13px; line-height: 1.7; color: var(--text-secondary); margin: 0; }
+    .code-body .kw { color: var(--pink); }
+    .code-body .fn { color: var(--accent); }
+    .code-body .str { color: var(--green); }
+    .code-body .cm { color: var(--text-tertiary); }
+    .code-body .num { color: var(--orange); }
+    .code-body .prop { color: var(--teal); }
+    .code-body .obj { color: var(--purple); }
+
+    /* Method signature */
+    .method-sig { background: rgba(41,151,255,0.06); border: 1px solid rgba(41,151,255,0.15); border-radius: var(--radius-xs); padding: 12px 16px; margin-bottom: 12px; font-family: var(--mono); font-size: 13px; color: var(--accent); overflow-x: auto; }
+
+    /* Param table */
+    .param-table { width: 100%; border-collapse: collapse; margin-bottom: 24px; }
+    .param-table th { text-align: left; font-size: 12px; font-weight: 600; color: var(--text-tertiary); text-transform: uppercase; letter-spacing: 0.06em; padding: 8px 12px; border-bottom: 1px solid var(--border); }
+    .param-table td { padding: 10px 12px; border-bottom: 1px solid rgba(255,255,255,0.04); font-size: 14px; color: var(--text-secondary); }
+    .param-table td:first-child { font-family: var(--mono); font-size: 13px; color: var(--pink); }
+    .param-table td:nth-child(2) { font-family: var(--mono); font-size: 13px; color: var(--orange); }
+
+    /* Tags */
+    .tag { display: inline-block; padding: 3px 8px; border-radius: 4px; font-size: 11px; font-weight: 500; }
+    .tag-blue { background: rgba(41,151,255,0.12); color: var(--accent); }
+    .tag-green { background: rgba(48,209,88,0.12); color: var(--green); }
+    .tag-orange { background: rgba(255,159,10,0.12); color: var(--orange); }
+    .tag-pink { background: rgba(255,55,95,0.12); color: var(--pink); }
+
+    /* Responsive */
+    @media (max-width: 768px) {
+      .doc-layout { grid-template-columns: 1fr; }
+      .doc-sidebar { display: none; }
+      .doc-content { padding: 24px; }
+    }
+
+    ::-webkit-scrollbar { width: 8px; }
+    ::-webkit-scrollbar-track { background: transparent; }
+    ::-webkit-scrollbar-thumb { background: var(--border); border-radius: 4px; }
+  </style>
+</head>
+<body>
+  <nav class="doc-nav">
+    <div class="doc-nav-inner">
+      <a href="../index.html" class="doc-nav-logo">Aura.js</a>
+      <ul class="doc-nav-links">
+        <li><a href="../index.html">Home</a></li>
+        <li><a href="router.html">Router</a></li>
+        <li><a href="state.html">State</a></li>
+        <li><a href="events.html">Events</a></li>
+        <li><a href="template.html">Template</a></li>
+        <li><a href="api.html">API</a></li>
+        <li><a href="i18n.html">i18n</a></li>
+        <li><a href="mock.html">Mock</a></li>
+      </ul>
+    </div>
+  </nav>
+
+  <div class="doc-layout">
+    <aside class="doc-sidebar">
+      <h4>All Modules</h4>
+      <a href="router.html">Router</a>
+      <a href="state.html">State</a>
+      <a href="events.html" class="active">Events</a>
+      <a href="template.html">Template</a>
+      <a href="api.html">API</a>
+      <a href="i18n.html">i18n</a>
+      <a href="mock.html">Mock</a>
+
+      <h4>On This Page</h4>
+      <a href="#quick-start">Quick Start</a>
+      <a href="#on">on()</a>
+      <a href="#once">once()</a>
+      <a href="#off">off()</a>
+      <a href="#emit">emit()</a>
+      <a href="#wildcards">Wildcard Patterns</a>
+      <a href="#priority">Priority Ordering</a>
+      <a href="#builtin-events">Built-in Events</a>
+    </aside>
+
+    <main class="doc-content">
+      <h1>Events</h1>
+      <p class="doc-lead">
+        A priority-aware publish/subscribe event bus with wildcard matching, one-time listeners,
+        and automatic cleanup. The event system underpins the router, state manager, and all
+        inter-module communication in Aura.js.
+      </p>
+
+      <!-- Quick Start -->
+      <h2 id="quick-start">Quick Start</h2>
+      <p>Subscribe to events, emit them with data, and clean up when done.</p>
+
+      <div class="code-block">
+        <div class="code-header">
+          <div class="code-dots"><span class="code-dot"></span><span class="code-dot"></span><span class="code-dot"></span></div>
+          <span class="code-lang">js</span>
+        </div>
+        <div class="code-body"><pre><span class="kw">import</span> <span class="obj">Aura</span> <span class="kw">from</span> <span class="str">'@buildwithdarsh/aura.js'</span>;
+
+<span class="cm">// Subscribe to an event</span>
+<span class="kw">const</span> unsub = <span class="obj">Aura</span>.<span class="fn">on</span>(<span class="str">'user:login'</span>, (user) =&gt; {
+  <span class="obj">console</span>.<span class="fn">log</span>(<span class="str">'Welcome'</span>, user.<span class="prop">name</span>);
+});
+
+<span class="cm">// Emit an event with data</span>
+<span class="obj">Aura</span>.<span class="fn">emit</span>(<span class="str">'user:login'</span>, { <span class="prop">name</span>: <span class="str">'Alice'</span> });
+
+<span class="cm">// Unsubscribe when no longer needed</span>
+<span class="fn">unsub</span>();</pre></div>
+      </div>
+
+      <!-- on() -->
+      <h2 id="on">on() <span class="tag tag-blue">core</span></h2>
+      <p>Register a persistent listener for an event. Listeners are sorted by priority (higher values run first). Returns an unsubscribe function for easy cleanup.</p>
+      <div class="method-sig">Aura.on(event: string, fn: (...args: unknown[]) =&gt; void, priority?: number): () =&gt; void</div>
+      <table class="param-table">
+        <thead><tr><th>Param</th><th>Type</th><th>Description</th></tr></thead>
+        <tbody>
+          <tr><td>event</td><td>string</td><td>Event name. Supports namespaced names like <code>'user:login'</code>. Use <code>'namespace:*'</code> for wildcards.</td></tr>
+          <tr><td>fn</td><td>Function</td><td>Callback invoked with whatever arguments are passed to <code>emit()</code>.</td></tr>
+          <tr><td>priority</td><td>number</td><td>Optional priority (default <code>0</code>). Higher values execute first.</td></tr>
+        </tbody>
+      </table>
+      <p>Returns a <code>() =&gt; void</code> unsubscribe function.</p>
+      <div class="code-block">
+        <div class="code-header">
+          <div class="code-dots"><span class="code-dot"></span><span class="code-dot"></span><span class="code-dot"></span></div>
+          <span class="code-lang">js</span>
+        </div>
+        <div class="code-body"><pre><span class="cm">// Basic listener</span>
+<span class="kw">const</span> unsub = <span class="obj">Aura</span>.<span class="fn">on</span>(<span class="str">'cart:update'</span>, (items) =&gt; {
+  renderCart(items);
+});
+
+<span class="cm">// High-priority listener (runs before default)</span>
+<span class="obj">Aura</span>.<span class="fn">on</span>(<span class="str">'cart:update'</span>, (items) =&gt; {
+  analytics.<span class="fn">track</span>(<span class="str">'cart_updated'</span>, items.<span class="prop">length</span>);
+}, <span class="num">10</span>);
+
+<span class="cm">// Cleanup later</span>
+<span class="fn">unsub</span>();</pre></div>
+      </div>
+
+      <!-- once() -->
+      <h2 id="once">once() <span class="tag tag-blue">core</span></h2>
+      <p>Register a one-time listener that is automatically removed after it fires once. Like <code>on()</code>, it supports priority ordering and returns an unsubscribe function (useful if you want to cancel before it fires).</p>
+      <div class="method-sig">Aura.once(event: string, fn: (...args: unknown[]) =&gt; void): () =&gt; void</div>
+      <table class="param-table">
+        <thead><tr><th>Param</th><th>Type</th><th>Description</th></tr></thead>
+        <tbody>
+          <tr><td>event</td><td>string</td><td>Event name to listen for.</td></tr>
+          <tr><td>fn</td><td>Function</td><td>Callback invoked once, then automatically removed.</td></tr>
+        </tbody>
+      </table>
+      <p>Returns a <code>() =&gt; void</code> unsubscribe function.</p>
+      <div class="code-block">
+        <div class="code-header">
+          <div class="code-dots"><span class="code-dot"></span><span class="code-dot"></span><span class="code-dot"></span></div>
+          <span class="code-lang">js</span>
+        </div>
+        <div class="code-body"><pre><span class="cm">// Only handle the first occurrence</span>
+<span class="obj">Aura</span>.<span class="fn">once</span>(<span class="str">'app:ready'</span>, () =&gt; {
+  <span class="obj">console</span>.<span class="fn">log</span>(<span class="str">'Application is ready!'</span>);
+});
+
+<span class="cm">// Cancel before it fires</span>
+<span class="kw">const</span> cancel = <span class="obj">Aura</span>.<span class="fn">once</span>(<span class="str">'timeout:warning'</span>, showWarning);
+<span class="cm">// Changed our mind</span>
+<span class="fn">cancel</span>();</pre></div>
+      </div>
+
+      <!-- off() -->
+      <h2 id="off">off() <span class="tag tag-blue">core</span></h2>
+      <p>Remove event listeners. Pass a specific function reference to remove just that listener, or omit <code>fn</code> to remove all listeners for the event.</p>
+      <div class="method-sig">Aura.off(event: string, fn?: (...args: unknown[]) =&gt; void): void</div>
+      <table class="param-table">
+        <thead><tr><th>Param</th><th>Type</th><th>Description</th></tr></thead>
+        <tbody>
+          <tr><td>event</td><td>string</td><td>Event name to remove listeners from.</td></tr>
+          <tr><td>fn</td><td>Function</td><td>Optional. The specific listener to remove. If omitted, all listeners for the event are removed.</td></tr>
+        </tbody>
+      </table>
+      <div class="code-block">
+        <div class="code-header">
+          <div class="code-dots"><span class="code-dot"></span><span class="code-dot"></span><span class="code-dot"></span></div>
+          <span class="code-lang">js</span>
+        </div>
+        <div class="code-body"><pre><span class="kw">function</span> <span class="fn">onLogin</span>(user) {
+  <span class="obj">console</span>.<span class="fn">log</span>(<span class="str">'Logged in:'</span>, user.<span class="prop">name</span>);
+}
+
+<span class="obj">Aura</span>.<span class="fn">on</span>(<span class="str">'user:login'</span>, onLogin);
+
+<span class="cm">// Remove the specific listener</span>
+<span class="obj">Aura</span>.<span class="fn">off</span>(<span class="str">'user:login'</span>, onLogin);
+
+<span class="cm">// Remove ALL listeners for an event</span>
+<span class="obj">Aura</span>.<span class="fn">off</span>(<span class="str">'user:login'</span>);</pre></div>
+      </div>
+
+      <!-- emit() -->
+      <h2 id="emit">emit() <span class="tag tag-blue">core</span></h2>
+      <p>Fire an event, invoking all matching listeners in priority order. Also triggers any wildcard listeners whose pattern matches (e.g. <code>'user:*'</code> matches <code>'user:login'</code>). Any number of arguments can be passed and are forwarded to listeners.</p>
+      <div class="method-sig">Aura.emit(event: string, ...args: unknown[]): void</div>
+      <table class="param-table">
+        <thead><tr><th>Param</th><th>Type</th><th>Description</th></tr></thead>
+        <tbody>
+          <tr><td>event</td><td>string</td><td>The event name to fire.</td></tr>
+          <tr><td>...args</td><td>unknown[]</td><td>Any number of arguments forwarded to all matching listeners.</td></tr>
+        </tbody>
+      </table>
+      <div class="code-block">
+        <div class="code-header">
+          <div class="code-dots"><span class="code-dot"></span><span class="code-dot"></span><span class="code-dot"></span></div>
+          <span class="code-lang">js</span>
+        </div>
+        <div class="code-body"><pre><span class="cm">// Emit with no data</span>
+<span class="obj">Aura</span>.<span class="fn">emit</span>(<span class="str">'app:ready'</span>);
+
+<span class="cm">// Emit with a single argument</span>
+<span class="obj">Aura</span>.<span class="fn">emit</span>(<span class="str">'user:login'</span>, { <span class="prop">name</span>: <span class="str">'Alice'</span>, <span class="prop">id</span>: <span class="num">1</span> });
+
+<span class="cm">// Emit with multiple arguments</span>
+<span class="obj">Aura</span>.<span class="fn">emit</span>(<span class="str">'form:error'</span>, <span class="str">'email'</span>, <span class="str">'Invalid email address'</span>);</pre></div>
+      </div>
+
+      <!-- Wildcard Patterns -->
+      <h2 id="wildcards">Wildcard Patterns <span class="tag tag-orange">feature</span></h2>
+      <p>Register listeners with a <code>:*</code> suffix to match all events in a namespace. When <code>emit('user:login')</code> is called, listeners registered on both <code>'user:login'</code> (exact) and <code>'user:*'</code> (wildcard) are invoked.</p>
+
+      <div class="code-block">
+        <div class="code-header">
+          <div class="code-dots"><span class="code-dot"></span><span class="code-dot"></span><span class="code-dot"></span></div>
+          <span class="code-lang">js</span>
+        </div>
+        <div class="code-body"><pre><span class="cm">// Catch ALL user events</span>
+<span class="obj">Aura</span>.<span class="fn">on</span>(<span class="str">'user:*'</span>, (...args) =&gt; {
+  <span class="obj">console</span>.<span class="fn">log</span>(<span class="str">'User event fired'</span>, args);
+});
+
+<span class="cm">// All of these will trigger the wildcard listener above:</span>
+<span class="obj">Aura</span>.<span class="fn">emit</span>(<span class="str">'user:login'</span>, userData);
+<span class="obj">Aura</span>.<span class="fn">emit</span>(<span class="str">'user:logout'</span>);
+<span class="obj">Aura</span>.<span class="fn">emit</span>(<span class="str">'user:updated'</span>, changes);
+
+<span class="cm">// Catch ALL route events</span>
+<span class="obj">Aura</span>.<span class="fn">on</span>(<span class="str">'route:*'</span>, (...args) =&gt; {
+  <span class="obj">console</span>.<span class="fn">log</span>(<span class="str">'Route event'</span>, args);
+});</pre></div>
+      </div>
+
+      <!-- Priority Ordering -->
+      <h2 id="priority">Priority Ordering <span class="tag tag-orange">feature</span></h2>
+      <p>Listeners are sorted by priority in descending order. Higher priority values run first. Default priority is <code>0</code>. This is useful when certain listeners need to run before others (e.g. validation before rendering).</p>
+
+      <div class="code-block">
+        <div class="code-header">
+          <div class="code-dots"><span class="code-dot"></span><span class="code-dot"></span><span class="code-dot"></span></div>
+          <span class="code-lang">js</span>
+        </div>
+        <div class="code-body"><pre><span class="cm">// Priority 100 - runs first</span>
+<span class="obj">Aura</span>.<span class="fn">on</span>(<span class="str">'form:submit'</span>, (data) =&gt; {
+  <span class="obj">console</span>.<span class="fn">log</span>(<span class="str">'1. Validate'</span>);
+}, <span class="num">100</span>);
+
+<span class="cm">// Priority 50 - runs second</span>
+<span class="obj">Aura</span>.<span class="fn">on</span>(<span class="str">'form:submit'</span>, (data) =&gt; {
+  <span class="obj">console</span>.<span class="fn">log</span>(<span class="str">'2. Transform'</span>);
+}, <span class="num">50</span>);
+
+<span class="cm">// Priority 0 (default) - runs last</span>
+<span class="obj">Aura</span>.<span class="fn">on</span>(<span class="str">'form:submit'</span>, (data) =&gt; {
+  <span class="obj">console</span>.<span class="fn">log</span>(<span class="str">'3. Submit'</span>);
+});
+
+<span class="obj">Aura</span>.<span class="fn">emit</span>(<span class="str">'form:submit'</span>, formData);
+<span class="cm">// Output: 1. Validate, 2. Transform, 3. Submit</span></pre></div>
+      </div>
+
+      <!-- Built-in Events -->
+      <h2 id="builtin-events">Built-in Events <span class="tag tag-green">reference</span></h2>
+      <p>Aura.js modules emit the following events automatically. You can listen to any of them with <code>Aura.on()</code>.</p>
+
+      <h3>Router Events</h3>
+      <table class="param-table">
+        <thead><tr><th>Event</th><th>Payload</th><th>Description</th></tr></thead>
+        <tbody>
+          <tr><td>route:change</td><td>RouteContext</td><td>A route handler completed successfully.</td></tr>
+          <tr><td>route:error</td><td>{ path, error }</td><td>A route handler threw an exception.</td></tr>
+          <tr><td>route:notFound</td><td>{ path }</td><td>No route matched the requested path (404).</td></tr>
+          <tr><td>route:stateChange</td><td>PageState</td><td>The page state transitioned (idle/loading/loaded/error).</td></tr>
+        </tbody>
+      </table>
+
+      <h3>State Events</h3>
+      <table class="param-table">
+        <thead><tr><th>Event</th><th>Payload</th><th>Description</th></tr></thead>
+        <tbody>
+          <tr><td>state:&lt;key&gt;</td><td>newVal, oldVal</td><td>A specific state key was updated.</td></tr>
+          <tr><td>state:change</td><td>key, newVal, oldVal</td><td>Any state key was updated (outside of batch).</td></tr>
+          <tr><td>state:batch</td><td>[key, val, old][]</td><td>A batch of state changes completed.</td></tr>
+          <tr><td>state:reset</td><td>newState</td><td>The state was reset.</td></tr>
+        </tbody>
+      </table>
+
+      <div class="code-block">
+        <div class="code-header">
+          <div class="code-dots"><span class="code-dot"></span><span class="code-dot"></span><span class="code-dot"></span></div>
+          <span class="code-lang">js</span>
+        </div>
+        <div class="code-body"><pre><span class="cm">// Listen to all route events with a wildcard</span>
+<span class="obj">Aura</span>.<span class="fn">on</span>(<span class="str">'route:*'</span>, (...args) =&gt; {
+  <span class="obj">console</span>.<span class="fn">log</span>(<span class="str">'[Router]'</span>, ...args);
+});
+
+<span class="cm">// Listen to all state changes with a wildcard</span>
+<span class="obj">Aura</span>.<span class="fn">on</span>(<span class="str">'state:*'</span>, (...args) =&gt; {
+  <span class="obj">console</span>.<span class="fn">log</span>(<span class="str">'[State]'</span>, ...args);
+});</pre></div>
+      </div>
+
+      <!-- Patterns & Best Practices -->
+      <h2 id="patterns">Patterns</h2>
+
+      <h3>Cleanup on route change</h3>
+      <p>Use the returned unsubscribe function to clean up listeners when navigating away from a page.</p>
+      <div class="code-block">
+        <div class="code-header">
+          <div class="code-dots"><span class="code-dot"></span><span class="code-dot"></span><span class="code-dot"></span></div>
+          <span class="code-lang">js</span>
+        </div>
+        <div class="code-body"><pre><span class="kw">let</span> cleanups = [];
+
+<span class="obj">Aura</span>.<span class="fn">route</span>(<span class="str">'/dashboard'</span>, (ctx) =&gt; {
+  <span class="cm">// Clean up previous listeners</span>
+  cleanups.<span class="fn">forEach</span>(fn =&gt; <span class="fn">fn</span>());
+  cleanups = [];
+
+  <span class="cm">// Set up new listeners</span>
+  cleanups.<span class="fn">push</span>(
+    <span class="obj">Aura</span>.<span class="fn">on</span>(<span class="str">'data:refresh'</span>, loadDashboard)
+  );
+  cleanups.<span class="fn">push</span>(
+    <span class="obj">Aura</span>.<span class="fn">on</span>(<span class="str">'notification:new'</span>, showBadge)
+  );
+});</pre></div>
+      </div>
+
+      <h3>Custom application events</h3>
+      <p>Use namespaced event names to keep your custom events organized and take advantage of wildcard matching.</p>
+      <div class="code-block">
+        <div class="code-header">
+          <div class="code-dots"><span class="code-dot"></span><span class="code-dot"></span><span class="code-dot"></span></div>
+          <span class="code-lang">js</span>
+        </div>
+        <div class="code-body"><pre><span class="cm">// Component A emits</span>
+<span class="obj">Aura</span>.<span class="fn">emit</span>(<span class="str">'cart:add'</span>, { <span class="prop">productId</span>: <span class="num">123</span>, <span class="prop">qty</span>: <span class="num">2</span> });
+<span class="obj">Aura</span>.<span class="fn">emit</span>(<span class="str">'cart:remove'</span>, { <span class="prop">productId</span>: <span class="num">456</span> });
+
+<span class="cm">// Component B listens to all cart events</span>
+<span class="obj">Aura</span>.<span class="fn">on</span>(<span class="str">'cart:*'</span>, (...args) =&gt; {
+  updateCartUI();
+});</pre></div>
+      </div>
+    </main>
+  </div>
+</body>
+</html>

@@ -1,0 +1,405 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+  <title>tryThis — Aura.js Docs</title>
+  <meta name="description" content="Aura.js tryThis API — simple error handling wrapper that returns [error, data] tuples for sync functions, async functions, and promises. Full method reference." />
+  <meta name="robots" content="index, follow" />
+  <meta property="og:title" content="tryThis — Aura.js Docs" />
+  <meta property="og:description" content="Aura.js tryThis API — simple error handling wrapper that returns [error, data] tuples for sync functions, async functions, and promises. Full method reference." />
+  <meta property="og:type" content="article" />
+  <meta property="og:url" content="https://aurajs-delta.vercel.app/docs/try.html" />
+  <meta property="og:image" content="https://aurajs-delta.vercel.app/og-image.png" />
+  <meta property="og:site_name" content="Aura.js" />
+  <meta name="twitter:card" content="summary_large_image" />
+  <meta name="twitter:title" content="tryThis — Aura.js Docs" />
+  <meta name="twitter:description" content="Aura.js tryThis API — simple error handling wrapper that returns [error, data] tuples for sync functions, async functions, and promises. Full method reference." />
+  <meta name="twitter:image" content="https://aurajs-delta.vercel.app/og-image.png" />
+  <link rel="canonical" href="https://aurajs-delta.vercel.app/docs/try.html" />
+  <link rel="icon" href="../favicon.svg" type="image/svg+xml" />
+  <script type="application/ld+json">
+  {
+    "@context": "https://schema.org",
+    "@graph": [
+      {
+        "@type": "TechArticle",
+        "headline": "tryThis — Aura.js Docs",
+        "description": "Aura.js tryThis API — simple error handling wrapper that returns [error, data] tuples for sync functions, async functions, and promises.",
+        "url": "https://aurajs-delta.vercel.app/docs/try.html",
+        "image": "https://aurajs-delta.vercel.app/og-image.png",
+        "datePublished": "2026-03-17",
+        "dateModified": "2026-03-17",
+        "author": { "@type": "Organization", "name": "Darsh Gupta", "url": "https://github.com/darshgupta" },
+        "publisher": { "@type": "Organization", "name": "Darsh Gupta", "url": "https://github.com/darshgupta", "logo": { "@type": "ImageObject", "url": "https://aurajs-delta.vercel.app/favicon.svg" } },
+        "mainEntityOfPage": "https://aurajs-delta.vercel.app/docs/try.html",
+        "inLanguage": "en"
+      },
+      {
+        "@type": "BreadcrumbList",
+        "itemListElement": [
+          { "@type": "ListItem", "position": 1, "name": "Home", "item": "https://aurajs-delta.vercel.app/" },
+          { "@type": "ListItem", "position": 2, "name": "Docs", "item": "https://aurajs-delta.vercel.app/docs/router.html" },
+          { "@type": "ListItem", "position": 3, "name": "tryThis", "item": "https://aurajs-delta.vercel.app/docs/try.html" }
+        ]
+      }
+    ]
+  }
+  </script>
+  <style>
+    *, *::before, *::after { margin: 0; padding: 0; box-sizing: border-box; }
+    :root {
+      --bg: #000000; --bg-card: #111111; --bg-code: #0d0d0d;
+      --text: #f5f5f7; --text-secondary: #86868b; --text-tertiary: #6e6e73;
+      --accent: #2997ff; --accent-hover: #0077ed; --green: #30d158;
+      --orange: #ff9f0a; --pink: #ff375f; --purple: #bf5af2; --teal: #64d2ff;
+      --border: #1d1d1f; --radius: 20px; --radius-sm: 12px; --radius-xs: 8px;
+      --font: -apple-system, BlinkMacSystemFont, 'SF Pro Display', 'Helvetica Neue', sans-serif;
+      --mono: 'SF Mono', SFMono-Regular, ui-monospace, 'Cascadia Code', Menlo, monospace;
+      --transition: 0.3s cubic-bezier(0.25, 0.1, 0.25, 1);
+    }
+    html { scroll-behavior: smooth; -webkit-font-smoothing: antialiased; }
+    body { font-family: var(--font); background: var(--bg); color: var(--text); line-height: 1.6; }
+    .doc-nav { position: fixed; top: 0; left: 0; right: 0; z-index: 100; backdrop-filter: saturate(180%) blur(20px); background: rgba(0,0,0,0.72); border-bottom: 0.5px solid rgba(255,255,255,0.08); }
+    .doc-nav-inner { max-width: 1200px; margin: 0 auto; padding: 0 24px; height: 52px; display: flex; align-items: center; gap: 24px; }
+    .doc-nav-logo { font-size: 20px; font-weight: 700; background: linear-gradient(135deg, var(--accent), var(--purple)); -webkit-background-clip: text; -webkit-text-fill-color: transparent; text-decoration: none; }
+    .doc-nav-links { display: flex; gap: 20px; list-style: none; margin-left: auto; flex-wrap: wrap; }
+    .doc-nav-links a { color: var(--text-secondary); text-decoration: none; font-size: 14px; transition: color var(--transition); }
+    .doc-nav-links a:hover { color: var(--text); }
+    .doc-layout { display: grid; grid-template-columns: 240px 1fr; max-width: 1200px; margin: 0 auto; padding-top: 52px; min-height: 100vh; }
+    .doc-sidebar { position: sticky; top: 52px; height: calc(100vh - 52px); overflow-y: auto; padding: 32px 24px; border-right: 1px solid var(--border); }
+    .doc-sidebar h4 { font-size: 11px; font-weight: 600; text-transform: uppercase; letter-spacing: 0.08em; color: var(--text-tertiary); margin: 24px 0 8px; }
+    .doc-sidebar h4:first-child { margin-top: 0; }
+    .doc-sidebar a { display: block; padding: 6px 12px; border-radius: 6px; font-size: 13px; color: var(--text-secondary); text-decoration: none; transition: all 0.15s ease; }
+    .doc-sidebar a:hover { background: rgba(255,255,255,0.04); color: var(--text); }
+    .doc-sidebar a.active { background: rgba(41,151,255,0.1); color: var(--accent); }
+    .doc-content { padding: 48px 48px 120px; max-width: 800px; }
+    .doc-content h1 { font-size: 40px; font-weight: 700; letter-spacing: -0.03em; margin-bottom: 8px; }
+    .doc-content .doc-lead { font-size: 18px; color: var(--text-secondary); margin-bottom: 48px; line-height: 1.5; }
+    .doc-content h2 { font-size: 24px; font-weight: 600; letter-spacing: -0.02em; margin: 48px 0 16px; padding-bottom: 8px; border-bottom: 1px solid var(--border); }
+    .doc-content h3 { font-size: 18px; font-weight: 600; margin: 32px 0 12px; color: var(--text); }
+    .doc-content p { color: var(--text-secondary); margin-bottom: 16px; }
+    .doc-content ul, .doc-content ol { color: var(--text-secondary); margin-bottom: 16px; padding-left: 24px; }
+    .doc-content li { margin-bottom: 6px; }
+    .doc-content code { font-family: var(--mono); font-size: 13px; background: rgba(255,255,255,0.06); padding: 2px 7px; border-radius: 4px; color: var(--pink); }
+    .doc-content a { color: var(--accent); text-decoration: none; }
+    .code-block { background: var(--bg-code); border-radius: var(--radius-sm); border: 1px solid var(--border); margin-bottom: 24px; overflow: hidden; }
+    .code-header { display: flex; align-items: center; justify-content: space-between; padding: 10px 16px; border-bottom: 1px solid var(--border); background: rgba(255,255,255,0.02); }
+    .code-dots { display: flex; gap: 6px; }
+    .code-dot { width: 10px; height: 10px; border-radius: 50%; }
+    .code-dot:nth-child(1) { background: #ff5f57; }
+    .code-dot:nth-child(2) { background: #febc2e; }
+    .code-dot:nth-child(3) { background: #28c840; }
+    .code-lang { font-size: 12px; color: var(--text-tertiary); font-family: var(--mono); }
+    .code-body { padding: 16px; overflow-x: auto; }
+    .code-body pre { font-family: var(--mono); font-size: 13px; line-height: 1.7; color: var(--text-secondary); margin: 0; }
+    .code-body .kw { color: var(--pink); }
+    .code-body .fn { color: var(--accent); }
+    .code-body .str { color: var(--green); }
+    .code-body .cm { color: var(--text-tertiary); }
+    .code-body .num { color: var(--orange); }
+    .code-body .prop { color: var(--teal); }
+    .code-body .obj { color: var(--purple); }
+    .method-sig { background: rgba(41,151,255,0.06); border: 1px solid rgba(41,151,255,0.15); border-radius: var(--radius-xs); padding: 12px 16px; margin-bottom: 12px; font-family: var(--mono); font-size: 13px; color: var(--accent); overflow-x: auto; }
+    .param-table { width: 100%; border-collapse: collapse; margin-bottom: 24px; }
+    .param-table th { text-align: left; font-size: 12px; font-weight: 600; color: var(--text-tertiary); text-transform: uppercase; letter-spacing: 0.06em; padding: 8px 12px; border-bottom: 1px solid var(--border); }
+    .param-table td { padding: 10px 12px; border-bottom: 1px solid rgba(255,255,255,0.04); font-size: 14px; color: var(--text-secondary); }
+    .param-table td:first-child { font-family: var(--mono); font-size: 13px; color: var(--pink); }
+    .param-table td:nth-child(2) { font-family: var(--mono); font-size: 13px; color: var(--orange); }
+    @media (max-width: 768px) { .doc-layout { grid-template-columns: 1fr; } .doc-sidebar { display: none; } .doc-content { padding: 24px; } }
+    ::-webkit-scrollbar { width: 8px; } ::-webkit-scrollbar-track { background: transparent; } ::-webkit-scrollbar-thumb { background: var(--border); border-radius: 4px; }
+  </style>
+</head>
+<body>
+  <nav class="doc-nav">
+    <div class="doc-nav-inner">
+      <a href="../index.html" class="doc-nav-logo">Aura.js</a>
+      <ul class="doc-nav-links">
+        <li><a href="../index.html">Home</a></li>
+        <li><a href="router.html">Router</a></li>
+        <li><a href="state.html">State</a></li>
+        <li><a href="events.html">Events</a></li>
+        <li><a href="api.html">API</a></li>
+        <li><a href="hooks.html">Hooks</a></li>
+        <li><a href="idb.html">IDB</a></li>
+        <li><a href="logger.html">Logger</a></li>
+        <li><a href="try.html">tryThis</a></li>
+        <li><a href="pwa.html">PWA</a></li>
+        <li><a href="mock.html">Mock</a></li>
+      </ul>
+    </div>
+  </nav>
+
+  <div class="doc-layout">
+    <aside class="doc-sidebar">
+      <h4>All Modules</h4>
+      <a href="router.html">Router</a>
+      <a href="state.html">State</a>
+      <a href="events.html">Events</a>
+      <a href="api.html">API</a>
+      <a href="hooks.html">Hooks</a>
+      <a href="idb.html">IDB</a>
+      <a href="logger.html">Logger</a>
+      <a class="active" href="try.html">tryThis</a>
+      <a href="pwa.html">PWA</a>
+      <a href="mock.html">Mock</a>
+
+      <h4>On This Page</h4>
+      <a href="#quick-start">Quick Start</a>
+      <a href="#signature">Signature</a>
+      <a href="#tuple-pattern">The Tuple Pattern</a>
+      <a href="#sync">Sync Functions</a>
+      <a href="#async">Async Functions</a>
+      <a href="#promises">Direct Promises</a>
+      <a href="#recipe-json">Recipe: JSON Parsing</a>
+      <a href="#recipe-api">Recipe: API Calls</a>
+      <a href="#recipe-file">Recipe: File Reading</a>
+      <a href="#recipe-logger">Recipe: Chaining with Logger</a>
+    </aside>
+
+    <main class="doc-content">
+      <h1>tryThis</h1>
+      <p class="doc-lead">
+        A safe wrapper that catches errors from synchronous functions, async functions, and raw promises, returning a Go-style <code>[error, result]</code> tuple instead of throwing. Never write a try/catch block again.
+      </p>
+
+      <!-- Quick Start -->
+      <h2 id="quick-start">Quick Start</h2>
+      <p>Wrap any operation in <code>Aura.tryThis()</code> and destructure the result. If the operation succeeds, <code>error</code> is <code>null</code>. If it fails, <code>result</code> is <code>null</code> and <code>error</code> is an <code>Error</code> instance.</p>
+      <div class="code-block">
+        <div class="code-header">
+          <div class="code-dots"><div class="code-dot"></div><div class="code-dot"></div><div class="code-dot"></div></div>
+          <span class="code-lang">js</span>
+        </div>
+        <div class="code-body"><pre><span class="cm">// Sync</span>
+<span class="kw">const</span> [err, data] = <span class="obj">Aura</span>.<span class="fn">tryThis</span>(() => <span class="obj">JSON</span>.<span class="fn">parse</span>(rawString));
+
+<span class="cm">// Async</span>
+<span class="kw">const</span> [err, users] = <span class="kw">await</span> <span class="obj">Aura</span>.<span class="fn">tryThis</span>(() =>
+  <span class="fn">fetch</span>(<span class="str">'/api/users'</span>).<span class="fn">then</span>(r => r.<span class="fn">json</span>())
+);
+
+<span class="cm">// Direct promise</span>
+<span class="kw">const</span> [err, res] = <span class="kw">await</span> <span class="obj">Aura</span>.<span class="fn">tryThis</span>(<span class="fn">fetch</span>(<span class="str">'/api/users'</span>));</pre></div>
+      </div>
+
+      <!-- Signature -->
+      <h2 id="signature">Signature</h2>
+      <div class="method-sig">Aura.tryThis&lt;T&gt;(fnOrPromise: (() =&gt; T | Promise&lt;T&gt;) | Promise&lt;T&gt;): TryResult&lt;T&gt; | Promise&lt;TryResult&lt;T&gt;&gt;</div>
+      <table class="param-table">
+        <thead><tr><th>Param</th><th>Type</th><th>Description</th></tr></thead>
+        <tbody>
+          <tr><td>fnOrPromise</td><td>(() =&gt; T | Promise&lt;T&gt;) | Promise&lt;T&gt;</td><td>A sync function, an async function, or a Promise to wrap.</td></tr>
+        </tbody>
+      </table>
+      <h3>Return Value</h3>
+      <table class="param-table">
+        <thead><tr><th>Scenario</th><th>Return Type</th><th>Value</th></tr></thead>
+        <tbody>
+          <tr><td>Sync success</td><td>[null, T]</td><td>Synchronous tuple with the result.</td></tr>
+          <tr><td>Sync failure</td><td>[Error, null]</td><td>Synchronous tuple with the caught error.</td></tr>
+          <tr><td>Async success</td><td>Promise&lt;[null, T]&gt;</td><td>Resolves with the result.</td></tr>
+          <tr><td>Async failure</td><td>Promise&lt;[Error, null]&gt;</td><td>Resolves (not rejects) with the error.</td></tr>
+        </tbody>
+      </table>
+      <p>Non-<code>Error</code> throws are automatically wrapped via <code>new Error(String(thrown))</code>, so the first element is always an <code>Error</code> instance or <code>null</code>.</p>
+
+      <!-- The Tuple Pattern -->
+      <h2 id="tuple-pattern">The Tuple Pattern</h2>
+      <p>The <code>[error, result]</code> tuple eliminates the need for try/catch blocks and makes error handling explicit at the call site. It is inspired by Go's multiple return values.</p>
+      <div class="code-block">
+        <div class="code-header">
+          <div class="code-dots"><div class="code-dot"></div><div class="code-dot"></div><div class="code-dot"></div></div>
+          <span class="code-lang">js</span>
+        </div>
+        <div class="code-body"><pre><span class="cm">// Before — nested try/catch</span>
+<span class="kw">let</span> config;
+<span class="kw">try</span> {
+  config = <span class="obj">JSON</span>.<span class="fn">parse</span>(raw);
+} <span class="kw">catch</span> (e) {
+  config = defaultConfig;
+}
+
+<span class="cm">// After — flat and readable</span>
+<span class="kw">const</span> [err, config] = <span class="obj">Aura</span>.<span class="fn">tryThis</span>(() => <span class="obj">JSON</span>.<span class="fn">parse</span>(raw));
+<span class="kw">if</span> (err) config = defaultConfig;</pre></div>
+      </div>
+      <p>Key rules:</p>
+      <ul>
+        <li>On success: <code>[null, value]</code> &mdash; error is always <code>null</code>.</li>
+        <li>On failure: <code>[Error, null]</code> &mdash; result is always <code>null</code>.</li>
+        <li>The function <strong>never throws</strong>. Async variants <strong>never reject</strong>.</li>
+      </ul>
+
+      <!-- Sync Functions -->
+      <h2 id="sync">Sync Functions</h2>
+      <p>When you pass a function that returns a non-Promise value, <code>tryThis</code> returns a tuple synchronously &mdash; no <code>await</code> needed.</p>
+      <div class="code-block">
+        <div class="code-header">
+          <div class="code-dots"><div class="code-dot"></div><div class="code-dot"></div><div class="code-dot"></div></div>
+          <span class="code-lang">js</span>
+        </div>
+        <div class="code-body"><pre><span class="cm">// Success</span>
+<span class="kw">const</span> [err, num] = <span class="obj">Aura</span>.<span class="fn">tryThis</span>(() => <span class="fn">parseInt</span>(<span class="str">'42'</span>, <span class="num">10</span>));
+<span class="obj">console</span>.<span class="fn">log</span>(err);  <span class="cm">// null</span>
+<span class="obj">console</span>.<span class="fn">log</span>(num);  <span class="cm">// 42</span>
+
+<span class="cm">// Failure</span>
+<span class="kw">const</span> [err, val] = <span class="obj">Aura</span>.<span class="fn">tryThis</span>(() => {
+  <span class="kw">throw</span> <span class="kw">new</span> <span class="obj">Error</span>(<span class="str">'boom'</span>);
+});
+<span class="obj">console</span>.<span class="fn">log</span>(err.<span class="prop">message</span>); <span class="cm">// 'boom'</span>
+<span class="obj">console</span>.<span class="fn">log</span>(val);          <span class="cm">// null</span></pre></div>
+      </div>
+
+      <!-- Async Functions -->
+      <h2 id="async">Async Functions</h2>
+      <p>When the function returns a Promise (or is declared <code>async</code>), <code>tryThis</code> returns a Promise that resolves to the tuple. Use <code>await</code> to unwrap it.</p>
+      <div class="code-block">
+        <div class="code-header">
+          <div class="code-dots"><div class="code-dot"></div><div class="code-dot"></div><div class="code-dot"></div></div>
+          <span class="code-lang">js</span>
+        </div>
+        <div class="code-body"><pre><span class="kw">const</span> [err, users] = <span class="kw">await</span> <span class="obj">Aura</span>.<span class="fn">tryThis</span>(<span class="kw">async</span> () => {
+  <span class="kw">const</span> res = <span class="kw">await</span> <span class="fn">fetch</span>(<span class="str">'/api/users'</span>);
+  <span class="kw">if</span> (!res.<span class="prop">ok</span>) <span class="kw">throw</span> <span class="kw">new</span> <span class="obj">Error</span>(<span class="str">`HTTP ${res.status}`</span>);
+  <span class="kw">return</span> res.<span class="fn">json</span>();
+});
+
+<span class="kw">if</span> (err) {
+  <span class="obj">Aura</span>.<span class="prop">log</span>.<span class="fn">error</span>(<span class="str">'Failed to load users'</span>, err);
+} <span class="kw">else</span> {
+  <span class="fn">renderUsers</span>(users);
+}</pre></div>
+      </div>
+
+      <!-- Direct Promises -->
+      <h2 id="promises">Direct Promises</h2>
+      <p>You can also pass a Promise directly instead of wrapping it in a function. This is handy when you already have a Promise reference.</p>
+      <div class="code-block">
+        <div class="code-header">
+          <div class="code-dots"><div class="code-dot"></div><div class="code-dot"></div><div class="code-dot"></div></div>
+          <span class="code-lang">js</span>
+        </div>
+        <div class="code-body"><pre><span class="kw">const</span> promise = <span class="fn">fetch</span>(<span class="str">'/api/config'</span>).<span class="fn">then</span>(r => r.<span class="fn">json</span>());
+
+<span class="cm">// Pass the promise directly</span>
+<span class="kw">const</span> [err, config] = <span class="kw">await</span> <span class="obj">Aura</span>.<span class="fn">tryThis</span>(promise);
+
+<span class="kw">if</span> (err) {
+  <span class="obj">console</span>.<span class="fn">log</span>(<span class="str">'Using defaults'</span>, err.<span class="prop">message</span>);
+}</pre></div>
+      </div>
+
+      <!-- Recipe: JSON Parsing -->
+      <h2 id="recipe-json">Recipe: JSON Parsing</h2>
+      <p>Safely parse JSON without try/catch. Perfect for user input, localStorage, or WebSocket messages.</p>
+      <div class="code-block">
+        <div class="code-header">
+          <div class="code-dots"><div class="code-dot"></div><div class="code-dot"></div><div class="code-dot"></div></div>
+          <span class="code-lang">js</span>
+        </div>
+        <div class="code-body"><pre><span class="kw">function</span> <span class="fn">safeParse</span>(raw, fallback = <span class="num">null</span>) {
+  <span class="kw">const</span> [err, data] = <span class="obj">Aura</span>.<span class="fn">tryThis</span>(() => <span class="obj">JSON</span>.<span class="fn">parse</span>(raw));
+  <span class="kw">return</span> err ? fallback : data;
+}
+
+<span class="cm">// Usage</span>
+<span class="kw">const</span> settings = <span class="fn">safeParse</span>(<span class="obj">localStorage</span>.<span class="fn">getItem</span>(<span class="str">'settings'</span>), {});
+<span class="kw">const</span> message  = <span class="fn">safeParse</span>(wsEvent.<span class="prop">data</span>, { <span class="prop">type</span>: <span class="str">'unknown'</span> });</pre></div>
+      </div>
+
+      <!-- Recipe: API Calls -->
+      <h2 id="recipe-api">Recipe: API Calls</h2>
+      <p>Combine <code>tryThis</code> with <code>fetch</code> for clean, flat async error handling.</p>
+      <div class="code-block">
+        <div class="code-header">
+          <div class="code-dots"><div class="code-dot"></div><div class="code-dot"></div><div class="code-dot"></div></div>
+          <span class="code-lang">js</span>
+        </div>
+        <div class="code-body"><pre><span class="kw">async function</span> <span class="fn">getUser</span>(id) {
+  <span class="kw">const</span> [fetchErr, res] = <span class="kw">await</span> <span class="obj">Aura</span>.<span class="fn">tryThis</span>(
+    <span class="fn">fetch</span>(<span class="str">`/api/users/${id}`</span>)
+  );
+  <span class="kw">if</span> (fetchErr) <span class="kw">return</span> { <span class="prop">error</span>: <span class="str">'Network failure'</span> };
+
+  <span class="kw">if</span> (!res.<span class="prop">ok</span>) <span class="kw">return</span> { <span class="prop">error</span>: <span class="str">`HTTP ${res.status}`</span> };
+
+  <span class="kw">const</span> [parseErr, user] = <span class="kw">await</span> <span class="obj">Aura</span>.<span class="fn">tryThis</span>(res.<span class="fn">json</span>());
+  <span class="kw">if</span> (parseErr) <span class="kw">return</span> { <span class="prop">error</span>: <span class="str">'Invalid JSON'</span> };
+
+  <span class="kw">return</span> { <span class="prop">data</span>: user };
+}</pre></div>
+      </div>
+
+      <!-- Recipe: File Reading -->
+      <h2 id="recipe-file">Recipe: File Reading</h2>
+      <p>Read files via the File API without nested callbacks or try/catch.</p>
+      <div class="code-block">
+        <div class="code-header">
+          <div class="code-dots"><div class="code-dot"></div><div class="code-dot"></div><div class="code-dot"></div></div>
+          <span class="code-lang">js</span>
+        </div>
+        <div class="code-body"><pre><span class="kw">async function</span> <span class="fn">readFile</span>(file) {
+  <span class="kw">const</span> [err, text] = <span class="kw">await</span> <span class="obj">Aura</span>.<span class="fn">tryThis</span>(
+    <span class="kw">new</span> <span class="obj">Promise</span>((resolve, reject) => {
+      <span class="kw">const</span> reader = <span class="kw">new</span> <span class="obj">FileReader</span>();
+      reader.<span class="prop">onload</span> = () => <span class="fn">resolve</span>(reader.<span class="prop">result</span>);
+      reader.<span class="prop">onerror</span> = () => <span class="fn">reject</span>(reader.<span class="prop">error</span>);
+      reader.<span class="fn">readAsText</span>(file);
+    })
+  );
+
+  <span class="kw">if</span> (err) {
+    <span class="obj">console</span>.<span class="fn">error</span>(<span class="str">'Could not read file:'</span>, err.<span class="prop">message</span>);
+    <span class="kw">return</span> <span class="num">null</span>;
+  }
+
+  <span class="kw">return</span> text;
+}</pre></div>
+      </div>
+
+      <!-- Recipe: Chaining with Logger -->
+      <h2 id="recipe-logger">Recipe: Chaining with Logger</h2>
+      <p>Pair <code>tryThis</code> with <code>Aura.log</code> for structured error reporting without cluttering your business logic.</p>
+      <div class="code-block">
+        <div class="code-header">
+          <div class="code-dots"><div class="code-dot"></div><div class="code-dot"></div><div class="code-dot"></div></div>
+          <span class="code-lang">js</span>
+        </div>
+        <div class="code-body"><pre><span class="kw">const</span> api = <span class="obj">Aura</span>.<span class="prop">log</span>.<span class="fn">tag</span>(<span class="str">'API'</span>);
+
+<span class="kw">async function</span> <span class="fn">loadDashboard</span>() {
+  <span class="kw">const</span> [err, data] = <span class="kw">await</span> <span class="obj">Aura</span>.<span class="fn">tryThis</span>(<span class="kw">async</span> () => {
+    <span class="kw">const</span> res = <span class="kw">await</span> <span class="fn">fetch</span>(<span class="str">'/api/dashboard'</span>);
+    <span class="kw">if</span> (!res.<span class="prop">ok</span>) <span class="kw">throw</span> <span class="kw">new</span> <span class="obj">Error</span>(<span class="str">`HTTP ${res.status}`</span>);
+    <span class="kw">return</span> res.<span class="fn">json</span>();
+  });
+
+  <span class="kw">if</span> (err) {
+    api.<span class="fn">error</span>(<span class="str">'Dashboard load failed'</span>, err);
+    <span class="fn">showFallbackUI</span>();
+    <span class="kw">return</span>;
+  }
+
+  api.<span class="fn">info</span>(<span class="str">'Dashboard loaded'</span>, { <span class="prop">widgets</span>: data.<span class="prop">widgets</span>.<span class="prop">length</span> });
+  <span class="fn">renderDashboard</span>(data);
+}
+
+<span class="cm">// Sync + Logger</span>
+<span class="kw">const</span> [parseErr, config] = <span class="obj">Aura</span>.<span class="fn">tryThis</span>(() =>
+  <span class="obj">JSON</span>.<span class="fn">parse</span>(<span class="obj">localStorage</span>.<span class="fn">getItem</span>(<span class="str">'config'</span>))
+);
+
+<span class="kw">if</span> (parseErr) {
+  <span class="obj">Aura</span>.<span class="prop">log</span>.<span class="fn">warn</span>(<span class="str">'Config parse failed, using defaults'</span>, parseErr);
+}
+
+<span class="cm">// Export errors for debugging</span>
+<span class="kw">const</span> errorLog = <span class="obj">Aura</span>.<span class="prop">log</span>.<span class="fn">export</span>(<span class="str">'error'</span>);
+<span class="obj">console</span>.<span class="fn">log</span>(errorLog);</pre></div>
+      </div>
+    </main>
+  </div>
+</body>
+</html>
