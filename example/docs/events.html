@@ -3,18 +3,18 @@
 <head>
   <meta charset="UTF-8" />
   <meta name="viewport" content="width=device-width, initial-scale=1.0" />
-  <title>Events — Aura.js Docs</title>
-  <meta name="description" content="Aura.js Events API — fast pub/sub event system with wildcards, priority ordering, and built-in router and state events. Quick start and full method reference." />
+  <title>Events — AuraJS Docs</title>
+  <meta name="description" content="AuraJS Events API — fast pub/sub event system with wildcards, priority ordering, and built-in router and state events. Quick start and full method reference." />
   <meta name="robots" content="index, follow" />
-  <meta property="og:title" content="Events — Aura.js Docs" />
-  <meta property="og:description" content="Aura.js Events API — fast pub/sub event system with wildcards, priority ordering, and built-in router and state events. Quick start and full method reference." />
+  <meta property="og:title" content="Events — AuraJS Docs" />
+  <meta property="og:description" content="AuraJS Events API — fast pub/sub event system with wildcards, priority ordering, and built-in router and state events. Quick start and full method reference." />
   <meta property="og:type" content="article" />
   <meta property="og:url" content="https://aurajs-delta.vercel.app/docs/events.html" />
   <meta property="og:image" content="https://aurajs-delta.vercel.app/og-image.png" />
-  <meta property="og:site_name" content="Aura.js" />
+  <meta property="og:site_name" content="AuraJS" />
   <meta name="twitter:card" content="summary_large_image" />
-  <meta name="twitter:title" content="Events — Aura.js Docs" />
-  <meta name="twitter:description" content="Aura.js Events API — fast pub/sub event system with wildcards, priority ordering, and built-in router and state events. Quick start and full method reference." />
+  <meta name="twitter:title" content="Events — AuraJS Docs" />
+  <meta name="twitter:description" content="AuraJS Events API — fast pub/sub event system with wildcards, priority ordering, and built-in router and state events. Quick start and full method reference." />
   <meta name="twitter:image" content="https://aurajs-delta.vercel.app/og-image.png" />
   <link rel="canonical" href="https://aurajs-delta.vercel.app/docs/events.html" />
   <link rel="icon" href="../favicon.svg" type="image/svg+xml" />
@@ -24,8 +24,8 @@
     "@graph": [
       {
         "@type": "TechArticle",
-        "headline": "Events — Aura.js Docs",
-        "description": "Aura.js Events API — fast pub/sub event system with wildcards, priority ordering, and built-in router and state events.",
+        "headline": "Events — AuraJS Docs",
+        "description": "AuraJS Events API — fast pub/sub event system with wildcards, priority ordering, and built-in router and state events.",
         "url": "https://aurajs-delta.vercel.app/docs/events.html",
         "image": "https://aurajs-delta.vercel.app/og-image.png",
         "datePublished": "2026-03-17",
@@ -144,7 +144,7 @@
 <body>
   <nav class="doc-nav">
     <div class="doc-nav-inner">
-      <a href="../index.html" class="doc-nav-logo">Aura.js</a>
+      <a href="../index.html" class="doc-nav-logo">AuraJS</a>
       <ul class="doc-nav-links">
         <li><a href="../index.html">Home</a></li>
         <li><a href="router.html">Router</a></li>
@@ -185,7 +185,7 @@
       <p class="doc-lead">
         A priority-aware publish/subscribe event bus with wildcard matching, one-time listeners,
         and automatic cleanup. The event system underpins the router, state manager, and all
-        inter-module communication in Aura.js.
+        inter-module communication in AuraJS.
       </p>
 
       <!-- Quick Start -->
@@ -197,7 +197,7 @@
           <div class="code-dots"><span class="code-dot"></span><span class="code-dot"></span><span class="code-dot"></span></div>
           <span class="code-lang">js</span>
         </div>
-        <div class="code-body"><pre><span class="kw">import</span> <span class="obj">Aura</span> <span class="kw">from</span> <span class="str">'@buildwithdarsh/aura.js'</span>;
+        <div class="code-body"><pre><span class="kw">import</span> <span class="obj">Aura</span> <span class="kw">from</span> <span class="str">'@buildwithdarsh/aurajs'</span>;
 
 <span class="cm">// Subscribe to an event</span>
 <span class="kw">const</span> unsub = <span class="obj">Aura</span>.<span class="fn">on</span>(<span class="str">'user:login'</span>, (user) =&gt; {
@@ -381,7 +381,7 @@
 
       <!-- Built-in Events -->
       <h2 id="builtin-events">Built-in Events <span class="tag tag-green">reference</span></h2>
-      <p>Aura.js modules emit the following events automatically. You can listen to any of them with <code>Aura.on()</code>.</p>
+      <p>AuraJS modules emit the following events automatically. You can listen to any of them with <code>Aura.on()</code>.</p>
 
       <h3>Router Events</h3>
       <table class="param-table">

@@ -3,18 +3,18 @@
 <head>
   <meta charset="UTF-8" />
   <meta name="viewport" content="width=device-width, initial-scale=1.0" />
-  <title>Mock API — Aura.js Docs</title>
-  <meta name="description" content="Aura.js Mock API — simple fetch interception for API mocking with custom responses, delays, file-based definitions, and import/export. Full method reference." />
+  <title>Mock API — AuraJS Docs</title>
+  <meta name="description" content="AuraJS Mock API — simple fetch interception for API mocking with custom responses, delays, file-based definitions, and import/export. Full method reference." />
   <meta name="robots" content="index, follow" />
-  <meta property="og:title" content="Mock API — Aura.js Docs" />
-  <meta property="og:description" content="Aura.js Mock API — simple fetch interception for API mocking with custom responses, delays, file-based definitions, and import/export. Full method reference." />
+  <meta property="og:title" content="Mock API — AuraJS Docs" />
+  <meta property="og:description" content="AuraJS Mock API — simple fetch interception for API mocking with custom responses, delays, file-based definitions, and import/export. Full method reference." />
   <meta property="og:type" content="article" />
   <meta property="og:url" content="https://aurajs-delta.vercel.app/docs/mock.html" />
   <meta property="og:image" content="https://aurajs-delta.vercel.app/og-image.png" />
-  <meta property="og:site_name" content="Aura.js" />
+  <meta property="og:site_name" content="AuraJS" />
   <meta name="twitter:card" content="summary_large_image" />
-  <meta name="twitter:title" content="Mock API — Aura.js Docs" />
-  <meta name="twitter:description" content="Aura.js Mock API — simple fetch interception for API mocking with custom responses, delays, file-based definitions, and import/export. Full method reference." />
+  <meta name="twitter:title" content="Mock API — AuraJS Docs" />
+  <meta name="twitter:description" content="AuraJS Mock API — simple fetch interception for API mocking with custom responses, delays, file-based definitions, and import/export. Full method reference." />
   <meta name="twitter:image" content="https://aurajs-delta.vercel.app/og-image.png" />
   <link rel="canonical" href="https://aurajs-delta.vercel.app/docs/mock.html" />
   <link rel="icon" href="../favicon.svg" type="image/svg+xml" />
@@ -24,8 +24,8 @@
     "@graph": [
       {
         "@type": "TechArticle",
-        "headline": "Mock API — Aura.js Docs",
-        "description": "Aura.js Mock API — simple fetch interception for API mocking with custom responses, delays, file-based definitions, and import/export.",
+        "headline": "Mock API — AuraJS Docs",
+        "description": "AuraJS Mock API — simple fetch interception for API mocking with custom responses, delays, file-based definitions, and import/export.",
         "url": "https://aurajs-delta.vercel.app/docs/mock.html",
         "image": "https://aurajs-delta.vercel.app/og-image.png",
         "datePublished": "2026-03-17",
@@ -114,7 +114,7 @@
 <body>
   <nav class="doc-nav">
     <div class="doc-nav-inner">
-      <a href="../index.html" class="doc-nav-logo">Aura.js</a>
+      <a href="../index.html" class="doc-nav-logo">AuraJS</a>
       <ul class="doc-nav-links">
         <li><a href="../index.html">Home</a></li>
         <li><a href="router.html">Router</a></li>
@@ -179,7 +179,7 @@
           <div class="code-dots"><span class="code-dot"></span><span class="code-dot"></span><span class="code-dot"></span></div>
           <span class="code-lang">js</span>
         </div>
-        <div class="code-body"><pre><span class="kw">import</span> aura <span class="kw">from</span> <span class="str">'@buildwithdarsh/aura.js'</span>;
+        <div class="code-body"><pre><span class="kw">import</span> aura <span class="kw">from</span> <span class="str">'@buildwithdarsh/aurajs'</span>;
 
 <span class="cm">// 1. Register mock routes</span>
 aura.<span class="obj">mock</span>.<span class="fn">register</span>(<span class="str">'GET'</span>, <span class="str">'/api/users'</span>, {
@@ -576,7 +576,7 @@ console.<span class="fn">log</span>(aura.<span class="obj">mock</span>.<span cla
           <div class="code-dots"><span class="code-dot"></span><span class="code-dot"></span><span class="code-dot"></span></div>
           <span class="code-lang">js — mocks/setup.js</span>
         </div>
-        <div class="code-body"><pre><span class="kw">import</span> aura <span class="kw">from</span> <span class="str">'@buildwithdarsh/aura.js'</span>;
+        <div class="code-body"><pre><span class="kw">import</span> aura <span class="kw">from</span> <span class="str">'@buildwithdarsh/aurajs'</span>;
 
 aura.<span class="obj">mock</span>.<span class="fn">load</span>({
   <span class="cm">// Auth</span>
@@ -676,7 +676,7 @@ aura.<span class="obj">mock</span>.<span class="fn">load</span>({
           <div class="code-dots"><span class="code-dot"></span><span class="code-dot"></span><span class="code-dot"></span></div>
           <span class="code-lang">js — main.js</span>
         </div>
-        <div class="code-body"><pre><span class="kw">import</span> aura <span class="kw">from</span> <span class="str">'@buildwithdarsh/aura.js'</span>;
+        <div class="code-body"><pre><span class="kw">import</span> aura <span class="kw">from</span> <span class="str">'@buildwithdarsh/aurajs'</span>;
 
 <span class="cm">// Option 1: Environment variable</span>
 <span class="kw">if</span> (import.meta.<span class="prop">env</span>.<span class="prop">DEV</span>) {

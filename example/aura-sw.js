@@ -1,5 +1,5 @@
 /**
- * Aura.js Service Worker
+ * AuraJS Service Worker
  * Drop this file in your project root and register with:
  *   Aura.pwa.register('/aura-sw.js');
  *

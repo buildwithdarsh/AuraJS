@@ -3,18 +3,18 @@
 <head>
   <meta charset="UTF-8" />
   <meta name="viewport" content="width=device-width, initial-scale=1.0" />
-  <title>Hooks — Aura.js Docs</title>
-  <meta name="description" content="Aura.js Hooks API — React-style hooks including useState, useEvent, useComputed, useFetch, useI18n, useStorage, and custom hooks. Full reference and examples." />
+  <title>Hooks — AuraJS Docs</title>
+  <meta name="description" content="AuraJS Hooks API — React-style hooks including useState, useEvent, useComputed, useFetch, useI18n, useStorage, and custom hooks. Full reference and examples." />
   <meta name="robots" content="index, follow" />
-  <meta property="og:title" content="Hooks — Aura.js Docs" />
-  <meta property="og:description" content="Aura.js Hooks API — React-style hooks including useState, useEvent, useComputed, useFetch, useI18n, useStorage, and custom hooks. Full reference and examples." />
+  <meta property="og:title" content="Hooks — AuraJS Docs" />
+  <meta property="og:description" content="AuraJS Hooks API — React-style hooks including useState, useEvent, useComputed, useFetch, useI18n, useStorage, and custom hooks. Full reference and examples." />
   <meta property="og:type" content="article" />
   <meta property="og:url" content="https://aurajs-delta.vercel.app/docs/hooks.html" />
   <meta property="og:image" content="https://aurajs-delta.vercel.app/og-image.png" />
-  <meta property="og:site_name" content="Aura.js" />
+  <meta property="og:site_name" content="AuraJS" />
   <meta name="twitter:card" content="summary_large_image" />
-  <meta name="twitter:title" content="Hooks — Aura.js Docs" />
-  <meta name="twitter:description" content="Aura.js Hooks API — React-style hooks including useState, useEvent, useComputed, useFetch, useI18n, useStorage, and custom hooks. Full reference and examples." />
+  <meta name="twitter:title" content="Hooks — AuraJS Docs" />
+  <meta name="twitter:description" content="AuraJS Hooks API — React-style hooks including useState, useEvent, useComputed, useFetch, useI18n, useStorage, and custom hooks. Full reference and examples." />
   <meta name="twitter:image" content="https://aurajs-delta.vercel.app/og-image.png" />
   <link rel="canonical" href="https://aurajs-delta.vercel.app/docs/hooks.html" />
   <link rel="icon" href="../favicon.svg" type="image/svg+xml" />
@@ -24,8 +24,8 @@
     "@graph": [
       {
         "@type": "TechArticle",
-        "headline": "Hooks — Aura.js Docs",
-        "description": "Aura.js Hooks API — React-style hooks including useState, useEvent, useComputed, useFetch, useI18n, useStorage, and custom hooks.",
+        "headline": "Hooks — AuraJS Docs",
+        "description": "AuraJS Hooks API — React-style hooks including useState, useEvent, useComputed, useFetch, useI18n, useStorage, and custom hooks.",
         "url": "https://aurajs-delta.vercel.app/docs/hooks.html",
         "image": "https://aurajs-delta.vercel.app/og-image.png",
         "datePublished": "2026-03-17",
@@ -113,7 +113,7 @@
 <body>
   <nav class="doc-nav">
     <div class="doc-nav-inner">
-      <a href="../index.html" class="doc-nav-logo">Aura.js</a>
+      <a href="../index.html" class="doc-nav-logo">AuraJS</a>
       <ul class="doc-nav-links">
         <li><a href="../index.html">Home</a></li>
         <li><a href="router.html">Router</a></li>
@@ -573,7 +573,7 @@ console.<span class="fn">log</span>(<span class="fn">theme</span>());   <span cl
       <p>If you are coming from React, here is how Aura hooks map to their React equivalents. The main difference is that Aura getters are <em>functions</em> you call, not raw values.</p>
 
       <table class="param-table">
-        <thead><tr><th>React</th><th>Aura.js</th><th>Notes</th></tr></thead>
+        <thead><tr><th>React</th><th>AuraJS</th><th>Notes</th></tr></thead>
         <tbody>
           <tr>
             <td>useState(0)</td>
@@ -622,7 +622,7 @@ console.<span class="fn">log</span>(<span class="fn">theme</span>());   <span cl
 <span class="kw">const</span> [<span class="prop">count</span>, <span class="fn">setCount</span>] = <span class="fn">useState</span>(<span class="num">0</span>);
 <span class="kw">return</span> &lt;<span class="prop">p</span>&gt;{<span class="prop">count</span>}&lt;/<span class="prop">p</span>&gt;;
 
-<span class="cm">// Aura.js</span>
+<span class="cm">// AuraJS</span>
 <span class="kw">const</span> [<span class="prop">count</span>, <span class="fn">setCount</span>] = <span class="obj">Aura</span>.<span class="obj">hooks</span>.<span class="fn">useState</span>(<span class="str">'count'</span>, <span class="num">0</span>);
 <span class="prop">el</span>.<span class="prop">textContent</span> = <span class="fn">count</span>();  <span class="cm">// Note: getter is a function call</span></pre></div>
       </div>

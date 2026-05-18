@@ -4,7 +4,7 @@
 
 <br />
 
-<img src="https://img.shields.io/badge/aura.js-v1.0.0-2997ff?style=for-the-badge&labelColor=000000" alt="version" />
+<img src="https://img.shields.io/badge/aurajs-v1.0.0-2997ff?style=for-the-badge&labelColor=000000" alt="version" />
 <img src="https://img.shields.io/badge/minified-32KB-30d158?style=for-the-badge&labelColor=000000" alt="size" />
 <img src="https://img.shields.io/badge/gzip-~11KB-ff9f0a?style=for-the-badge&labelColor=000000" alt="gzip" />
 <img src="https://img.shields.io/badge/dependencies-0-bf5af2?style=for-the-badge&labelColor=000000" alt="deps" />
@@ -13,7 +13,7 @@
 
 <br /><br />
 
-# Aura.js
+# AuraJS
 
 **The everything framework in one script tag.**
 
@@ -27,9 +27,9 @@ Build full-featured SPAs with routing, state, hooks, i18n, IndexedDB, PWA suppor
 
 ---
 
-## Why Aura.js?
+## Why AuraJS?
 
-| | React + ecosystem | Vue 3 | **Aura.js** |
+| | React + ecosystem | Vue 3 | **AuraJS** |
 |---|---|---|---|
 | Setup time | ~2 min (Node + CLI) | ~2 min (Node + CLI) | **10 seconds** |
 | Bundle (min+gzip) | ~46KB + router + state | ~44KB + router | **~11KB (everything)** |
@@ -240,11 +240,11 @@ Aura.on('log:error', showToast);
 ### npm (for bundler setups)
 
 ```bash
-npm install @buildwithdarsh/aura.js
+npm install @buildwithdarsh/aurajs
 ```
 
 ```js
-import Aura from '@buildwithdarsh/aura.js';
+import Aura from '@buildwithdarsh/aurajs';
 
 Aura.route('/', handler);
 Aura.init();
@@ -253,7 +253,7 @@ Aura.init();
 Or via CDN:
 
 ```html
-<script src="https://cdn.jsdelivr.net/npm/@buildwithdarsh/aura.js"></script>
+<script src="https://cdn.jsdelivr.net/npm/@buildwithdarsh/aurajs"></script>
 ```
 
 ---

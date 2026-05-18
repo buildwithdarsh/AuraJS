@@ -3,18 +3,18 @@
 <head>
   <meta charset="UTF-8" />
   <meta name="viewport" content="width=device-width, initial-scale=1.0" />
-  <title>Storage — Aura.js Docs</title>
-  <meta name="description" content="Aura.js Storage API — easy localStorage, sessionStorage, and cookie management with prefixed keys, JSON serialization, and TTL support. Full method reference." />
+  <title>Storage — AuraJS Docs</title>
+  <meta name="description" content="AuraJS Storage API — easy localStorage, sessionStorage, and cookie management with prefixed keys, JSON serialization, and TTL support. Full method reference." />
   <meta name="robots" content="index, follow" />
-  <meta property="og:title" content="Storage — Aura.js Docs" />
-  <meta property="og:description" content="Aura.js Storage API — easy localStorage, sessionStorage, and cookie management with prefixed keys, JSON serialization, and TTL support. Full method reference." />
+  <meta property="og:title" content="Storage — AuraJS Docs" />
+  <meta property="og:description" content="AuraJS Storage API — easy localStorage, sessionStorage, and cookie management with prefixed keys, JSON serialization, and TTL support. Full method reference." />
   <meta property="og:type" content="article" />
   <meta property="og:url" content="https://aurajs-delta.vercel.app/docs/storage.html" />
   <meta property="og:image" content="https://aurajs-delta.vercel.app/og-image.png" />
-  <meta property="og:site_name" content="Aura.js" />
+  <meta property="og:site_name" content="AuraJS" />
   <meta name="twitter:card" content="summary_large_image" />
-  <meta name="twitter:title" content="Storage — Aura.js Docs" />
-  <meta name="twitter:description" content="Aura.js Storage API — easy localStorage, sessionStorage, and cookie management with prefixed keys, JSON serialization, and TTL support. Full method reference." />
+  <meta name="twitter:title" content="Storage — AuraJS Docs" />
+  <meta name="twitter:description" content="AuraJS Storage API — easy localStorage, sessionStorage, and cookie management with prefixed keys, JSON serialization, and TTL support. Full method reference." />
   <meta name="twitter:image" content="https://aurajs-delta.vercel.app/og-image.png" />
   <link rel="canonical" href="https://aurajs-delta.vercel.app/docs/storage.html" />
   <link rel="icon" href="../favicon.svg" type="image/svg+xml" />
@@ -24,8 +24,8 @@
     "@graph": [
       {
         "@type": "TechArticle",
-        "headline": "Storage — Aura.js Docs",
-        "description": "Aura.js Storage API — easy localStorage, sessionStorage, and cookie management with prefixed keys, JSON serialization, and TTL support.",
+        "headline": "Storage — AuraJS Docs",
+        "description": "AuraJS Storage API — easy localStorage, sessionStorage, and cookie management with prefixed keys, JSON serialization, and TTL support.",
         "url": "https://aurajs-delta.vercel.app/docs/storage.html",
         "image": "https://aurajs-delta.vercel.app/og-image.png",
         "datePublished": "2026-03-17",
@@ -113,7 +113,7 @@
 <body>
   <nav class="doc-nav">
     <div class="doc-nav-inner">
-      <a href="../index.html" class="doc-nav-logo">Aura.js</a>
+      <a href="../index.html" class="doc-nav-logo">AuraJS</a>
       <ul class="doc-nav-links">
         <li><a href="../index.html">Home</a></li>
         <li><a href="router.html">Router</a></li>
@@ -174,7 +174,7 @@
           <div class="code-dots"><span class="code-dot"></span><span class="code-dot"></span><span class="code-dot"></span></div>
           <span class="code-lang">js</span>
         </div>
-        <div class="code-body"><pre><span class="kw">import</span> aura <span class="kw">from</span> <span class="str">'@buildwithdarsh/aura.js'</span>;
+        <div class="code-body"><pre><span class="kw">import</span> aura <span class="kw">from</span> <span class="str">'@buildwithdarsh/aurajs'</span>;
 
 <span class="cm">// Store a value in localStorage (persists across sessions)</span>
 aura.<span class="obj">storage</span>.<span class="prop">local</span>.<span class="fn">set</span>(<span class="str">'user'</span>, { <span class="prop">name</span>: <span class="str">'Alex'</span>, <span class="prop">role</span>: <span class="str">'admin'</span> });
@@ -383,7 +383,7 @@ aura.<span class="obj">storage</span>.<span class="prop">local</span>.<span clas
 <span class="cm">// Actual localStorage key: "myapp_user"</span>
 
 <span class="cm">// Or create a standalone instance</span>
-<span class="kw">import</span> { <span class="obj">AuraStorage</span> } <span class="kw">from</span> <span class="str">'@buildwithdarsh/aura.js/storage'</span>;
+<span class="kw">import</span> { <span class="obj">AuraStorage</span> } <span class="kw">from</span> <span class="str">'@buildwithdarsh/aurajs/storage'</span>;
 <span class="kw">const</span> store = <span class="kw">new</span> <span class="obj">AuraStorage</span>(<span class="str">'v2_'</span>);</pre></div>
       </div>
 

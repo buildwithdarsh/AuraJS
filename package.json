@@ -1,5 +1,5 @@
 {
-  "name": "@buildwithdarsh/aura.js",
+  "name": "@buildwithdarsh/aurajs",
   "version": "1.1.0",
   "publishConfig": {
     "access": "public"
